@@ -11,6 +11,7 @@ import RecentMovements from "./_components/RecentMovements";
 import CategoryValueChart, {
   type CategoryStat,
 } from "./_components/CategoryValueChart";
+import SetupChecklist from "./_components/SetupChecklist";
 
 export default function DashboardPage() {
   const [products, setProducts] = useState<Product[] | null>(null);
@@ -75,36 +76,36 @@ export default function DashboardPage() {
     };
   }, [products]);
 
-  if (error) {
-    return (
-      <div className="rounded-md border border-red-300 bg-red-50 dark:bg-red-950/30 dark:border-red-800 p-4">
-        <h2 className="font-semibold mb-1">Kunde inte ladda dashboard</h2>
-        <p className="text-sm">{error}</p>
-      </div>
-    );
-  }
-
-  if (!stats || movements === null) {
-    return <p className="text-sm text-neutral-500">Laddar dashboard…</p>;
-  }
-
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold">Dashboard</h1>
 
-      <KpiCards
-        productCount={stats.productCount}
-        totalValue={stats.totalValue}
-        lowStockCount={stats.lowStockCount}
-        outOfStockCount={stats.outOfStockCount}
-      />
+      <SetupChecklist />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <LowStockTable products={stats.lowStock} />
-        <RecentMovements movements={movements} />
-      </div>
+      {error ? (
+        <div className="rounded-md border border-red-300 bg-red-50 dark:bg-red-950/30 dark:border-red-800 p-4">
+          <h2 className="font-semibold mb-1">Kunde inte ladda dashboard</h2>
+          <p className="text-sm">{error}</p>
+        </div>
+      ) : !stats || movements === null ? (
+        <p className="text-sm text-neutral-500">Laddar dashboard…</p>
+      ) : (
+        <>
+          <KpiCards
+            productCount={stats.productCount}
+            totalValue={stats.totalValue}
+            lowStockCount={stats.lowStockCount}
+            outOfStockCount={stats.outOfStockCount}
+          />
 
-      <CategoryValueChart stats={stats.categoryStats} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <LowStockTable products={stats.lowStock} />
+            <RecentMovements movements={movements} />
+          </div>
+
+          <CategoryValueChart stats={stats.categoryStats} />
+        </>
+      )}
     </div>
   );
 }
