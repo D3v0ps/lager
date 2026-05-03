@@ -1,19 +1,19 @@
 const problems = [
   {
-    title: "Förlorade försäljningar",
-    body: "En kund vill köpa — men varan är slut. Du visste inte att den höll på att ta slut. Det händer varje vecka.",
+    title: "Lagersaldot stämmer aldrig",
+    body: "Webshoppen visar en siffra, lagret en annan, Fortnox en tredje. Någon säljer det sista exemplaret — två gånger.",
   },
   {
-    title: "Excel som lever sitt eget liv",
-    body: "Tre olika versioner i mappen. Ingen vet vilken som är aktuell. Någon har skrivit över Karins ändringar igen.",
+    title: "Inköpsorder utanför systemet",
+    body: "Beställningar lever i Excel, mejl och en kalkyl ingen vågar röra. Ingen vet riktigt vad som faktiskt är på väg in.",
   },
   {
-    title: "Ingen koll på rörelser",
-    body: "Vad gick ut förra veckan? Vem registrerade vad? Lagervärdet i bokföringen stämmer inte med verkligheten.",
+    title: "8 musklick för att ändra ett antal",
+    body: "Gamla affärssystem är byggda för 2005. En justering ska ta två klick — inte en kaffepaus.",
   },
   {
-    title: "Krångliga system",
-    body: "Affärssystemen kräver konsult, kostar tiotusentals kronor och har 200 funktioner du aldrig kommer använda.",
+    title: "Allt fungerar inte ihop",
+    body: "Webshop, lager, frakt och bokföring blir fyra öar med dyra tredjepartsbroar emellan. Det är där dubbelarbetet uppstår.",
   },
 ];
 
@@ -26,11 +26,12 @@ export default function Problem() {
             Problemet
           </p>
           <h2 className="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-neutral-950 dark:text-white">
-            Lagerkaos kostar mer än du tror
+            Den dagliga driften läcker tid överallt
           </h2>
           <p className="mt-4 text-neutral-600 dark:text-neutral-400">
-            För de flesta småföretag handlar det inte om att de saknar ett
-            system — utan om att de fastnat i ett som inte fungerar.
+            Bokföringen är löst — Fortnox sköter den. Men runt den ligger
+            lager, ordrar, inköp och frakt utspridda i system som inte pratar
+            med varandra. Det är där timmarna försvinner.
           </p>
         </div>
 

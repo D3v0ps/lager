@@ -1,15 +1,15 @@
 const points = [
   {
-    title: "Svenskt — på riktigt",
-    body: "Byggt och drivet i Sverige. Allt på svenska — gränssnitt, support, fakturor. Ingen Google Translate-känsla.",
+    title: "Modern UX byggd 2026 — inte 2005",
+    body: "Justera ett antal på två klick. Snabbsökning som faktiskt är snabb. Mobilvänligt på riktigt — för du står i lagret, inte vid skrivbordet.",
   },
   {
-    title: "Ingen onödig komplexitet",
-    body: "Vi har sagt nej till hundra funktioner för att de tio som spelar roll ska vara perfekta.",
+    title: "Fortnox-koppling INGÅR",
+    body: "Artiklar, kunder, fakturor och lagervärde synkas bidirektionellt. Andra leverantörer tar 200–500 kr/mån för samma sak — vi tar noll.",
   },
   {
-    title: "Direkt i webbläsaren",
-    body: "Inga installationer. Inga lokala databaser. Logga in och börja jobba — på vilken dator som helst.",
+    title: "Personlig svensk support",
+    body: "Vi lämnar inte förrän er lageransvarig är hemma i systemet. Riktiga människor som svarar på svenska, samma dag.",
   },
 ];
 
@@ -23,12 +23,12 @@ export default function Why() {
               Varför Saldo
             </p>
             <h2 className="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-neutral-950 dark:text-white">
-              Enkelt. Svenskt. Genomtänkt.
+              Vi gör en sak — och vi gör den bättre
             </h2>
             <p className="mt-4 text-neutral-600 dark:text-neutral-400">
-              Vi har sett för många småföretag drunkna i affärssystem som är
-              gjorda för storbolag. Saldo är motsatsen — det minsta du behöver
-              för att äntligen ha koll.
+              Saldo försöker inte vara hela ditt affärssystem. Vi är navet för
+              den dagliga driften — lager, order, inköp, frakt — och vi
+              kopplar oss till det du redan har. Klart.
             </p>
 
             <div className="mt-8 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6">
@@ -37,10 +37,11 @@ export default function Why() {
               </p>
               <ul className="mt-3 space-y-2 text-sm text-neutral-700 dark:text-neutral-300">
                 {[
-                  "Konsultarvoden för att komma igång",
-                  "Långa avtal och uppsägningstider",
-                  "Moduler du aldrig kommer använda",
-                  "Engelska felmeddelanden mitt i natten",
+                  "Separat konnektor mellan webshop och Fortnox (190–500 kr/mån)",
+                  "Per-användarpåslag varje gång du anställer någon",
+                  "Konsultarvoden och flerveckors implementation",
+                  "Excel-ark som lever utanför systemet",
+                  "Moduler för bokföring och lön — det löser Fortnox",
                 ].map((s) => (
                   <li key={s} className="flex items-start gap-2">
                     <svg

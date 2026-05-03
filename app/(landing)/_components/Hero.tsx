@@ -22,25 +22,26 @@ export default function Hero() {
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 px-3 py-1 text-xs font-medium text-neutral-700 dark:text-neutral-300">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              Byggt i Sverige för svenska företag
+              Det operativa navet — kopplat till Fortnox
             </div>
             <h1 className="mt-5 text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-neutral-950 dark:text-white">
-              Slut på Excel-kaoset.{" "}
+              Slut på dubbelregistreringar mellan webshop, lager och{" "}
               <span className="text-neutral-500 dark:text-neutral-400">
-                Full koll på lagret.
+                Fortnox.
               </span>
             </h1>
             <p className="mt-6 text-lg text-neutral-600 dark:text-neutral-400 max-w-xl">
-              Saldo är den enkla lagerhanteringen för svenska e-handlare och
-              småföretag. Inga installationer. Inga onödiga moduler. Bara
-              ordning — direkt i webbläsaren.
+              Saldo är det operativa navet för svenska e-handlare. Vi sköter
+              lager, ordrar, inköp och frakt — Fortnox sköter bokföringen.
+              Tillsammans får du en hel maskin, inte fyra system med tejp
+              emellan.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/demo/"
                 className="inline-flex items-center gap-2 rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-5 py-3 text-sm font-medium hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
               >
-                Kom igång gratis
+                Kom igång
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
@@ -63,7 +64,8 @@ export default function Hero() {
               </a>
             </div>
             <p className="mt-5 text-xs text-neutral-500 dark:text-neutral-500">
-              Inget kreditkort. Personlig svensk support från dag ett.
+              Fortnox-koppling ingår. Inga per-användarkostnader. Personlig
+              svensk support.
             </p>
           </div>
 

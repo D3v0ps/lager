@@ -8,6 +8,8 @@ import { listProducts } from "@/lib/data";
 import { formatPrice } from "@/lib/format";
 import type { Product } from "@/lib/database.types";
 
+import { QuickAdjustCell } from "./_components/quick-adjust-cell";
+
 type SortKey =
   | "name-asc"
   | "name-desc"
@@ -226,12 +228,23 @@ export default function ProductsPage() {
                     <td className="px-4 py-2 text-right">
                       {formatPrice(p.unit_price)}
                     </td>
-                    <td
-                      className={`px-4 py-2 text-right font-medium ${
-                        low ? "text-red-600 dark:text-red-400" : ""
-                      }`}
-                    >
-                      {p.quantity}
+                    <td className="px-4 py-2 text-right">
+                      <QuickAdjustCell
+                        productId={p.id}
+                        quantity={p.quantity}
+                        low={low}
+                        onSaved={(newQty) =>
+                          setProducts((prev) =>
+                            prev
+                              ? prev.map((x) =>
+                                  x.id === p.id
+                                    ? { ...x, quantity: newQty }
+                                    : x,
+                                )
+                              : prev,
+                          )
+                        }
+                      />
                     </td>
                     <td className="px-4 py-2 text-right text-neutral-500">
                       {p.reorder_point}

@@ -149,6 +149,209 @@ export interface Database {
           },
         ];
       };
+      suppliers: {
+        Row: {
+          id: string;
+          tenant_id: string;
+          name: string;
+          contact_name: string | null;
+          email: string | null;
+          phone: string | null;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          tenant_id: string;
+          name: string;
+          contact_name?: string | null;
+          email?: string | null;
+          phone?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          tenant_id?: string;
+          name?: string;
+          contact_name?: string | null;
+          email?: string | null;
+          phone?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "suppliers_tenant_id_fkey";
+            columns: ["tenant_id"];
+            isOneToOne: false;
+            referencedRelation: "tenants";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      purchase_orders: {
+        Row: {
+          id: string;
+          tenant_id: string;
+          supplier_id: string | null;
+          status: "draft" | "sent" | "received" | "cancelled";
+          reference: string | null;
+          notes: string | null;
+          created_at: string;
+          received_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          tenant_id: string;
+          supplier_id?: string | null;
+          status?: "draft" | "sent" | "received" | "cancelled";
+          reference?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          received_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          tenant_id?: string;
+          supplier_id?: string | null;
+          status?: "draft" | "sent" | "received" | "cancelled";
+          reference?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          received_at?: string | null;
+        };
+        Relationships: [];
+      };
+      purchase_order_items: {
+        Row: {
+          id: string;
+          purchase_order_id: string;
+          product_id: string;
+          quantity: number;
+          unit_cost: number;
+        };
+        Insert: {
+          id?: string;
+          purchase_order_id: string;
+          product_id: string;
+          quantity: number;
+          unit_cost?: number;
+        };
+        Update: {
+          id?: string;
+          purchase_order_id?: string;
+          product_id?: string;
+          quantity?: number;
+          unit_cost?: number;
+        };
+        Relationships: [];
+      };
+      customers: {
+        Row: {
+          id: string;
+          tenant_id: string;
+          name: string;
+          email: string | null;
+          phone: string | null;
+          org_number: string | null;
+          billing_address: string | null;
+          shipping_address: string | null;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          tenant_id: string;
+          name: string;
+          email?: string | null;
+          phone?: string | null;
+          org_number?: string | null;
+          billing_address?: string | null;
+          shipping_address?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          tenant_id?: string;
+          name?: string;
+          email?: string | null;
+          phone?: string | null;
+          org_number?: string | null;
+          billing_address?: string | null;
+          shipping_address?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      sales_orders: {
+        Row: {
+          id: string;
+          tenant_id: string;
+          customer_id: string | null;
+          reference: string | null;
+          status: "draft" | "confirmed" | "picking" | "shipped" | "cancelled";
+          shipping_address: string | null;
+          notes: string | null;
+          created_at: string;
+          shipped_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          tenant_id: string;
+          customer_id?: string | null;
+          reference?: string | null;
+          status?: "draft" | "confirmed" | "picking" | "shipped" | "cancelled";
+          shipping_address?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          shipped_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          tenant_id?: string;
+          customer_id?: string | null;
+          reference?: string | null;
+          status?: "draft" | "confirmed" | "picking" | "shipped" | "cancelled";
+          shipping_address?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          shipped_at?: string | null;
+        };
+        Relationships: [];
+      };
+      sales_order_items: {
+        Row: {
+          id: string;
+          sales_order_id: string;
+          product_id: string;
+          quantity: number;
+          unit_price: number;
+        };
+        Insert: {
+          id?: string;
+          sales_order_id: string;
+          product_id: string;
+          quantity: number;
+          unit_price?: number;
+        };
+        Update: {
+          id?: string;
+          sales_order_id?: string;
+          product_id?: string;
+          quantity?: number;
+          unit_price?: number;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
