@@ -45,8 +45,11 @@ function buildNav(tenant: string): NavSection[] {
       ],
     },
     {
-      title: "Övrigt",
-      items: [{ label: "Import / export", href: `/${tenant}/import/` }],
+      title: "Inställningar",
+      items: [
+        { label: "Team", href: `/${tenant}/team/` },
+        { label: "Import / export", href: `/${tenant}/import/` },
+      ],
     },
   ];
 }

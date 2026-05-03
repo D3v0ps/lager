@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { signIn } from "@/lib/auth";
+import { getCurrentSession, signIn } from "@/lib/auth";
+import { acceptPendingInvitations } from "@/lib/team";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,12 +17,27 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
+  // Magic-link redirects land here already authenticated. Apply any pending
+  // invitations and bounce into the app.
+  useEffect(() => {
+    let active = true;
+    getCurrentSession().then(async (session) => {
+      if (!session || !active) return;
+      await acceptPendingInvitations();
+      if (active) router.replace(`/${tenant}/`);
+    });
+    return () => {
+      active = false;
+    };
+  }, [router, tenant]);
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
     setBusy(true);
     try {
       await signIn(email.trim(), password);
+      await acceptPendingInvitations();
       router.replace(`/${tenant}/`);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));

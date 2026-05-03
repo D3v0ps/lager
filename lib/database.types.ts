@@ -352,6 +352,36 @@ export interface Database {
         };
         Relationships: [];
       };
+      tenant_invitations: {
+        Row: {
+          id: string;
+          tenant_id: string;
+          email: string;
+          role: "owner" | "member";
+          invited_by: string | null;
+          created_at: string;
+          accepted_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          tenant_id: string;
+          email: string;
+          role?: "owner" | "member";
+          invited_by?: string | null;
+          created_at?: string;
+          accepted_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          tenant_id?: string;
+          email?: string;
+          role?: "owner" | "member";
+          invited_by?: string | null;
+          created_at?: string;
+          accepted_at?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
@@ -362,6 +392,27 @@ export interface Database {
       tenant_member_count: {
         Args: { target_tenant: string };
         Returns: number;
+      };
+      invite_member: {
+        Args: {
+          target_slug: string;
+          invitee_email: string;
+          invitee_role: string;
+        };
+        Returns: string;
+      };
+      accept_pending_invitations: {
+        Args: Record<string, never>;
+        Returns: number;
+      };
+      list_tenant_team: {
+        Args: { target_tenant: string };
+        Returns: {
+          user_id: string;
+          email: string;
+          role: "admin" | "owner" | "member";
+          created_at: string;
+        }[];
       };
     };
   };

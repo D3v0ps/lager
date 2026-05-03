@@ -12,6 +12,9 @@ I Supabase Dashboard → **SQL Editor**, kör i tur och ordning:
 1. `supabase/migrations/0001_init_lager.sql` — produkter + lagerrörelser
 2. `supabase/migrations/0002_multi_tenant.sql` — tenants + RLS + auth-koppling
 3. `supabase/migrations/0003_admin_helpers.sql` — admin-funktioner
+4. `supabase/migrations/0004_suppliers_and_pos.sql` — leverantörer + inköpsorder
+5. `supabase/migrations/0005_orders_customers.sql` — kunder + sälj-order
+6. `supabase/migrations/0006_team_invitations.sql` — owner kan bjuda in användare
 
 Migration 2 skapar automatiskt en `demo`-tenant och flyttar all befintlig
 data dit.
@@ -65,12 +68,18 @@ Nu kan du logga in på `/demo/login/` med ditt admin-konto, och även gå till
 
 ### Skapa användarkontot
 
-Användarkonton skapas i Supabase Dashboard (Auth API kräver service-role som
-inte ska finnas i en statisk SPA):
+**Två sätt:**
 
+**A. Du skapar manuellt (snabbast för första owner per kund):**
 1. Supabase Dashboard → Authentication → Users → Add user
 2. Skicka inloggningsuppgifterna till kunden
-3. I admin-UI — koppla användaren till deras kund med rollen `member` eller `owner`
+3. I admin-UI — koppla användaren till deras kund med rollen `owner`
+
+**B. Owner bjuder in själva (för deras lageransvarig osv):**
+- Owner går till `/<slug>/team/`, fyller i e-post + roll, klickar **Bjud in**
+- Inbjudan + magisk länk skickas via Supabase Auth e-postmall
+- När mottagaren klickar länken loggas de in och kopplas automatiskt till kunden
+- Du behöver inte göra något i Supabase
 
 ### Trigga om deploy
 
@@ -90,11 +99,8 @@ du lägger till en kund:
 | Roll | Vad de kan |
 |---|---|
 | `admin` | Allt — inkl. /admin/ för alla kunder |
-| `owner` | Hela kundens portal (men inte /admin/) |
-| `member` | Hela kundens portal (samma som owner i v1) |
-
-Roll-skillnaden mellan `owner` och `member` används inte ännu — finns för
-framtida funktioner som faktura-godkännande, användarhantering per kund etc.
+| `owner` | Hela kundens portal + kan bjuda in/ta bort medlemmar via /<slug>/team/ |
+| `member` | Hela kundens portal — kan inte ändra team |
 
 ## URL-struktur
 
@@ -111,6 +117,16 @@ framtida funktioner som faktura-godkännande, användarhantering per kund etc.
 /<slug>/product/edit/?id=… Redigera produkt
 /<slug>/products/new/      Ny produkt
 /<slug>/import/            CSV import/export
+/<slug>/team/              Team management (owners + admins)
+/<slug>/dashboard/         KPIer, lågnivå, senaste rörelser
+/<slug>/reports/           Värde per produkt, döda lager, top movers
+/<slug>/scan/              Streckkods-scanner (mobil)
+/<slug>/customers/         Kunder
+/<slug>/orders/            Sälj-ordrar
+/<slug>/orders/new/        Ny order
+/<slug>/suppliers/         Leverantörer
+/<slug>/purchasing/        Inköpsorder
+/<slug>/purchasing/new/    Ny inköpsorder
 ```
 
 ## GitHub Secrets som måste finnas
