@@ -8,12 +8,12 @@ Följande sex secrets måste vara konfigurerade i repot innan workflowen kan kö
 
 | Secret | Beskrivning |
 | --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL` | URL:en till ditt Supabase-projekt (t.ex. `https://xxxx.supabase.co`). Bakas in i JS-bundlen vid build. |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Publik anon-nyckel från Supabase. Bakas in i JS-bundlen vid build. |
-| `SFTP_HOST` | One.coms SFTP-server, typiskt `ssh.one.com`. |
-| `SFTP_USERNAME` | Ditt SFTP-användarnamn hos One.com. |
-| `SFTP_PASSWORD` | Lösenordet till SFTP-användaren. |
-| `SFTP_REMOTE_PATH` | Absolut sökväg på servern dit `out/`-innehållet ska laddas upp, t.ex. `/customers/X/Y/Z/portal.karimkhalil.se/`. |
+| `SUPABASE_URL` | URL:en till ditt Supabase-projekt (t.ex. `https://xxxx.supabase.co`). Mappas till `NEXT_PUBLIC_SUPABASE_URL` vid build. |
+| `SUPABASE_ANON_KEY` | Publik anon-nyckel från Supabase. Mappas till `NEXT_PUBLIC_SUPABASE_ANON_KEY` vid build. |
+| `SSH_HOST` | One.coms SFTP-server, typiskt `ssh.one.com`. |
+| `SSH_USER` | Ditt SFTP-användarnamn hos One.com. |
+| `SSH_PASSWORD` | Lösenordet till SFTP-användaren. |
+| `SSH_REMOTE_PATH` | Absolut sökväg på servern dit `out/`-innehållet ska laddas upp, t.ex. `/customers/X/Y/Z/portal.karimkhalil.se/`. |
 
 ## Lägga till en secret
 
