@@ -15,6 +15,9 @@ I Supabase Dashboard → **SQL Editor**, kör i tur och ordning:
 4. `supabase/migrations/0004_suppliers_and_pos.sql` — leverantörer + inköpsorder
 5. `supabase/migrations/0005_orders_customers.sql` — kunder + sälj-order
 6. `supabase/migrations/0006_team_invitations.sql` — owner kan bjuda in användare
+7. `supabase/migrations/0007_cost_of_goods.sql` — inköpspris/marginal
+8. `supabase/migrations/0008_tenant_branding.sql` — logo + primärfärg per kund
+9. `supabase/migrations/0009_rls_recursion_fix.sql` — fix för RLS-rekursion
 
 Migration 2 skapar automatiskt en `demo`-tenant och flyttar all befintlig
 data dit.
