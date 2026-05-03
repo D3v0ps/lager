@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
 import { getProduct } from "@/lib/data";
-import { ProductForm } from "@/app/products/_components/product-form";
+import { ProductForm } from "../../products/_components/product-form";
 import type { Product } from "@/lib/database.types";
 
 export default function Page() {
@@ -51,7 +51,7 @@ function EditProduct() {
       <div className="text-center py-16">
         <h1 className="text-2xl font-semibold mb-2">Produkten hittades inte</h1>
         <Link
-          href="/"
+          href="/app/"
           className="inline-block rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 mt-4"
         >
           Tillbaka
@@ -64,7 +64,7 @@ function EditProduct() {
     <div>
       <div className="mb-6">
         <Link
-          href={`/product/?id=${product.id}`}
+          href={`/app/product/?id=${product.id}`}
           className="text-sm text-neutral-500 hover:underline"
         >
           ← Tillbaka

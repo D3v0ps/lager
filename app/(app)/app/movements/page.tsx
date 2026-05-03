@@ -60,7 +60,7 @@ export default function MovementsPage() {
                   </td>
                   <td className="px-4 py-2">
                     <Link
-                      href={`/product/?id=${m.product_id}`}
+                      href={`/app/product/?id=${m.product_id}`}
                       className="text-blue-600 dark:text-blue-400 hover:underline"
                     >
                       {m.products?.name ?? "Okänd"}

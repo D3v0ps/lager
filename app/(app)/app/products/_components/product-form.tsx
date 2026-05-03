@@ -44,7 +44,7 @@ export function ProductForm({ product, submitLabel }: Props) {
           reorder_point,
           notes,
         });
-        router.push(`/product/?id=${product.id}`);
+        router.push(`/app/product/?id=${product.id}`);
       } else {
         const quantity = Number(fd.get("quantity") ?? 0);
         const created = await createProduct({
@@ -56,7 +56,7 @@ export function ProductForm({ product, submitLabel }: Props) {
           reorder_point,
           notes,
         });
-        router.push(`/product/?id=${created.id}`);
+        router.push(`/app/product/?id=${created.id}`);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));

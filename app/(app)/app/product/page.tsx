@@ -74,7 +74,7 @@ function ProductDetail() {
       <div className="text-center py-16">
         <h1 className="text-2xl font-semibold mb-2">Produkten hittades inte</h1>
         <Link
-          href="/"
+          href="/app/"
           className="inline-block rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 mt-4"
         >
           Tillbaka till listan
@@ -90,7 +90,7 @@ function ProductDetail() {
     if (!confirm(`Ta bort ${product.name}?`)) return;
     try {
       await deleteProduct(product.id);
-      router.push("/");
+      router.push("/app/");
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     }
@@ -99,7 +99,7 @@ function ProductDetail() {
   return (
     <div className="space-y-8">
       <div>
-        <Link href="/" className="text-sm text-neutral-500 hover:underline">
+        <Link href="/app/" className="text-sm text-neutral-500 hover:underline">
           ← Tillbaka
         </Link>
         <div className="flex items-start justify-between mt-2">
@@ -186,7 +186,7 @@ function ProductDetail() {
 
       <section className="flex items-center justify-between gap-3 border-t border-neutral-200 dark:border-neutral-800 pt-6">
         <Link
-          href={`/product/edit/?id=${product.id}`}
+          href={`/app/product/edit/?id=${product.id}`}
           className="rounded-md border border-neutral-300 dark:border-neutral-700 px-3 py-2 text-sm"
         >
           Redigera produkt

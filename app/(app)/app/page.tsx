@@ -38,7 +38,7 @@ export default function ProductsPage() {
           Lägg till din första produkt för att komma igång.
         </p>
         <Link
-          href="/products/new/"
+          href="/app/products/new/"
           className="inline-block rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2"
         >
           + Ny produkt
@@ -76,7 +76,7 @@ export default function ProductsPage() {
                   <td className="px-4 py-2 font-mono">{p.sku}</td>
                   <td className="px-4 py-2">
                     <Link
-                      href={`/product/?id=${p.id}`}
+                      href={`/app/product/?id=${p.id}`}
                       className="text-blue-600 dark:text-blue-400 hover:underline"
                     >
                       {p.name}
