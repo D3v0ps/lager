@@ -11,6 +11,7 @@ export const PRODUCT_COLUMNS = [
   "name",
   "category",
   "unit_price",
+  "cost_price",
   "quantity",
   "reorder_point",
   "notes",
@@ -71,6 +72,7 @@ export function serializeProducts(products: Product[]): string {
     p.name,
     p.category ?? "",
     p.unit_price,
+    p.cost_price,
     p.quantity,
     p.reorder_point,
     p.notes ?? "",
@@ -83,8 +85,8 @@ export function sampleProductsCsv(): string {
   const header = PRODUCT_COLUMNS.slice();
   const rows: (string | number)[][] = [
     header.slice(),
-    ["SKU-001", "Exempelprodukt", "Tillbehör", 99.5, 10, 2, "Anteckning"],
-    ["SKU-002", "Annan produkt", "", 250, 0, 5, ""],
+    ["SKU-001", "Exempelprodukt", "Tillbehör", 99.5, 60, 10, 2, "Anteckning"],
+    ["SKU-002", "Annan produkt", "", 250, 175, 0, 5, ""],
   ];
   return UTF8_BOM + serializeCsv(rows) + "\r\n";
 }
@@ -119,6 +121,7 @@ export function parseProductsCsv(text: string): ParseResult {
     name: -1,
     category: -1,
     unit_price: -1,
+    cost_price: -1,
     quantity: -1,
     reorder_point: -1,
     notes: -1,
@@ -154,6 +157,11 @@ export function parseProductsCsv(text: string): ParseResult {
     if (Number.isNaN(unitPrice)) errors.push(`Ogiltigt pris: "${raw.unit_price}"`);
     else if (unitPrice < 0) errors.push("Pris kan inte vara negativt");
 
+    const costPrice = toFloat(raw.cost_price);
+    if (Number.isNaN(costPrice))
+      errors.push(`Ogiltigt inköpspris: "${raw.cost_price}"`);
+    else if (costPrice < 0) errors.push("Inköpspris kan inte vara negativt");
+
     const quantity = toInt(raw.quantity);
     if (Number.isNaN(quantity)) errors.push(`Ogiltigt antal: "${raw.quantity}"`);
     else if (quantity < 0) errors.push("Antal kan inte vara negativt");
@@ -169,6 +177,7 @@ export function parseProductsCsv(text: string): ParseResult {
       name: raw.name,
       category: raw.category === "" ? null : raw.category,
       unit_price: Number.isNaN(unitPrice) ? 0 : unitPrice,
+      cost_price: Number.isNaN(costPrice) ? 0 : costPrice,
       quantity: Number.isNaN(quantity) ? 0 : quantity,
       reorder_point: Number.isNaN(reorderPoint) ? 0 : reorderPoint,
       notes: raw.notes === "" ? null : raw.notes,

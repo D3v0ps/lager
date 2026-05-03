@@ -12,6 +12,8 @@ export type ValueRow = {
   name: string;
   category: string | null;
   quantity: number;
+  unitPrice: number;
+  costPrice: number;
   value: number;
   share: number; // 0..1 of total lagervärde
 };
@@ -29,10 +31,10 @@ export default function ValueByProductTable({ rows }: Props) {
   return (
     <section className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
       <header className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-800">
-        <h2 className="text-base font-semibold">Värde per produkt</h2>
+        <h2 className="text-base font-semibold">Marginal per produkt</h2>
         <p className="text-xs text-neutral-500 mt-0.5">
-          Sorterat på lagervärde. Saldo lagrar inte inköpspris ännu, så detta
-          ersätter marginal-rapport.
+          Sorterat på lagervärde. Marginal beräknas från inköpspris — sätt
+          inköpspris på produkten för att se siffror.
         </p>
       </header>
       {visible.length === 0 ? (
@@ -51,6 +53,15 @@ export default function ValueByProductTable({ rows }: Props) {
                   <th className="px-4 py-2 font-medium text-right">Antal</th>
                   <th className="px-4 py-2 font-medium text-right">Värde</th>
                   <th className="px-4 py-2 font-medium text-right">
+                    Inköpspris
+                  </th>
+                  <th className="px-4 py-2 font-medium text-right">
+                    Marginal kr
+                  </th>
+                  <th className="px-4 py-2 font-medium text-right">
+                    Marginal %
+                  </th>
+                  <th className="px-4 py-2 font-medium text-right">
                     % av lagervärde
                   </th>
                 </tr>
@@ -58,6 +69,11 @@ export default function ValueByProductTable({ rows }: Props) {
               <tbody>
                 {visible.map((r) => {
                   const zero = r.quantity === 0;
+                  const hasCost = r.costPrice > 0;
+                  const marginPerUnit = r.unitPrice - r.costPrice;
+                  const marginKr = marginPerUnit * r.quantity;
+                  const marginPct =
+                    r.unitPrice > 0 ? (marginPerUnit / r.unitPrice) * 100 : 0;
                   return (
                     <tr
                       key={r.id}
@@ -88,6 +104,17 @@ export default function ValueByProductTable({ rows }: Props) {
                       </td>
                       <td className="px-4 py-2 text-right">
                         {formatPrice(r.value)}
+                      </td>
+                      <td className="px-4 py-2 text-right text-neutral-500">
+                        {hasCost ? formatPrice(r.costPrice) : "—"}
+                      </td>
+                      <td className="px-4 py-2 text-right">
+                        {hasCost ? formatPrice(marginKr) : "—"}
+                      </td>
+                      <td className="px-4 py-2 text-right text-neutral-500">
+                        {hasCost
+                          ? `${marginPct.toFixed(1).replace(".", ",")} %`
+                          : "—"}
                       </td>
                       <td className="px-4 py-2 text-right text-neutral-500">
                         {(r.share * 100).toFixed(1).replace(".", ",")} %

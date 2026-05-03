@@ -9,18 +9,24 @@ export interface Database {
           id: string;
           slug: string;
           name: string;
+          logo_url: string | null;
+          primary_color: string | null;
           created_at: string;
         };
         Insert: {
           id?: string;
           slug: string;
           name: string;
+          logo_url?: string | null;
+          primary_color?: string | null;
           created_at?: string;
         };
         Update: {
           id?: string;
           slug?: string;
           name?: string;
+          logo_url?: string | null;
+          primary_color?: string | null;
           created_at?: string;
         };
         Relationships: [];
@@ -62,6 +68,7 @@ export interface Database {
           name: string;
           category: string | null;
           unit_price: number;
+          cost_price: number;
           quantity: number;
           reorder_point: number;
           notes: string | null;
@@ -75,6 +82,7 @@ export interface Database {
           name: string;
           category?: string | null;
           unit_price?: number;
+          cost_price?: number;
           quantity?: number;
           reorder_point?: number;
           notes?: string | null;
@@ -88,6 +96,7 @@ export interface Database {
           name?: string;
           category?: string | null;
           unit_price?: number;
+          cost_price?: number;
           quantity?: number;
           reorder_point?: number;
           notes?: string | null;

@@ -38,6 +38,7 @@ export type ProductInput = {
   name: string;
   category: string | null;
   unit_price: number;
+  cost_price: number;
   quantity?: number;
   reorder_point: number;
   notes: string | null;
@@ -52,6 +53,7 @@ export async function createProduct(input: ProductInput): Promise<Product> {
       name: input.name,
       category: input.category,
       unit_price: input.unit_price,
+      cost_price: input.cost_price,
       quantity: Math.max(0, Math.floor(input.quantity ?? 0)),
       reorder_point: Math.max(0, Math.floor(input.reorder_point)),
       notes: input.notes,
@@ -73,6 +75,7 @@ export async function updateProduct(
       name: input.name,
       category: input.category,
       unit_price: input.unit_price,
+      cost_price: input.cost_price,
       reorder_point: Math.max(0, Math.floor(input.reorder_point)),
       notes: input.notes,
     })

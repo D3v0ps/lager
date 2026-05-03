@@ -180,6 +180,8 @@ function computeAnalytics(
         name: p.name,
         category: p.category,
         quantity: p.quantity,
+        unitPrice: p.unit_price,
+        costPrice: p.cost_price,
         value,
         share: totalValue > 0 ? value / totalValue : 0,
       };

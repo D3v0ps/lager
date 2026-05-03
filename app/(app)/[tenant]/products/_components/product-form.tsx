@@ -33,6 +33,7 @@ export function ProductForm({ product, submitLabel }: Props) {
       const name = String(fd.get("name") ?? "").trim();
       const category = String(fd.get("category") ?? "").trim() || null;
       const unit_price = Number(fd.get("unit_price") ?? 0);
+      const cost_price = Number(fd.get("cost_price") ?? 0);
       const reorder_point = Number(fd.get("reorder_point") ?? 0);
       const notes = String(fd.get("notes") ?? "").trim() || null;
       if (!sku || !name) throw new Error("SKU och namn krävs");
@@ -43,6 +44,7 @@ export function ProductForm({ product, submitLabel }: Props) {
           name,
           category,
           unit_price,
+          cost_price,
           reorder_point,
           notes,
         });
@@ -56,6 +58,7 @@ export function ProductForm({ product, submitLabel }: Props) {
           name,
           category,
           unit_price,
+          cost_price,
           quantity,
           reorder_point,
           notes,
@@ -112,7 +115,7 @@ export function ProductForm({ product, submitLabel }: Props) {
           className={inputClass}
         />
       </div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         <div>
           <label htmlFor="unit_price" className={labelClass}>
             Pris (SEK)
@@ -127,6 +130,22 @@ export function ProductForm({ product, submitLabel }: Props) {
             className={inputClass}
           />
         </div>
+        <div>
+          <label htmlFor="cost_price" className={labelClass}>
+            Inköpspris (SEK)
+          </label>
+          <input
+            id="cost_price"
+            name="cost_price"
+            type="number"
+            min="0"
+            step="0.01"
+            defaultValue={product?.cost_price ?? 0}
+            className={inputClass}
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-4">
         {!isEdit && (
           <div>
             <label htmlFor="quantity" className={labelClass}>
