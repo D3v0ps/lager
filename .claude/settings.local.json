@@ -1,0 +1,5 @@
+{
+  "env": {
+    "SUPABASE_PAT": "sbp_din_token_här"
+  }
+}
