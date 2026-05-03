@@ -151,7 +151,16 @@ export interface Database {
       };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      admin_list_users: {
+        Args: Record<string, never>;
+        Returns: { id: string; email: string; created_at: string }[];
+      };
+      tenant_member_count: {
+        Args: { target_tenant: string };
+        Returns: number;
+      };
+    };
   };
 }
 
