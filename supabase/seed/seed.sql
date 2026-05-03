@@ -5,8 +5,18 @@
 
 begin;
 
--- Töm tabellerna så skriptet är säkert att köra om.
-truncate table public.stock_movements, public.products restart identity cascade;
+-- Säkerställ att demo-tenanten finns. 0002 lägger redan in den, men vi vill
+-- att seed:en kan köras självständigt på en färsk DB.
+insert into public.tenants (slug, name)
+values ('demo', 'Demo')
+on conflict (slug) do nothing;
+
+-- Töm bara demo-tenantens rader så skriptet är säkert att köra om utan att
+-- röra andra tenants.
+delete from public.stock_movements
+  where tenant_id = (select id from public.tenants where slug = 'demo');
+delete from public.products
+  where tenant_id = (select id from public.tenants where slug = 'demo');
 
 -- ---------------------------------------------------------------------------
 -- Produkter
@@ -14,52 +24,60 @@ truncate table public.stock_movements, public.products restart identity cascade;
 -- Notera: quantity sätts inte här — triggern på stock_movements räknar
 -- upp/ner saldot när rörelser läggs in nedan.
 
-insert into public.products (sku, name, category, unit_price, reorder_point, notes) values
+insert into public.products (tenant_id, sku, name, category, unit_price, reorder_point, notes)
+select t.id, v.sku, v.name, v.category, v.unit_price, v.reorder_point, v.notes
+from public.tenants t
+cross join (values
   -- Skruv & spik
-  ('SKR-001', 'Skruv 4x40 mm trä, 100-pack',         'Skruv & spik',      89.00,  20, 'Försänkt huvud, torx T20'),
-  ('SKR-002', 'Skruv 5x80 mm trä, 50-pack',          'Skruv & spik',     129.00,  15, 'Helgängad, torx T25'),
-  ('SKR-003', 'Spik 75 mm varmförzinkad, 1 kg',      'Skruv & spik',      79.50,  25, 'För utomhusbruk'),
-  ('SKR-004', 'Gipsskruv 3,9x35 mm, 200-pack',       'Skruv & spik',      69.00,  30, 'Fosfaterad, för gipsskivor'),
+  ('SKR-001', 'Skruv 4x40 mm trä, 100-pack',         'Skruv & spik',      89.00::numeric,  20, 'Försänkt huvud, torx T20'),
+  ('SKR-002', 'Skruv 5x80 mm trä, 50-pack',          'Skruv & spik',     129.00::numeric,  15, 'Helgängad, torx T25'),
+  ('SKR-003', 'Spik 75 mm varmförzinkad, 1 kg',      'Skruv & spik',      79.50::numeric,  25, 'För utomhusbruk'),
+  ('SKR-004', 'Gipsskruv 3,9x35 mm, 200-pack',       'Skruv & spik',      69.00::numeric,  30, 'Fosfaterad, för gipsskivor'),
 
   -- Verktyg
-  ('VRK-001', 'Hammare 500 g',                        'Verktyg',          249.00,  10, 'Snickarhammare med trähandtag'),
-  ('VRK-002', 'Skruvdragare 18V borstlös',            'Verktyg',         1990.00,   5, 'Inkl. 2 batterier och laddare'),
-  ('VRK-003', 'Tumstock 2 m trä',                     'Verktyg',           59.00,  20, 'Klassisk gul, mm-skala'),
-  ('VRK-004', 'Vattenpass 600 mm aluminium',          'Verktyg',          189.00,  10, '3 libeller'),
-  ('VRK-005', 'Bitsats 32 delar',                     'Verktyg',          299.00,  12, 'Torx, insex, kryss, spår'),
-  ('VRK-006', 'Fogsvans 500 mm',                      'Verktyg',          179.00,   8, 'Härdade tänder'),
+  ('VRK-001', 'Hammare 500 g',                        'Verktyg',          249.00::numeric,  10, 'Snickarhammare med trähandtag'),
+  ('VRK-002', 'Skruvdragare 18V borstlös',            'Verktyg',         1990.00::numeric,   5, 'Inkl. 2 batterier och laddare'),
+  ('VRK-003', 'Tumstock 2 m trä',                     'Verktyg',           59.00::numeric,  20, 'Klassisk gul, mm-skala'),
+  ('VRK-004', 'Vattenpass 600 mm aluminium',          'Verktyg',          189.00::numeric,  10, '3 libeller'),
+  ('VRK-005', 'Bitsats 32 delar',                     'Verktyg',          299.00::numeric,  12, 'Torx, insex, kryss, spår'),
+  ('VRK-006', 'Fogsvans 500 mm',                      'Verktyg',          179.00::numeric,   8, 'Härdade tänder'),
 
   -- El-tillbehör
-  ('ELT-001', 'Skarvsladd 5 m vit',                   'El-tillbehör',     149.00,  15, 'Jordad, 3x1,5 mm²'),
-  ('ELT-002', 'Grenuttag 4-vägs med jord',            'El-tillbehör',     199.00,  10, 'Med strömbrytare'),
-  ('ELT-003', 'LED-lampa E27 9W varmvit',             'El-tillbehör',      49.50,  40, '806 lm, 2700K'),
-  ('ELT-004', 'Vägguttag jordat vit',                 'El-tillbehör',      89.00,  25, 'För infällt montage'),
-  ('ELT-005', 'Förlängningskabel 25 m utomhus',       'El-tillbehör',     449.00,   5, 'IP44, orange'),
+  ('ELT-001', 'Skarvsladd 5 m vit',                   'El-tillbehör',     149.00::numeric,  15, 'Jordad, 3x1,5 mm²'),
+  ('ELT-002', 'Grenuttag 4-vägs med jord',            'El-tillbehör',     199.00::numeric,  10, 'Med strömbrytare'),
+  ('ELT-003', 'LED-lampa E27 9W varmvit',             'El-tillbehör',      49.50::numeric,  40, '806 lm, 2700K'),
+  ('ELT-004', 'Vägguttag jordat vit',                 'El-tillbehör',      89.00::numeric,  25, 'För infällt montage'),
+  ('ELT-005', 'Förlängningskabel 25 m utomhus',       'El-tillbehör',     449.00::numeric,   5, 'IP44, orange'),
 
   -- Färg
-  ('FRG-001', 'Väggfärg vit matt 10 L',               'Färg',             599.00,  10, 'För inomhusbruk, klass 7'),
-  ('FRG-002', 'Träolja transparent 1 L',              'Färg',             189.00,  15, 'För utomhusträ'),
-  ('FRG-003', 'Penselsats 5 delar',                   'Färg',              99.50,  20, 'Syntetborst, 25–75 mm'),
-  ('FRG-004', 'Maskeringstejp 38 mm x 50 m',          'Färg',              45.00,  30, 'Lätt avtagbar'),
+  ('FRG-001', 'Väggfärg vit matt 10 L',               'Färg',             599.00::numeric,  10, 'För inomhusbruk, klass 7'),
+  ('FRG-002', 'Träolja transparent 1 L',              'Färg',             189.00::numeric,  15, 'För utomhusträ'),
+  ('FRG-003', 'Penselsats 5 delar',                   'Färg',              99.50::numeric,  20, 'Syntetborst, 25–75 mm'),
+  ('FRG-004', 'Maskeringstejp 38 mm x 50 m',          'Färg',              45.00::numeric,  30, 'Lätt avtagbar'),
 
   -- Skyddsutrustning
-  ('SKY-001', 'Skyddsglasögon klar',                  'Skyddsutrustning',  79.00,  20, 'Reptåliga, EN166'),
-  ('SKY-002', 'Arbetshandskar nitril stl 10',         'Skyddsutrustning',  39.50,  50, 'Skärbeständighet B'),
-  ('SKY-003', 'Hörselskydd öronkåpor SNR 30',         'Skyddsutrustning', 199.00,   8, 'Justerbar bygel'),
-  ('SKY-004', 'Andningsskydd FFP3, 5-pack',           'Skyddsutrustning', 149.00,  15, 'Med ventil'),
+  ('SKY-001', 'Skyddsglasögon klar',                  'Skyddsutrustning',  79.00::numeric,  20, 'Reptåliga, EN166'),
+  ('SKY-002', 'Arbetshandskar nitril stl 10',         'Skyddsutrustning',  39.50::numeric,  50, 'Skärbeständighet B'),
+  ('SKY-003', 'Hörselskydd öronkåpor SNR 30',         'Skyddsutrustning', 199.00::numeric,   8, 'Justerbar bygel'),
+  ('SKY-004', 'Andningsskydd FFP3, 5-pack',           'Skyddsutrustning', 149.00::numeric,  15, 'Med ventil'),
 
   -- Förpackning
-  ('FPK-001', 'Wellpapplåda 400x300x200 mm',          'Förpackning',       12.50, 100, 'Dubbelvågig, brun'),
-  ('FPK-002', 'Packtejp brun 50 mm x 66 m',           'Förpackning',       29.00,  40, 'Akrylbaserad'),
+  ('FPK-001', 'Wellpapplåda 400x300x200 mm',          'Förpackning',       12.50::numeric, 100, 'Dubbelvågig, brun'),
+  ('FPK-002', 'Packtejp brun 50 mm x 66 m',           'Förpackning',       29.00::numeric,  40, 'Akrylbaserad'),
 
   -- Kontorsmaterial
-  ('KON-001', 'Kopieringspapper A4 80g, 500 ark',     'Kontorsmaterial',   59.00,  50, 'Vitt, FSC-märkt');
+  ('KON-001', 'Kopieringspapper A4 80g, 500 ark',     'Kontorsmaterial',   59.00::numeric,  50, 'Vitt, FSC-märkt')
+) as v(sku, name, category, unit_price, reorder_point, notes)
+where t.slug = 'demo';
 
 -- ---------------------------------------------------------------------------
 -- Lagerrörelser
 -- ---------------------------------------------------------------------------
 -- Rörelserna är spridda över de senaste 60 dagarna. Triggern
--- public.apply_stock_movement uppdaterar produktens saldo automatiskt.
+-- public.apply_stock_movement uppdaterar produktens saldo automatiskt
+-- och fyller stock_movements.tenant_id från product.tenant_id.
+-- SKU är unik per tenant så seed:en filtrerar implicit till demo via
+-- products-tabellen (vi raderade alla demo-rader högst upp).
 -- Alla 'out'-rörelser är dimensionerade så att inget saldo blir negativt
 -- (NOT NULL CHECK quantity >= 0 på products skulle annars stoppa skriptet).
 --

@@ -192,10 +192,12 @@ security definer
 set search_path = public
 as $$
 begin
+  -- All references aliased: RETURNS TABLE puts user_id/email/role in scope as
+  -- OUT parameters, so unqualified column references collide. See 0010.
   if not exists (
-    select 1 from public.tenant_users
-    where tenant_id = target_tenant
-      and user_id = auth.uid()
+    select 1 from public.tenant_users tu
+    where tu.tenant_id = target_tenant
+      and tu.user_id = auth.uid()
   ) and not public.is_admin() then
     raise exception 'forbidden';
   end if;
