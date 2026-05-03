@@ -10,7 +10,7 @@ export default function Header() {
           className="flex items-center gap-2 font-semibold text-lg tracking-tight"
         >
           <Logo className="h-7 w-7" />
-          <span>Lager</span>
+          <span>Saldo</span>
         </Link>
         <nav className="hidden md:flex gap-8 text-sm text-neutral-700 dark:text-neutral-300">
           <a

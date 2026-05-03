@@ -1,4 +1,4 @@
-# Lager — demoseed
+# Saldo — demoseed
 
 Det här skriptet (`seed.sql`) fyller databasen med realistisk svensk
 demodata: ca 25 produkter spridda över sju kategorier samt ett 50-tal

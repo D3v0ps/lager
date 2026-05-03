@@ -1,4 +1,4 @@
--- Lager: demoseed
+-- Saldo: demoseed
 -- Innehåller realistiska svenska produkter och lagerrörelser för demo.
 -- OBS: Skriptet kör truncate först — all befintlig data i public.products
 -- och public.stock_movements raderas innan ny demodata skrivs in.

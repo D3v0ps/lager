@@ -1,4 +1,4 @@
-# Lager
+# Saldo
 
 Statisk SPA för lagerhantering byggd med Next.js 16 (App Router, `output: 'export'`),
 TypeScript, Tailwind v4 och Supabase. Funkar på vilken statisk hosting som helst —

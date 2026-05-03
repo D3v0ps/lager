@@ -31,7 +31,7 @@ export default function Hero() {
               </span>
             </h1>
             <p className="mt-6 text-lg text-neutral-600 dark:text-neutral-400 max-w-xl">
-              Lager är den enkla lagerhanteringen för svenska e-handlare och
+              Saldo är den enkla lagerhanteringen för svenska e-handlare och
               småföretag. Inga installationer. Inga onödiga moduler. Bara
               ordning — direkt i webbläsaren.
             </p>

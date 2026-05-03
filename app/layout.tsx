@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lager — enkel lagerhantering för svenska företag",
+  title: "Saldo — enkel lagerhantering för svenska företag",
   description:
-    "Lager hjälper svenska e-handlare och småföretag hålla ordning på sitt lager — utan krångel.",
+    "Saldo hjälper svenska e-handlare och småföretag hålla ordning på sitt lager — utan krångel.",
 };
 
 export default function RootLayout({

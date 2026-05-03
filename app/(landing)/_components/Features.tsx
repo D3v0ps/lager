@@ -63,7 +63,7 @@ export default function Features() {
             Allt du behöver. Inget du inte behöver.
           </h2>
           <p className="mt-4 text-neutral-600 dark:text-neutral-400">
-            Lager är byggt för att lösa lagerhantering — inte för att ersätta
+            Saldo är byggt för att lösa lagerhantering — inte för att ersätta
             hela ditt affärssystem. Det är därför det är så lätt att komma
             igång.
           </p>

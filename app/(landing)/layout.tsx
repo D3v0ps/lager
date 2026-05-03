@@ -3,9 +3,9 @@ import Header from "./_components/Header";
 import Footer from "./_components/Footer";
 
 export const metadata: Metadata = {
-  title: "Lager — enkel lagerhantering för svenska företag",
+  title: "Saldo — enkel lagerhantering för svenska företag",
   description:
-    "Lager hjälper svenska e-handlare och småföretag hålla ordning på sitt lager — utan krångel. Personlig svensk support hela vägen.",
+    "Saldo hjälper svenska e-handlare och småföretag hålla ordning på sitt lager — utan krångel. Personlig svensk support hela vägen.",
 };
 
 export default function LandingLayout({

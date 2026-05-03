@@ -20,14 +20,14 @@ export default function Why() {
         <div className="grid lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-5">
             <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
-              Varför Lager
+              Varför Saldo
             </p>
             <h2 className="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-neutral-950 dark:text-white">
               Enkelt. Svenskt. Genomtänkt.
             </h2>
             <p className="mt-4 text-neutral-600 dark:text-neutral-400">
               Vi har sett för många småföretag drunkna i affärssystem som är
-              gjorda för storbolag. Lager är motsatsen — det minsta du behöver
+              gjorda för storbolag. Saldo är motsatsen — det minsta du behöver
               för att äntligen ha koll.
             </p>
 

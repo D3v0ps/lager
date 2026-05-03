@@ -40,7 +40,7 @@ export default function Footer() {
                 </svg>
               </Link>
               <a
-                href="mailto:hej@lager.se"
+                href="mailto:hej@saldo.se"
                 className="inline-flex items-center gap-2 rounded-md border border-neutral-700 dark:border-neutral-300 px-5 py-3 text-sm font-medium hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
               >
                 Prata med oss
@@ -53,7 +53,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-2 font-semibold">
               <Logo className="h-6 w-6" />
-              <span>Lager</span>
+              <span>Saldo</span>
             </Link>
             <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400 max-w-sm">
               Enkel lagerhantering byggd i Sverige för svenska e-handlare och
@@ -91,10 +91,10 @@ export default function Footer() {
             <ul className="mt-3 space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
               <li>
                 <a
-                  href="mailto:hej@lager.se"
+                  href="mailto:hej@saldo.se"
                   className="hover:underline break-all"
                 >
-                  hej@lager.se
+                  hej@saldo.se
                 </a>
               </li>
               <li>
@@ -108,7 +108,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row gap-3 justify-between text-xs text-neutral-500">
-          <p>© {new Date().getFullYear()} Lager. Gjort i Sverige.</p>
+          <p>© {new Date().getFullYear()} Saldo. Gjort i Sverige.</p>
           <p>Alla priser exklusive moms.</p>
         </div>
       </div>

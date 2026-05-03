@@ -10,7 +10,7 @@ export default function AppLayout({
       <header className="border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
         <div className="mx-auto max-w-5xl px-4 py-4 flex items-center justify-between">
           <Link href="/app/" className="font-semibold text-lg">
-            Lager
+            Saldo
           </Link>
           <nav className="flex gap-4 text-sm items-center">
             <Link href="/app/" className="hover:underline">
