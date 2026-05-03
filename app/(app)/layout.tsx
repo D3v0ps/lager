@@ -13,11 +13,20 @@ export default function AppLayout({
             Saldo
           </Link>
           <nav className="flex gap-4 text-sm items-center">
+            <Link href="/app/dashboard/" className="hover:underline">
+              Dashboard
+            </Link>
             <Link href="/app/" className="hover:underline">
               Produkter
             </Link>
+            <Link href="/app/categories/" className="hover:underline">
+              Kategorier
+            </Link>
             <Link href="/app/movements/" className="hover:underline">
               Rörelser
+            </Link>
+            <Link href="/app/import/" className="hover:underline">
+              Import
             </Link>
             <Link
               href="/app/products/new/"
