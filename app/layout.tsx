@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Saldo — enkel lagerhantering för svenska företag",
+  title: "Saldo — operativa navet för svenska e-handlare",
   description:
-    "Saldo hjälper svenska e-handlare och småföretag hålla ordning på sitt lager — utan krångel.",
+    "Saldo sköter lager, ordrar, inköp och frakt — synkat med Fortnox i bakgrunden. Inga dubbelregistreringar. Inga konnektor-avgifter.",
 };
 
 export default function RootLayout({
@@ -26,12 +26,12 @@ export default function RootLayout({
   return (
     <html
       lang="sv"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`dark ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-neutral-50 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
+      <body className="min-h-full flex flex-col bg-background text-foreground">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-neutral-900 focus:px-3 focus:py-2 focus:text-sm focus:text-white"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-amber focus:px-3 focus:py-2 focus:text-sm focus:text-black"
         >
           Hoppa till innehåll
         </a>
