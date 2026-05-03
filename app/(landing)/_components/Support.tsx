@@ -13,12 +13,13 @@ export default function Support() {
                 Vårt löfte
               </p>
               <h2 className="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-neutral-950 dark:text-white">
-                Vi lämnar dig inte tills du känner dig bekväm i skorna
+                Vi lämnar inte förrän ni känner er hemma i systemet
               </h2>
               <p className="mt-5 text-lg text-neutral-700 dark:text-neutral-300 leading-relaxed">
-                Vi supportar dig genom hela processen. Personlig onboarding där
-                vi sätter upp ditt sortiment tillsammans, svenskspråkig support
-                via mejl och telefon — och en faktisk människa som svarar.
+                Vi sätter upp Fortnox-kopplingen, importerar artiklar och
+                kunder och kör en genomgång med er lageransvarige. Sedan finns
+                vi kvar — svenskspråkig support via mejl och telefon, en
+                faktisk människa som svarar.
               </p>
 
               <dl className="mt-8 grid sm:grid-cols-3 gap-6">
@@ -43,7 +44,7 @@ export default function Support() {
                     Migrering
                   </dt>
                   <dd className="mt-1 font-medium text-neutral-950 dark:text-white">
-                    Vi hjälper med Excel-import
+                    Fortnox-sync + dataimport
                   </dd>
                 </div>
               </dl>
@@ -58,9 +59,8 @@ export default function Support() {
                       Support · för 2 minuter sedan
                     </p>
                     <div className="mt-1 rounded-2xl rounded-tl-sm bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 px-4 py-3 text-sm text-neutral-800 dark:text-neutral-200">
-                      Hej! Jag såg att du precis registrerade dig — vill du att
-                      vi bokar 20 minuter och går igenom din Excel
-                      tillsammans?
+                      Hej! Jag såg att ni precis kom igång — vill ni att vi
+                      bokar 20 minuter och kopplar Fortnox tillsammans?
                     </div>
                   </div>
                 </div>

@@ -3,9 +3,9 @@ import Header from "./_components/Header";
 import Footer from "./_components/Footer";
 
 export const metadata: Metadata = {
-  title: "Saldo — enkel lagerhantering för svenska företag",
+  title: "Saldo — operativa navet för svenska e-handlare",
   description:
-    "Saldo hjälper svenska e-handlare och småföretag hålla ordning på sitt lager — utan krångel. Personlig svensk support hela vägen.",
+    "Saldo sköter lager, ordrar, inköp och frakt. Fortnox sköter bokföringen. Inga dubbelregistreringar, ingen integration att betala för.",
 };
 
 export default function LandingLayout({
