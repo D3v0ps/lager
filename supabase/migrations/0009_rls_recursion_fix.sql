@@ -23,6 +23,22 @@ $$;
 revoke all on function public.current_owner_admin_tenant_ids() from public;
 grant execute on function public.current_owner_admin_tenant_ids() to authenticated;
 
+-- Authenticated role cannot read auth.users directly. Wrap the lookup in
+-- a security-definer helper so RLS policies can match on the caller's email
+-- without granting select on auth.users.
+create or replace function public.current_user_email()
+returns text
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select coalesce((select email::text from auth.users where id = auth.uid()), '');
+$$;
+
+revoke all on function public.current_user_email() from public;
+grant execute on function public.current_user_email() to authenticated;
+
 -- ---------------------------------------------------------------------------
 -- tenant_users — replace the "for all" owner-write policy that recursed
 -- ---------------------------------------------------------------------------
@@ -64,9 +80,7 @@ create policy "tenant_invitations_select" on public.tenant_invitations
   for select using (
     tenant_id in (select public.current_owner_admin_tenant_ids())
     or public.is_admin()
-    or lower(email) = lower(
-      coalesce((select email::text from auth.users where id = auth.uid()), '')
-    )
+    or lower(email) = lower(public.current_user_email())
   );
 
 drop policy if exists "tenant_invitations_delete" on public.tenant_invitations;
