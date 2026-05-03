@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { createProduct, updateProduct } from "@/lib/data";
+import { useTenant } from "@/lib/tenant-context";
 import type { Product } from "@/lib/database.types";
 
 type Props = {
@@ -17,6 +18,7 @@ const labelClass = "block text-sm font-medium mb-1";
 
 export function ProductForm({ product, submitLabel }: Props) {
   const router = useRouter();
+  const tenant = useTenant();
   const isEdit = product != null;
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -44,10 +46,12 @@ export function ProductForm({ product, submitLabel }: Props) {
           reorder_point,
           notes,
         });
-        router.push(`/app/product/?id=${product.id}`);
+        router.push(`/${tenant?.slug}/product/?id=${product.id}`);
       } else {
+        if (!tenant) throw new Error("Saknar tenant-kontext");
         const quantity = Number(fd.get("quantity") ?? 0);
         const created = await createProduct({
+          tenant_id: tenant.id,
           sku,
           name,
           category,
@@ -56,7 +60,7 @@ export function ProductForm({ product, submitLabel }: Props) {
           reorder_point,
           notes,
         });
-        router.push(`/app/product/?id=${created.id}`);
+        router.push(`/${tenant.slug}/product/?id=${created.id}`);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));

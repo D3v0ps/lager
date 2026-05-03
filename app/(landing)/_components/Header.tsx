@@ -33,7 +33,7 @@ export default function Header() {
           </a>
         </nav>
         <Link
-          href="/app/"
+          href="/demo/"
           className="inline-flex items-center gap-1.5 rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-4 py-2 text-sm font-medium hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
         >
           Kom igång

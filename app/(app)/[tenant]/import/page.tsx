@@ -1,15 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 import { ExportSection } from "./_components/ExportSection";
 import { ImportSection } from "./_components/ImportSection";
 
 export default function ImportPage() {
+  const { tenant } = useParams<{ tenant: string }>();
   return (
     <div className="space-y-6">
       <div>
-        <Link href="/app/" className="text-sm text-neutral-500 hover:underline">
+        <Link
+          href={`/${tenant}/`}
+          className="text-sm text-neutral-500 hover:underline"
+        >
           ← Tillbaka
         </Link>
         <h1 className="text-2xl font-semibold mt-2">Import &amp; export</h1>

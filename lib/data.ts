@@ -33,6 +33,7 @@ export async function getProduct(id: string): Promise<Product | null> {
 }
 
 export type ProductInput = {
+  tenant_id: string;
   sku: string;
   name: string;
   category: string | null;
@@ -46,6 +47,7 @@ export async function createProduct(input: ProductInput): Promise<Product> {
   const { data, error } = await supabase
     .from("products")
     .insert({
+      tenant_id: input.tenant_id,
       sku: input.sku,
       name: input.name,
       category: input.category,
@@ -62,7 +64,7 @@ export async function createProduct(input: ProductInput): Promise<Product> {
 
 export async function updateProduct(
   id: string,
-  input: Omit<ProductInput, "quantity">,
+  input: Omit<ProductInput, "quantity" | "tenant_id">,
 ): Promise<Product> {
   const { data, error } = await supabase
     .from("products")

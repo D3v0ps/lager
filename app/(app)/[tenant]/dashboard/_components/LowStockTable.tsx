@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 import type { Product } from "@/lib/database.types";
 
@@ -9,6 +10,7 @@ type Props = {
 };
 
 export default function LowStockTable({ products }: Props) {
+  const { tenant } = useParams<{ tenant: string }>();
   return (
     <section className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
       <header className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-800">
@@ -38,7 +40,7 @@ export default function LowStockTable({ products }: Props) {
                   <td className="px-4 py-2 font-mono">{p.sku}</td>
                   <td className="px-4 py-2">
                     <Link
-                      href={`/app/product/?id=${p.id}`}
+                      href={`/${tenant}/product/?id=${p.id}`}
                       className="text-blue-600 dark:text-blue-400 hover:underline"
                     >
                       {p.name}

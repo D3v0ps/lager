@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { listAllMovements, type MovementWithProduct } from "@/lib/data";
 import { formatDate, movementLabel } from "@/lib/format";
 
 export default function MovementsPage() {
+  const { tenant } = useParams<{ tenant: string }>();
   const [movements, setMovements] = useState<MovementWithProduct[] | null>(
     null,
   );
@@ -60,7 +62,7 @@ export default function MovementsPage() {
                   </td>
                   <td className="px-4 py-2">
                     <Link
-                      href={`/app/product/?id=${m.product_id}`}
+                      href={`/${tenant}/product/?id=${m.product_id}`}
                       className="text-blue-600 dark:text-blue-400 hover:underline"
                     >
                       {m.products?.name ?? "Okänd"}

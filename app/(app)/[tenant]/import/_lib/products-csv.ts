@@ -1,6 +1,8 @@
 import type { Product } from "@/lib/database.types";
 import type { ProductInput } from "@/lib/data";
 
+export type CsvProductValues = Omit<ProductInput, "tenant_id">;
+
 import { parseCsv, serializeCsv, UTF8_BOM } from "./csv";
 
 /** Canonical column order for product CSV. */
@@ -22,7 +24,7 @@ export type ParsedRow = {
   /** Raw cell values keyed by canonical column name. */
   raw: Record<ProductColumn, string>;
   /** Coerced product input ready to send to data layer. */
-  values: ProductInput;
+  values: CsvProductValues;
   /** Per-row validation errors. Empty when valid. */
   errors: string[];
 };
@@ -162,7 +164,7 @@ export function parseProductsCsv(text: string): ParseResult {
     else if (reorderPoint < 0)
       errors.push("Beställningspunkt kan inte vara negativ");
 
-    const values: ProductInput = {
+    const values: CsvProductValues = {
       sku: raw.sku,
       name: raw.name,
       category: raw.category === "" ? null : raw.category,

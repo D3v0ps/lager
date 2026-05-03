@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import { listProducts } from "@/lib/data";
@@ -73,6 +74,7 @@ function aggregate(products: Product[]): CategoryRow[] {
 }
 
 export default function CategoriesPage() {
+  const { tenant } = useParams<{ tenant: string }>();
   const [products, setProducts] = useState<Product[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -150,8 +152,8 @@ export default function CategoriesPage() {
           <tbody>
             {rows.map((r) => {
               const href = r.isUncategorized
-                ? "/app/"
-                : `/app/?category=${encodeURIComponent(r.label)}`;
+                ? `/${tenant}/`
+                : `/${tenant}/?category=${encodeURIComponent(r.label)}`;
               return (
                 <tr
                   key={r.key}

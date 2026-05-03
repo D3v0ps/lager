@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 import type { MovementWithProduct } from "@/lib/data";
 import { formatDate, movementLabel } from "@/lib/format";
@@ -16,6 +17,7 @@ function typeIcon(type: "in" | "out" | "adjust"): string {
 }
 
 export default function RecentMovements({ movements }: Props) {
+  const { tenant } = useParams<{ tenant: string }>();
   return (
     <section className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
       <header className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-800">
@@ -31,7 +33,7 @@ export default function RecentMovements({ movements }: Props) {
             <li key={m.id} className="px-4 py-3 text-sm">
               <div className="flex items-baseline justify-between gap-2">
                 <Link
-                  href={`/app/product/?id=${m.product_id}`}
+                  href={`/${tenant}/product/?id=${m.product_id}`}
                   className="text-blue-600 dark:text-blue-400 hover:underline truncate"
                 >
                   {m.products?.name ?? "Okänd"}

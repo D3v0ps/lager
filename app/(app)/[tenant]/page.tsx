@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import { listProducts } from "@/lib/data";
@@ -21,6 +22,7 @@ const inputClass =
   "rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500";
 
 export default function ProductsPage() {
+  const { tenant } = useParams<{ tenant: string }>();
   const [products, setProducts] = useState<Product[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -108,7 +110,7 @@ export default function ProductsPage() {
           Lägg till din första produkt för att komma igång.
         </p>
         <Link
-          href="/app/products/new/"
+          href={`/${tenant}/products/new/`}
           className="inline-block rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2"
         >
           + Ny produkt
@@ -212,7 +214,7 @@ export default function ProductsPage() {
                     <td className="px-4 py-2 font-mono">{p.sku}</td>
                     <td className="px-4 py-2">
                       <Link
-                        href={`/app/product/?id=${p.id}`}
+                        href={`/${tenant}/product/?id=${p.id}`}
                         className="text-blue-600 dark:text-blue-400 hover:underline"
                       >
                         {p.name}

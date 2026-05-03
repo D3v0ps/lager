@@ -3,6 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 
 import { createProduct, listProducts, updateProduct } from "@/lib/data";
+import { useTenant } from "@/lib/tenant-context";
 import type { Product } from "@/lib/database.types";
 
 import {
@@ -34,6 +35,7 @@ type ImportState =
   | { kind: "done"; summary: Summary };
 
 export function ImportSection() {
+  const tenant = useTenant();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [filename, setFilename] = useState<string | null>(null);
   const [parseResult, setParseResult] = useState<ParseResult | null>(null);
@@ -132,7 +134,11 @@ export function ImportSection() {
           });
           summary.updated++;
         } else {
-          const created = await createProduct(row.values);
+          if (!tenant) throw new Error("Saknar tenant-kontext");
+          const created = await createProduct({
+            ...row.values,
+            tenant_id: tenant.id,
+          });
           bySku.set(created.sku, created);
           summary.created++;
         }

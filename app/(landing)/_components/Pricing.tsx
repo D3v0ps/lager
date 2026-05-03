@@ -12,7 +12,7 @@ const plans = [
       "Rörelsehistorik",
       "Mejlsupport",
     ],
-    cta: { label: "Kom igång gratis", href: "/app/" },
+    cta: { label: "Kom igång gratis", href: "/demo/" },
     highlight: false,
   },
   {
@@ -28,7 +28,7 @@ const plans = [
       "Personlig onboarding",
       "Prioriterad svensk support",
     ],
-    cta: { label: "Kom igång", href: "/app/" },
+    cta: { label: "Kom igång", href: "/demo/" },
     highlight: true,
   },
   {

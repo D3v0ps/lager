@@ -21,7 +21,7 @@ export default function Footer() {
             </div>
             <div className="flex flex-wrap gap-3 lg:justify-end">
               <Link
-                href="/app/"
+                href="/demo/"
                 className="inline-flex items-center gap-2 rounded-md bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white px-5 py-3 text-sm font-medium hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
               >
                 Kom igång
@@ -77,7 +77,7 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <Link href="/app/" className="hover:underline">
+                <Link href="/demo/" className="hover:underline">
                   Logga in
                 </Link>
               </li>
