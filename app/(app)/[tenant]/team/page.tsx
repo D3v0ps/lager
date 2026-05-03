@@ -14,7 +14,7 @@ import {
   type PendingInvitation,
   type TeamMember,
 } from "@/lib/team";
-import { useTenant } from "@/lib/tenant-context";
+import { useTenantState } from "@/lib/tenant-context";
 import { formatDate } from "@/lib/format";
 import type { TenantUserRole } from "@/lib/database.types";
 
@@ -22,7 +22,8 @@ const ASSIGNABLE_ROLES: ("owner" | "member")[] = ["owner", "member"];
 
 export default function TeamPage() {
   const { tenant: slug } = useParams<{ tenant: string }>();
-  const tenant = useTenant();
+  const tenantState = useTenantState();
+  const tenant = tenantState.tenant;
 
   const [members, setMembers] = useState<TeamMember[] | null>(null);
   const [invitations, setInvitations] = useState<PendingInvitation[]>([]);
@@ -55,8 +56,16 @@ export default function TeamPage() {
     void reload();
   }, [reload]);
 
-  if (!tenant) {
+  if (tenantState.status === "loading") {
     return <p className="text-sm text-neutral-500">Laddar…</p>;
+  }
+  if (tenantState.status !== "ready" || !tenant) {
+    return (
+      <div className="rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-800 p-4 text-sm">
+        Hittar inte kund-portalen. Kontrollera att du loggat in på rätt
+        portal eller be en admin lägga till dig.
+      </div>
+    );
   }
 
   const canManage = myRole === "owner" || myRole === "admin";

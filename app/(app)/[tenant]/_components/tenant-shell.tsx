@@ -5,7 +5,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { getCurrentSession, onAuthChange, signOut } from "@/lib/auth";
-import { TenantProvider, useTenant } from "@/lib/tenant-context";
+import { TenantProvider, useTenantState } from "@/lib/tenant-context";
+import { SaldoMark } from "@/app/_brand/Logo";
 
 type Status = "loading" | "anonymous" | "authenticated";
 
@@ -147,11 +148,52 @@ function AuthenticatedShell({
   handleSignOut: () => void;
   children: React.ReactNode;
 }) {
-  const tenantData = useTenant();
+  const tenantState = useTenantState();
+  const tenantData = tenantState.tenant;
   const sections = buildNav(tenant);
-  const brandColor = tenantData?.primary_color ?? "#171717";
+  const brandColor = tenantData?.primary_color ?? "#0F172A";
   const logoUrl = tenantData?.logo_url ?? null;
   const tenantName = tenantData?.name ?? tenant;
+
+  // Signed in but not a member of this tenant — RLS returned no row.
+  // Show a clear "no access"-screen with sign-out option instead of
+  // letting child pages hang on "Laddar..." forever.
+  if (tenantState.status === "missing") {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="max-w-md text-center space-y-4">
+          <h1 className="text-2xl font-semibold">Ingen åtkomst</h1>
+          <p className="text-sm text-neutral-500">
+            Du är inloggad men har inte tillgång till{" "}
+            <span className="font-mono">{tenant}</span>. Kontrollera att du
+            loggat in på rätt portal eller be en admin lägga till ditt konto
+            som medlem.
+          </p>
+          <div className="flex justify-center gap-2 pt-2">
+            <button
+              type="button"
+              onClick={handleSignOut}
+              className="rounded-md border border-neutral-300 dark:border-neutral-700 px-4 py-2 text-sm"
+            >
+              Logga ut
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  if (tenantState.status === "error") {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="max-w-md text-center space-y-3">
+          <h1 className="text-2xl font-semibold">Något gick fel</h1>
+          <p className="text-sm text-neutral-500 font-mono">
+            {tenantState.error}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -172,7 +214,10 @@ function AuthenticatedShell({
                 className="h-7 max-w-[10rem] object-contain"
               />
             ) : (
-              <span>Saldo</span>
+              <>
+                <SaldoMark className="h-6 w-6" />
+                <span>Saldo</span>
+              </>
             )}
             <span className="text-neutral-400 font-normal text-sm">
               {tenant}
@@ -204,7 +249,10 @@ function AuthenticatedShell({
                 className="h-8 max-w-full object-contain"
               />
             ) : (
-              <span className="font-semibold text-lg">Saldo</span>
+              <span className="inline-flex items-center gap-2 font-semibold text-lg">
+                <SaldoMark className="h-7 w-7" />
+                Saldo
+              </span>
             )}
           </Link>
           <p className="text-xs text-neutral-500 mt-0.5 font-mono">{tenant}</p>
