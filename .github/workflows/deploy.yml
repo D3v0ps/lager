@@ -45,4 +45,4 @@ jobs:
           port: 22
           local_path: './out/*'
           remote_path: ${{ secrets.SSH_REMOTE_PATH }}
-          delete_remote_files: true
+          delete_remote_files: false

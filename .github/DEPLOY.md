@@ -43,4 +43,4 @@ Förutom automatisk deploy vid push till `main` kan du trigga workflowen manuell
 ## Noter om beteende
 
 - **Concurrency**: Workflowen anvander gruppen `deploy-production` med `cancel-in-progress: false`. Pagaende deploys avbryts inte - nya deploys koas och kor i tur och ordning, sa du undviker halvfardiga uppladdningar.
-- **delete_remote_files**: Satt till `true`. Filer i `SFTP_REMOTE_PATH` som inte finns i `out/` raderas vid varje deploy. Se till att `SFTP_REMOTE_PATH` pekar exakt pa domanens webbrot och inget annat.
+- **delete_remote_files**: Satt till `false` eftersom One.com inte tillåter SFTP-användaren att radera vissa systemfiler i webroot. Nya och ändrade filer skrivs över; gamla filer som inte längre finns i `out/` ligger kvar tills du raderar dem manuellt via One.coms filhanterare.
