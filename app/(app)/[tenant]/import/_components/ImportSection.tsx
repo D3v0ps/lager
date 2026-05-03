@@ -129,6 +129,7 @@ export function ImportSection() {
             name: row.values.name,
             category: row.values.category,
             unit_price: row.values.unit_price,
+            cost_price: row.values.cost_price,
             reorder_point: row.values.reorder_point,
             notes: row.values.notes,
           });

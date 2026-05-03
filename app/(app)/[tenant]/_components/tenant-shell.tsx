@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { getCurrentSession, onAuthChange, signOut } from "@/lib/auth";
-import { TenantProvider } from "@/lib/tenant-context";
+import { TenantProvider, useTenant } from "@/lib/tenant-context";
 
 type Status = "loading" | "anonymous" | "authenticated";
 
@@ -47,6 +47,7 @@ function buildNav(tenant: string): NavSection[] {
     {
       title: "Inställningar",
       items: [
+        { label: "Inställningar", href: `/${tenant}/settings/` },
         { label: "Team", href: `/${tenant}/team/` },
         { label: "Import / export", href: `/${tenant}/import/` },
       ],
@@ -116,16 +117,66 @@ export default function TenantShell({
     router.replace(`/${tenant}/login/`);
   }
 
+  return (
+    <TenantProvider slug={tenant}>
+      <AuthenticatedShell
+        tenant={tenant}
+        navOpen={navOpen}
+        setNavOpen={setNavOpen}
+        pathname={pathname}
+        handleSignOut={handleSignOut}
+      >
+        {children}
+      </AuthenticatedShell>
+    </TenantProvider>
+  );
+}
+
+function AuthenticatedShell({
+  tenant,
+  navOpen,
+  setNavOpen,
+  pathname,
+  handleSignOut,
+  children,
+}: {
+  tenant: string;
+  navOpen: boolean;
+  setNavOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  pathname: string | null;
+  handleSignOut: () => void;
+  children: React.ReactNode;
+}) {
+  const tenantData = useTenant();
   const sections = buildNav(tenant);
+  const brandColor = tenantData?.primary_color ?? "#171717";
+  const logoUrl = tenantData?.logo_url ?? null;
+  const tenantName = tenantData?.name ?? tenant;
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
+    <div
+      className="min-h-screen flex flex-col lg:flex-row"
+      style={{ "--brand": brandColor } as React.CSSProperties}
+    >
       {/* Topbar (mobile + desktop) */}
       <header className="lg:hidden border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
         <div className="px-4 py-3 flex items-center justify-between">
-          <Link href={`/${tenant}/`} className="font-semibold text-lg">
-            Saldo{" "}
-            <span className="text-neutral-400 font-normal text-sm">{tenant}</span>
+          <Link
+            href={`/${tenant}/`}
+            className="font-semibold text-lg flex items-center gap-2"
+          >
+            {logoUrl ? (
+              <img
+                src={logoUrl}
+                alt={tenantName}
+                className="h-7 max-w-[10rem] object-contain"
+              />
+            ) : (
+              <span>Saldo</span>
+            )}
+            <span className="text-neutral-400 font-normal text-sm">
+              {tenant}
+            </span>
           </Link>
           <button
             type="button"
@@ -145,8 +196,16 @@ export default function TenantShell({
         } lg:block lg:w-60 lg:flex-shrink-0 lg:border-r border-b lg:border-b-0 border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900`}
       >
         <div className="hidden lg:block px-5 py-5 border-b border-neutral-200 dark:border-neutral-800">
-          <Link href={`/${tenant}/`} className="font-semibold text-lg">
-            Saldo
+          <Link href={`/${tenant}/`} className="block">
+            {logoUrl ? (
+              <img
+                src={logoUrl}
+                alt={tenantName}
+                className="h-8 max-w-full object-contain"
+              />
+            ) : (
+              <span className="font-semibold text-lg">Saldo</span>
+            )}
           </Link>
           <p className="text-xs text-neutral-500 mt-0.5 font-mono">{tenant}</p>
         </div>
@@ -198,9 +257,7 @@ export default function TenantShell({
       </aside>
 
       <main className="flex-1 min-w-0">
-        <div className="mx-auto max-w-5xl px-4 py-8">
-          <TenantProvider slug={tenant}>{children}</TenantProvider>
-        </div>
+        <div className="mx-auto max-w-5xl px-4 py-8">{children}</div>
       </main>
     </div>
   );
