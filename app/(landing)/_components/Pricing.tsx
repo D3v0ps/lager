@@ -3,47 +3,49 @@ import Link from "next/link";
 const plans = [
   {
     name: "Starter",
-    price: "0 kr",
+    price: "500 kr",
     period: "/månad",
-    description: "För dig som vill prova och har ett mindre sortiment.",
+    description: "För det mindre teamet som vill ha allt på plats från dag ett.",
     features: [
-      "Upp till 50 produkter",
-      "1 användare",
-      "Rörelsehistorik",
-      "Mejlsupport",
+      "Upp till 500 ordrar/mån",
+      "5 användare inkluderade",
+      "Alla moduler — lager, order, inköp, frakt, rapporter",
+      "Fortnox-koppling ingår",
+      "E-postsupport på svenska",
     ],
-    cta: { label: "Kom igång gratis", href: "/demo/" },
+    cta: { label: "Kom igång", href: "/demo/" },
     highlight: false,
   },
   {
     name: "Pro",
-    price: "199 kr",
+    price: "1 200 kr",
     period: "/månad",
-    description: "För växande e-handlare och småföretag som behöver full koll.",
+    description: "För den växande e-handlaren som börjar känna av volymen.",
     features: [
-      "Obegränsat antal produkter",
-      "Upp till 5 användare",
-      "Beställningspunkter & varningar",
-      "Rapporter och CSV-export",
-      "Personlig onboarding",
+      "Upp till 5 000 ordrar/mån",
+      "15 användare inkluderade",
+      "Alla moduler",
+      "Fortnox-koppling ingår",
       "Prioriterad svensk support",
+      "Onboarding-call med en människa",
     ],
     cta: { label: "Kom igång", href: "/demo/" },
     highlight: true,
   },
   {
     name: "Enterprise",
-    price: "499 kr",
+    price: "2 500 kr",
     period: "/månad",
-    description: "För större team med specifika behov och integrationer.",
+    description: "För etablerade verksamheter med större volymer och egna krav.",
     features: [
-      "Allt i Pro",
-      "Obegränsat antal användare",
-      "Anpassade roller & behörigheter",
-      "Integrationer (efter överenskommelse)",
-      "Dedikerad kontaktperson",
+      "Obegränsade ordrar",
+      "Obegränsade användare",
+      "Dedikerad kundansvarig",
+      "SLA på svarstid och drift",
+      "On-site onboarding",
+      "Uppstartsavgift tillkommer",
     ],
-    cta: { label: "Kontakta oss", href: "#kontakt" },
+    cta: { label: "Kontakta oss", href: "/demo/" },
     highlight: false,
   },
 ];
@@ -60,11 +62,11 @@ export default function Pricing() {
             Priser
           </p>
           <h2 className="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-neutral-950 dark:text-white">
-            Tydliga priser. Inga överraskningar.
+            Flata priser. Inga konnektor-avgifter.
           </h2>
           <p className="mt-4 text-neutral-600 dark:text-neutral-400">
-            Börja gratis. Uppgradera när du växer. Säg upp när du vill — inga
-            uppsägningstider, inga bindningstider.
+            Du betalar för verksamhetens storlek — inte per användare. Säg upp
+            när du vill, ingen bindningstid.
           </p>
         </div>
 
@@ -134,7 +136,11 @@ export default function Pricing() {
           ))}
         </div>
 
-        <p className="mt-8 text-sm text-neutral-500 dark:text-neutral-400 text-center">
+        <p className="mt-10 text-center text-base font-medium text-neutral-800 dark:text-neutral-200">
+          Inga per-användarkostnader. Inga konnektor-avgifter. Inga
+          överraskningar.
+        </p>
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400 text-center">
           Alla priser anges exklusive moms.
         </p>
       </div>

@@ -1,14 +1,16 @@
 const features = [
   {
-    title: "Produktregister",
-    body: "Lägg in hela ditt sortiment med SKU, pris och nuvarande lager. Sök och filtrera direkt.",
+    title: "Lager",
+    body: "Variants, multi-lokation, snabbjustering på två klick och scanning från mobilen. Saldot stämmer — överallt, hela tiden.",
+    status: null,
     icon: (
       <path d="M3 4.75A.75.75 0 0 1 3.75 4h12.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 4.75ZM3 10a.75.75 0 0 1 .75-.75h12.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 10Zm0 5.25a.75.75 0 0 1 .75-.75h12.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" />
     ),
   },
   {
-    title: "Registrera rörelser",
-    body: "In och ut med två klick. Varje rörelse loggas — du ser alltid vem som gjorde vad och när.",
+    title: "Order",
+    body: "Webshop-ordrar in, plocka, packa, skicka — utan dubbelregistrering. Manuella ordrar och returer i samma flöde.",
+    status: null,
     icon: (
       <path
         fillRule="evenodd"
@@ -18,22 +20,17 @@ const features = [
     ),
   },
   {
-    title: "Beställningspunkter",
-    body: "Sätt en miniminivå per produkt. Få varning innan något tar slut — aldrig mer panikbeställningar.",
+    title: "Inköp",
+    body: "Leverantörsregister, beställningsförslag baserat på era egna nivåer och mottagningsregistrering. Slut med Excel-listan i mejlen.",
+    status: null,
     icon: (
       <path d="M10 2a.75.75 0 0 1 .75.75v.5a6.5 6.5 0 0 1 5.93 5.93h.5a.75.75 0 0 1 0 1.5h-.5a6.5 6.5 0 0 1-5.93 5.93v.5a.75.75 0 0 1-1.5 0v-.5a6.5 6.5 0 0 1-5.93-5.93h-.5a.75.75 0 0 1 0-1.5h.5A6.5 6.5 0 0 1 9.25 3.25v-.5A.75.75 0 0 1 10 2Zm0 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm0 2.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
     ),
   },
   {
-    title: "Rapporter & lagervärde",
-    body: "Aktuellt lagervärde, rörelser per period, bästsäljare. Exportera till CSV när bokföringen kallar.",
-    icon: (
-      <path d="M3 13.75A.75.75 0 0 1 3.75 13h2.5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1-.75-.75v-3.5Zm5-5A.75.75 0 0 1 8.75 8h2.5a.75.75 0 0 1 .75.75v8.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1-.75-.75v-8.5Zm5-5a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1-.75-.75V3.75Z" />
-    ),
-  },
-  {
-    title: "Mobilvänligt",
-    body: "Räkna lager med telefonen i handen. Allt fungerar lika bra i lagret som vid skrivbordet.",
+    title: "Frakt",
+    body: "Etiketter direkt från ordern via Fraktjakt-integrationen. Inga extra inloggningar, ingen klipp-och-klistra av spårningsnummer.",
+    status: "Snart",
     icon: (
       <path
         fillRule="evenodd"
@@ -43,8 +40,17 @@ const features = [
     ),
   },
   {
-    title: "Flera användare",
-    body: "Bjud in kollegor med olika roller. Alla ser samma data i realtid — inga dubbletter, inga konflikter.",
+    title: "Rapporter",
+    body: "Vad säljer, vad ligger dött, marginal per artikel, lagervärde över tid. Beslut byggda på data — inte magkänsla.",
+    status: null,
+    icon: (
+      <path d="M3 13.75A.75.75 0 0 1 3.75 13h2.5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1-.75-.75v-3.5Zm5-5A.75.75 0 0 1 8.75 8h2.5a.75.75 0 0 1 .75.75v8.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1-.75-.75v-8.5Zm5-5a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1-.75-.75V3.75Z" />
+    ),
+  },
+  {
+    title: "Fortnox-sync",
+    body: "Artiklar, kunder, fakturor och lagervärde synkas bidirektionellt. Bokför som vanligt — Saldo håller siffrorna i takt.",
+    status: "Snart",
     icon: (
       <path d="M10 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-7 9a7 7 0 1 1 14 0H3Z" />
     ),
@@ -57,15 +63,15 @@ export default function Features() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-20 sm:py-24">
         <div className="max-w-2xl">
           <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
-            Funktioner
+            Moduler
           </p>
           <h2 className="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-neutral-950 dark:text-white">
-            Allt du behöver. Inget du inte behöver.
+            Sex moduler. Ett operativt nav.
           </h2>
           <p className="mt-4 text-neutral-600 dark:text-neutral-400">
-            Saldo är byggt för att lösa lagerhantering — inte för att ersätta
-            hela ditt affärssystem. Det är därför det är så lätt att komma
-            igång.
+            Allt som behövs för den dagliga driften — och inget mer. Lager,
+            order, inköp, frakt, rapporter och Fortnox-sync i samma system,
+            utan tredjepartsbroar.
           </p>
         </div>
 
@@ -75,16 +81,24 @@ export default function Features() {
               key={f.title}
               className="bg-white dark:bg-neutral-950 p-6 sm:p-8"
             >
-              <div className="h-9 w-9 rounded-lg bg-neutral-100 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  className="h-4.5 w-4.5"
-                  aria-hidden="true"
-                >
-                  {f.icon}
-                </svg>
+              <div className="flex items-center justify-between gap-3">
+                <div className="h-9 w-9 rounded-lg bg-neutral-100 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="h-4.5 w-4.5"
+                    aria-hidden="true"
+                  >
+                    {f.icon}
+                  </svg>
+                </div>
+                {f.status && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 px-2.5 py-0.5 text-xs font-medium text-neutral-600 dark:text-neutral-400">
+                    <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+                    {f.status}
+                  </span>
+                )}
               </div>
               <h3 className="mt-4 font-medium text-neutral-950 dark:text-white">
                 {f.title}
@@ -95,6 +109,11 @@ export default function Features() {
             </div>
           ))}
         </div>
+
+        <p className="mt-8 text-sm text-neutral-500 dark:text-neutral-400">
+          Lager, order, inköp och rapporter byggs nu. Frakt och Fortnox-sync
+          rullar ut under nästa kvartal.
+        </p>
       </div>
     </section>
   );
