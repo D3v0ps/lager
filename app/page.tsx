@@ -1,32 +1,36 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-import { createClient } from "@/lib/supabase/server";
+import { listProducts } from "@/lib/data";
 import { formatPrice } from "@/lib/format";
+import type { Product } from "@/lib/database.types";
 
-export const dynamic = "force-dynamic";
+export default function ProductsPage() {
+  const [products, setProducts] = useState<Product[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-export default async function ProductsPage() {
-  const supabase = await createClient();
-  const { data: products, error } = await supabase
-    .from("products")
-    .select("*")
-    .order("name", { ascending: true });
+  useEffect(() => {
+    listProducts()
+      .then(setProducts)
+      .catch((e: Error) => setError(e.message));
+  }, []);
 
   if (error) {
     return (
       <div className="rounded-md border border-red-300 bg-red-50 dark:bg-red-950/30 dark:border-red-800 p-4">
         <h2 className="font-semibold mb-1">Kunde inte hämta produkter</h2>
-        <p className="text-sm">{error.message}</p>
-        <p className="text-sm mt-2">
-          Kontrollera att <code>NEXT_PUBLIC_SUPABASE_URL</code> och{" "}
-          <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> är satta i{" "}
-          <code>.env.local</code> och att migrationen är körd.
-        </p>
+        <p className="text-sm">{error}</p>
       </div>
     );
   }
 
-  if (!products || products.length === 0) {
+  if (products === null) {
+    return <p className="text-sm text-neutral-500">Laddar…</p>;
+  }
+
+  if (products.length === 0) {
     return (
       <div className="text-center py-16">
         <h1 className="text-2xl font-semibold mb-2">Inga produkter än</h1>
@@ -34,7 +38,7 @@ export default async function ProductsPage() {
           Lägg till din första produkt för att komma igång.
         </p>
         <Link
-          href="/products/new"
+          href="/products/new/"
           className="inline-block rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2"
         >
           + Ny produkt
@@ -72,7 +76,7 @@ export default async function ProductsPage() {
                   <td className="px-4 py-2 font-mono">{p.sku}</td>
                   <td className="px-4 py-2">
                     <Link
-                      href={`/products/${p.id}`}
+                      href={`/product/?id=${p.id}`}
                       className="text-blue-600 dark:text-blue-400 hover:underline"
                     >
                       {p.name}

@@ -1,37 +1,34 @@
-import Link from "next/link";
+"use client";
 
-import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
+import { listAllMovements, type MovementWithProduct } from "@/lib/data";
 import { formatDate, movementLabel } from "@/lib/format";
 
-export const dynamic = "force-dynamic";
+export default function MovementsPage() {
+  const [movements, setMovements] = useState<MovementWithProduct[] | null>(
+    null,
+  );
+  const [error, setError] = useState<string | null>(null);
 
-type Row = {
-  id: string;
-  type: "in" | "out" | "adjust";
-  quantity: number;
-  note: string | null;
-  created_at: string;
-  product_id: string;
-  products: { name: string; sku: string } | null;
-};
-
-export default async function MovementsPage() {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("stock_movements")
-    .select("id, type, quantity, note, created_at, product_id, products(name, sku)")
-    .order("created_at", { ascending: false })
-    .limit(100);
+  useEffect(() => {
+    listAllMovements()
+      .then(setMovements)
+      .catch((e: Error) => setError(e.message));
+  }, []);
 
   if (error) {
     return (
       <div className="rounded-md border border-red-300 bg-red-50 p-4">
-        {error.message}
+        {error}
       </div>
     );
   }
 
-  const movements = (data ?? []) as unknown as Row[];
+  if (movements === null) {
+    return <p className="text-sm text-neutral-500">Laddar…</p>;
+  }
 
   return (
     <div>
@@ -63,7 +60,7 @@ export default async function MovementsPage() {
                   </td>
                   <td className="px-4 py-2">
                     <Link
-                      href={`/products/${m.product_id}`}
+                      href={`/product/?id=${m.product_id}`}
                       className="text-blue-600 dark:text-blue-400 hover:underline"
                     >
                       {m.products?.name ?? "Okänd"}
@@ -77,9 +74,7 @@ export default async function MovementsPage() {
                     {m.type === "out" ? "-" : m.type === "in" ? "+" : "="}
                     {Math.abs(m.quantity)}
                   </td>
-                  <td className="px-4 py-2 text-neutral-500">
-                    {m.note ?? "—"}
-                  </td>
+                  <td className="px-4 py-2 text-neutral-500">{m.note ?? "—"}</td>
                 </tr>
               ))}
             </tbody>

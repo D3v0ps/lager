@@ -38,11 +38,11 @@ export default function RootLayout({
               <Link href="/" className="hover:underline">
                 Produkter
               </Link>
-              <Link href="/movements" className="hover:underline">
+              <Link href="/movements/" className="hover:underline">
                 Rörelser
               </Link>
               <Link
-                href="/products/new"
+                href="/products/new/"
                 className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-3 py-1.5"
               >
                 + Ny produkt
