@@ -60,7 +60,7 @@ export default function Hero() {
                 href="#funktioner"
                 className="inline-flex items-center gap-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 px-5 py-3 text-sm font-medium hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
               >
-                Se demo
+                Se funktionerna
               </a>
             </div>
             <p className="mt-5 text-xs text-neutral-500 dark:text-neutral-500">

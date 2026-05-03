@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { createClient } from "@/lib/supabase/client";
 import type { Tenant } from "@/lib/database.types";
@@ -11,11 +18,17 @@ export type TenantState =
   | { status: "missing"; tenant: null; error: null }
   | { status: "error"; tenant: null; error: string };
 
-const TenantContext = createContext<TenantState>({
-  status: "loading",
-  tenant: null,
-  error: null,
-});
+type TenantContextValue = {
+  state: TenantState;
+  refresh: () => Promise<void>;
+};
+
+const initialValue: TenantContextValue = {
+  state: { status: "loading", tenant: null, error: null },
+  refresh: async () => {},
+};
+
+const TenantContext = createContext<TenantContextValue>(initialValue);
 
 const supabase = createClient();
 
@@ -26,43 +39,41 @@ export function TenantProvider({
   slug: string;
   children: React.ReactNode;
 }) {
-  const [state, setState] = useState<TenantState>({
-    status: "loading",
-    tenant: null,
-    error: null,
-  });
+  const [state, setState] = useState<TenantState>(initialValue.state);
+  const slugRef = useRef(slug);
+  slugRef.current = slug;
+
+  const load = useCallback(async (): Promise<void> => {
+    const targetSlug = slugRef.current;
+    const { data, error } = await supabase
+      .from("tenants")
+      .select("*")
+      .eq("slug", targetSlug)
+      .maybeSingle();
+
+    // Bail if the slug changed while we were fetching.
+    if (slugRef.current !== targetSlug) return;
+
+    if (error) {
+      setState({ status: "error", tenant: null, error: error.message });
+      return;
+    }
+    if (!data) {
+      setState({ status: "missing", tenant: null, error: null });
+      return;
+    }
+    setState({ status: "ready", tenant: data, error: null });
+  }, []);
 
   useEffect(() => {
-    let active = true;
     setState({ status: "loading", tenant: null, error: null });
-
-    (async () => {
-      const { data, error } = await supabase
-        .from("tenants")
-        .select("*")
-        .eq("slug", slug)
-        .maybeSingle();
-
-      if (!active) return;
-
-      if (error) {
-        setState({ status: "error", tenant: null, error: error.message });
-        return;
-      }
-      if (!data) {
-        setState({ status: "missing", tenant: null, error: null });
-        return;
-      }
-      setState({ status: "ready", tenant: data, error: null });
-    })();
-
-    return () => {
-      active = false;
-    };
-  }, [slug]);
+    void load();
+  }, [slug, load]);
 
   return (
-    <TenantContext.Provider value={state}>{children}</TenantContext.Provider>
+    <TenantContext.Provider value={{ state, refresh: load }}>
+      {children}
+    </TenantContext.Provider>
   );
 }
 
@@ -72,25 +83,18 @@ export function TenantProvider({
  * states, use useTenantState().
  */
 export function useTenant(): Tenant | null {
-  return useContext(TenantContext).tenant;
+  return useContext(TenantContext).state.tenant;
 }
 
 export function useTenantState(): TenantState {
-  return useContext(TenantContext);
+  return useContext(TenantContext).state;
 }
 
 /**
- * Same as useTenant() but throws when called from a tree without a provider
- * or before the tenant has loaded.
+ * Re-fetch the tenant row. Call this after mutations (branding save, name
+ * change, etc.) so dependent UI like the sidebar logo updates without a
+ * full page reload.
  */
-export function useRequiredTenant(): Tenant {
-  const state = useContext(TenantContext);
-  if (state.status !== "ready") {
-    throw new Error(
-      "useRequiredTenant called before tenant loaded (status: " +
-        state.status +
-        ")",
-    );
-  }
-  return state.tenant;
+export function useTenantRefresh(): () => Promise<void> {
+  return useContext(TenantContext).refresh;
 }

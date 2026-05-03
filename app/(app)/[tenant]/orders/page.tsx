@@ -13,11 +13,10 @@ import {
   type OrderStatus,
   type SalesOrderListRow,
 } from "@/lib/orders";
+import { ErrorPage, SkeletonTable } from "@/app/_components/ui";
+import { inputClass } from "@/lib/form-classes";
 
 import { StatusBadge } from "./_components/status-badge";
-
-const inputClass =
-  "rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500";
 
 type StatusFilter = OrderStatus | "all";
 
@@ -50,15 +49,28 @@ export default function OrdersPage() {
 
   if (error) {
     return (
-      <div className="rounded-md border border-red-300 bg-red-50 dark:bg-red-950/30 dark:border-red-800 p-4">
-        <h2 className="font-semibold mb-1">Kunde inte hämta ordrar</h2>
-        <p className="text-sm">{error}</p>
-      </div>
+      <ErrorPage
+        title="Kunde inte hämta ordrar"
+        message={error}
+        retry={() => {
+          setError(null);
+          listOrders()
+            .then(setOrders)
+            .catch((e: Error) => setError(e.message));
+        }}
+      />
     );
   }
 
   if (orders === null) {
-    return <p className="text-sm text-neutral-500">Laddar…</p>;
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-semibold">Ordrar</h1>
+        </div>
+        <SkeletonTable rows={6} />
+      </div>
+    );
   }
 
   if (orders.length === 0) {
@@ -123,10 +135,20 @@ export default function OrdersPage() {
       </div>
 
       {visible.length === 0 ? (
-        <div className="text-center py-16 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+        <div className="text-center py-16 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 space-y-3">
           <p className="text-neutral-600 dark:text-neutral-400">
             Inga ordrar matchar dina filter.
           </p>
+          <button
+            type="button"
+            onClick={() => {
+              setStatusFilter("all");
+              setSearch("");
+            }}
+            className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+          >
+            Rensa filter
+          </button>
         </div>
       ) : (
         <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">

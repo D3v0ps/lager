@@ -5,20 +5,25 @@ import type { Tenant } from "@/lib/database.types";
 
 const supabase = createClient();
 
-export async function signIn(email: string, password: string) {
+// Generic Swedish copy used so login errors don't leak whether the
+// account exists (Supabase distinguishes "Invalid login credentials" from
+// "Email not confirmed" otherwise — easy email enumeration).
+export const GENERIC_SIGN_IN_ERROR = "Fel e-post eller lösenord.";
+
+export async function signIn(email: string, password: string): Promise<void> {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) throw new Error(error.message);
+  if (error) {
+    // Log the original for ops; show user a generic message.
+    console.warn("[signIn] failed:", error.message);
+    throw new Error(GENERIC_SIGN_IN_ERROR);
+  }
 }
 
-export async function signOut() {
-  const { error } = await supabase.auth.signOut();
+export async function signOut(): Promise<void> {
+  // scope: 'global' so signing out on one device clears every active
+  // session for this user instead of just the local browser tab.
+  const { error } = await supabase.auth.signOut({ scope: "global" });
   if (error) throw new Error(error.message);
-}
-
-export async function getCurrentUser() {
-  const { data, error } = await supabase.auth.getUser();
-  if (error) return null;
-  return data.user ?? null;
 }
 
 export async function getCurrentSession() {
@@ -26,30 +31,19 @@ export async function getCurrentSession() {
   return data.session;
 }
 
-/**
- * Tenants the current authenticated user belongs to. Empty array if not
- * signed in or not a member anywhere. RLS on `tenants` already restricts
- * the rows to those the user can see.
- */
-export async function listMyTenants(): Promise<Tenant[]> {
-  const { data, error } = await supabase
-    .from("tenants")
-    .select("*")
-    .order("name", { ascending: true });
-  if (error) return [];
-  return data ?? [];
-}
-
 export async function getTenantBySlug(slug: string): Promise<Tenant | null> {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("tenants")
     .select("*")
     .eq("slug", slug)
     .maybeSingle();
+  if (error) throw new Error(error.message);
   return data ?? null;
 }
 
-export function onAuthChange(callback: (signedIn: boolean) => void) {
+export function onAuthChange(
+  callback: (signedIn: boolean) => void,
+): () => void {
   const { data } = supabase.auth.onAuthStateChange((_event, session) => {
     callback(!!session);
   });

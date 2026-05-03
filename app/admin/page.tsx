@@ -232,7 +232,7 @@ export default function AdminHomePage() {
                   value={slug}
                   onChange={(e) => setSlug(e.target.value.toLowerCase())}
                   pattern="^[a-z0-9][a-z0-9-]{0,62}$"
-                  placeholder="hotchilly"
+                  placeholder="dittforetag"
                   required
                   className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-950 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-neutral-900/15 dark:focus:ring-white/20 focus:border-neutral-400 dark:focus:border-neutral-500 transition-colors"
                 />
@@ -252,7 +252,7 @@ export default function AdminHomePage() {
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Hot Chilly AB"
+                  placeholder="Ditt företag AB"
                   required
                   className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-950 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/15 dark:focus:ring-white/20 focus:border-neutral-400 dark:focus:border-neutral-500 transition-colors"
                 />

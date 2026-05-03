@@ -9,11 +9,10 @@ import {
   type CustomerWithOrderCount,
 } from "@/lib/orders";
 import { formatDate } from "@/lib/format";
+import { ErrorPage, SkeletonTable } from "@/app/_components/ui";
+import { inputClass } from "@/lib/form-classes";
 
 import { CustomerForm } from "./_components/customer-form";
-
-const inputClass =
-  "rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500";
 
 export default function CustomersPage() {
   const { tenant } = useParams<{ tenant: string }>();
@@ -48,15 +47,15 @@ export default function CustomersPage() {
 
   if (error) {
     return (
-      <div className="rounded-md border border-red-300 bg-red-50 dark:bg-red-950/30 dark:border-red-800 p-4">
-        <h2 className="font-semibold mb-1">Kunde inte hämta kunder</h2>
-        <p className="text-sm">{error}</p>
-      </div>
+      <ErrorPage
+        title="Kunde inte hämta kunder"
+        message={error}
+        retry={() => {
+          setError(null);
+          reload();
+        }}
+      />
     );
-  }
-
-  if (customers === null) {
-    return <p className="text-sm text-neutral-500">Laddar…</p>;
   }
 
   return (
@@ -72,6 +71,8 @@ export default function CustomersPage() {
         </button>
       </div>
 
+      {customers === null && <SkeletonTable rows={5} />}
+
       {showNewForm && (
         <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-5">
           <h2 className="font-semibold mb-3">Ny kund</h2>
@@ -85,7 +86,7 @@ export default function CustomersPage() {
         </div>
       )}
 
-      {customers.length === 0 ? (
+      {customers === null ? null : customers.length === 0 ? (
         <div className="text-center py-16 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
           <h2 className="text-xl font-semibold mb-2">Inga kunder än</h2>
           <p className="text-neutral-600 dark:text-neutral-400 mb-4">

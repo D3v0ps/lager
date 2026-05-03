@@ -73,10 +73,19 @@ export default function TenantShell({
 
   useEffect(() => {
     let mounted = true;
-    getCurrentSession().then((session) => {
-      if (!mounted) return;
-      setStatus(session ? "authenticated" : "anonymous");
-    });
+    getCurrentSession()
+      .then((session) => {
+        if (!mounted) return;
+        setStatus(session ? "authenticated" : "anonymous");
+      })
+      .catch((err) => {
+        if (!mounted) return;
+        // Don't leave the user on an infinite "Laddar…": treat a failed
+        // session lookup as anonymous so the redirect-to-login useEffect
+        // kicks in.
+        console.warn("[tenant-shell] getCurrentSession failed:", err);
+        setStatus("anonymous");
+      });
     const unsub = onAuthChange((signedIn) => {
       setStatus(signedIn ? "authenticated" : "anonymous");
     });
@@ -100,7 +109,7 @@ export default function TenantShell({
   if (isLoginPath) {
     return (
       <div className="min-h-screen flex flex-col">
-        <main className="flex-1">{children}</main>
+        <main id="main" className="flex-1">{children}</main>
       </div>
     );
   }
@@ -304,7 +313,7 @@ function AuthenticatedShell({
         </nav>
       </aside>
 
-      <main className="flex-1 min-w-0">
+      <main id="main" className="flex-1 min-w-0">
         <div className="mx-auto max-w-5xl px-4 py-8">{children}</div>
       </main>
     </div>

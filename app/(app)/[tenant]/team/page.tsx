@@ -16,9 +16,20 @@ import {
 } from "@/lib/team";
 import { useTenantState } from "@/lib/tenant-context";
 import { formatDate } from "@/lib/format";
+import {
+  INVITABLE_ROLES,
+  TENANT_USER_ROLE,
+  isManager,
+  roleLabel,
+  type InvitableRole,
+} from "@/lib/roles";
 import type { TenantUserRole } from "@/lib/database.types";
-
-const ASSIGNABLE_ROLES: ("owner" | "member")[] = ["owner", "member"];
+import {
+  ErrorBanner,
+  LoadingText,
+  SkeletonRows,
+} from "@/app/_components/ui";
+import { inputClass, labelClass } from "@/lib/form-classes";
 
 export default function TeamPage() {
   const { tenant: slug } = useParams<{ tenant: string }>();
@@ -32,21 +43,28 @@ export default function TeamPage() {
   const [info, setInfo] = useState<string | null>(null);
 
   const [inviteEmail, setInviteEmail] = useState("");
-  const [inviteRole, setInviteRole] = useState<"owner" | "member">("member");
+  const [inviteRole, setInviteRole] = useState<InvitableRole>("member");
   const [busy, setBusy] = useState(false);
 
   const reload = useCallback(async () => {
     if (!tenant) return;
     setError(null);
     try {
-      const [m, inv, role] = await Promise.all([
+      const [m, inv, roleResult] = await Promise.all([
         listTeam(tenant.id),
         listPendingInvitations(tenant.id),
         getMyRoleInTenant(tenant.id),
       ]);
       setMembers(m);
       setInvitations(inv);
-      setMyRole(role);
+      if (roleResult.status === "ok") {
+        setMyRole(roleResult.role);
+      } else {
+        // Surface role-fetch failure: a flaky network shouldn't silently
+        // hide the manage-team UI from an actual owner.
+        setError(`Kunde inte hämta din roll: ${roleResult.error}`);
+        setMyRole(null);
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     }
@@ -57,7 +75,7 @@ export default function TeamPage() {
   }, [reload]);
 
   if (tenantState.status === "loading") {
-    return <p className="text-sm text-neutral-500">Laddar…</p>;
+    return <LoadingText />;
   }
   if (tenantState.status !== "ready" || !tenant) {
     return (
@@ -68,7 +86,7 @@ export default function TeamPage() {
     );
   }
 
-  const canManage = myRole === "owner" || myRole === "admin";
+  const canManage = isManager(myRole);
 
   async function handleInvite(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -112,14 +130,17 @@ export default function TeamPage() {
   }
 
   async function handleRevoke(invId: string, email: string) {
+    if (!tenant) return;
     if (!confirm(`Återkalla inbjudan till ${email}?`)) return;
     try {
-      await revokeInvitation(invId);
+      await revokeInvitation(tenant.id, invId);
       await reload();
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     }
   }
+
+  const isAlone = members !== null && members.length <= 1;
 
   return (
     <div className="space-y-8">
@@ -130,13 +151,13 @@ export default function TeamPage() {
         </p>
       </div>
 
-      {error && (
-        <div className="rounded-md border border-red-300 bg-red-50 dark:bg-red-950/30 dark:border-red-800 p-3 text-sm">
-          {error}
-        </div>
-      )}
+      {error && <ErrorBanner id="team-form-error">{error}</ErrorBanner>}
       {info && (
-        <div className="rounded-md border border-green-300 bg-green-50 dark:bg-green-950/30 dark:border-green-800 p-3 text-sm">
+        <div
+          role="status"
+          aria-live="polite"
+          className="rounded-md border border-green-300 bg-green-50 dark:bg-green-950/30 dark:border-green-800 p-3 text-sm"
+        >
           {info}
         </div>
       )}
@@ -147,12 +168,10 @@ export default function TeamPage() {
           <form
             onSubmit={handleInvite}
             className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4 grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-3 items-end"
+            aria-describedby={error ? "team-form-error" : undefined}
           >
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium mb-1"
-              >
+              <label htmlFor="email" className={labelClass}>
                 E-post
               </label>
               <input
@@ -161,24 +180,27 @@ export default function TeamPage() {
                 required
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
-                placeholder="lager@hotchilly.se"
-                className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm"
+                placeholder="kollega@dittforetag.se"
+                className={inputClass}
               />
             </div>
             <div>
-              <label htmlFor="role" className="block text-sm font-medium mb-1">
+              <label htmlFor="role" className={labelClass}>
                 Roll
               </label>
               <select
                 id="role"
                 value={inviteRole}
                 onChange={(e) =>
-                  setInviteRole(e.target.value as "owner" | "member")
+                  setInviteRole(e.target.value as InvitableRole)
                 }
-                className="rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm"
+                className={inputClass}
               >
-                <option value="member">member</option>
-                <option value="owner">owner</option>
+                {INVITABLE_ROLES.map((r) => (
+                  <option key={r} value={r}>
+                    {roleLabel(r)}
+                  </option>
+                ))}
               </select>
             </div>
             <button
@@ -204,7 +226,18 @@ export default function TeamPage() {
           </span>
         </h2>
         {members === null ? (
-          <p className="text-sm text-neutral-500">Laddar…</p>
+          <SkeletonRows rows={3} className="h-10" />
+        ) : isAlone ? (
+          <div className="rounded-lg border border-dashed border-neutral-300 dark:border-neutral-700 bg-neutral-50/40 dark:bg-neutral-900/30 p-6 text-center">
+            <p className="text-sm font-medium">
+              Du är ensam i {tenant.name}.
+            </p>
+            <p className="text-sm text-neutral-500 mt-1">
+              {canManage
+                ? "Bjud in en kollega ovan så blir det fler här."
+                : "Be en owner eller admin att bjuda in fler."}
+            </p>
+          </div>
         ) : (
           <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
             <table className="w-full text-sm">
@@ -224,8 +257,9 @@ export default function TeamPage() {
                   >
                     <td className="px-4 py-2">{m.email}</td>
                     <td className="px-4 py-2">
-                      {canManage && m.role !== "admin" ? (
+                      {canManage && m.role !== TENANT_USER_ROLE.ADMIN ? (
                         <select
+                          aria-label={`Roll för ${m.email}`}
                           value={m.role}
                           onChange={(e) =>
                             handleRoleChange(
@@ -235,14 +269,14 @@ export default function TeamPage() {
                           }
                           className="rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-2 py-1 text-sm"
                         >
-                          {ASSIGNABLE_ROLES.map((r) => (
+                          {INVITABLE_ROLES.map((r) => (
                             <option key={r} value={r}>
-                              {r}
+                              {roleLabel(r)}
                             </option>
                           ))}
                         </select>
                       ) : (
-                        <span className="text-sm">{m.role}</span>
+                        <span className="text-sm">{roleLabel(m.role)}</span>
                       )}
                     </td>
                     <td className="px-4 py-2 text-neutral-500">
@@ -250,7 +284,7 @@ export default function TeamPage() {
                     </td>
                     {canManage && (
                       <td className="px-4 py-2 text-right">
-                        {m.role !== "admin" && (
+                        {m.role !== TENANT_USER_ROLE.ADMIN && (
                           <button
                             type="button"
                             onClick={() => handleRemove(m.user_id, m.email)}
@@ -294,7 +328,7 @@ export default function TeamPage() {
                     className="border-t border-neutral-200 dark:border-neutral-800"
                   >
                     <td className="px-4 py-2">{inv.email}</td>
-                    <td className="px-4 py-2">{inv.role}</td>
+                    <td className="px-4 py-2">{roleLabel(inv.role)}</td>
                     <td className="px-4 py-2 text-neutral-500">
                       {formatDate(inv.created_at)}
                     </td>

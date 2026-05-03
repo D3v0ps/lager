@@ -423,8 +423,11 @@ function OrderRowEditor({
   const lineTotal = row.quantity * row.unit_price;
 
   return (
-    <div className="grid grid-cols-12 gap-2 items-start">
-      <div className="col-span-12 md:col-span-6 relative">
+    <div className="flex flex-col md:grid md:grid-cols-12 gap-2 md:items-start rounded-md md:rounded-none border md:border-0 border-neutral-200 dark:border-neutral-800 p-3 md:p-0">
+      <div className="md:col-span-6 relative">
+        <label className="md:hidden text-xs text-neutral-500 mb-1 block">
+          Produkt
+        </label>
         <input
           type="text"
           value={row.search}
@@ -462,45 +465,60 @@ function OrderRowEditor({
           </ul>
         )}
       </div>
-      <div className="col-span-4 md:col-span-2">
-        <input
-          type="number"
-          min={1}
-          step={1}
-          value={row.quantity}
-          onChange={(e) =>
-            onChange({ quantity: Math.max(1, Math.floor(Number(e.target.value) || 0)) })
-          }
-          aria-label="Antal"
-          className={inputClass}
-        />
+      <div className="grid grid-cols-2 gap-2 md:contents">
+        <div className="md:col-span-2">
+          <label className="md:hidden text-xs text-neutral-500 mb-1 block">
+            Antal
+          </label>
+          <input
+            type="number"
+            min={1}
+            step={1}
+            value={row.quantity}
+            onChange={(e) =>
+              onChange({
+                quantity: Math.max(1, Math.floor(Number(e.target.value) || 0)),
+              })
+            }
+            aria-label="Antal"
+            className={inputClass}
+          />
+        </div>
+        <div className="md:col-span-2">
+          <label className="md:hidden text-xs text-neutral-500 mb-1 block">
+            À-pris
+          </label>
+          <input
+            type="number"
+            min={0}
+            step="0.01"
+            value={row.unit_price}
+            onChange={(e) =>
+              onChange({ unit_price: Math.max(0, Number(e.target.value) || 0) })
+            }
+            aria-label="À-pris"
+            className={inputClass}
+          />
+        </div>
       </div>
-      <div className="col-span-4 md:col-span-2">
-        <input
-          type="number"
-          min={0}
-          step="0.01"
-          value={row.unit_price}
-          onChange={(e) =>
-            onChange({ unit_price: Math.max(0, Number(e.target.value) || 0) })
-          }
-          aria-label="À-pris"
-          className={inputClass}
-        />
-      </div>
-      <div className="col-span-3 md:col-span-1 flex items-center justify-end pt-2 text-sm">
-        {formatPrice(lineTotal)}
-      </div>
-      <div className="col-span-1 flex items-center justify-end pt-1">
-        <button
-          type="button"
-          onClick={onRemove}
-          disabled={!canRemove}
-          aria-label="Ta bort rad"
-          className="rounded-md border border-neutral-300 dark:border-neutral-700 px-2 py-1 text-sm text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-30"
-        >
-          ×
-        </button>
+      <div className="flex items-center justify-between gap-2 md:col-span-2 md:contents">
+        <div className="md:col-span-1 md:flex md:items-center md:justify-end md:pt-2 text-sm">
+          <span className="md:hidden text-xs text-neutral-500 mr-2">
+            Radsumma:
+          </span>
+          {formatPrice(lineTotal)}
+        </div>
+        <div className="md:col-span-1 md:flex md:items-center md:justify-end md:pt-1">
+          <button
+            type="button"
+            onClick={onRemove}
+            disabled={!canRemove}
+            aria-label="Ta bort rad"
+            className="rounded-md border border-neutral-300 dark:border-neutral-700 min-w-11 min-h-11 md:min-w-0 md:min-h-0 px-3 md:px-2 py-1 text-sm text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-30"
+          >
+            ×
+          </button>
+        </div>
       </div>
     </div>
   );

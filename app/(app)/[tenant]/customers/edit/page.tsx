@@ -91,7 +91,9 @@ function EditCustomer() {
   async function handleDelete() {
     if (!customer) return;
     if (orders.length > 0) {
-      alert(
+      // Surface inline instead of using window.alert (which is unstyled
+      // and breaks the demo's polish).
+      setError(
         `Kunden har ${orders.length} order(s) — ta bort eller koppla bort dessa först.`,
       );
       return;

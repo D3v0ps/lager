@@ -2,7 +2,7 @@
 // Handles: quoted fields, embedded commas/newlines inside quotes, "" -> " escape.
 // Good enough for export-then-import roundtrip; not a full RFC 4180 implementation.
 
-export type CsvRow = string[];
+type CsvRow = string[];
 
 /**
  * Parse CSV text into rows of string fields. Strips a UTF-8 BOM if present.
@@ -89,7 +89,7 @@ function escapeField(value: string): string {
   return value;
 }
 
-export type CsvSerializeValue = string | number | null | undefined;
+type CsvSerializeValue = string | number | null | undefined;
 
 /**
  * Serialize a 2D array of values into CSV text. Numbers are emitted unquoted,

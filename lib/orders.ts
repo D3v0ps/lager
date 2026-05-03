@@ -372,16 +372,29 @@ export async function deleteOrder(id: string): Promise<void> {
 
 // ---------------------------------------------------------------------------
 // Reference suggestion: SO-YYYY-NNN where NNN = (count this year) + 1.
-// Best-effort, runs against the current tenant via RLS.
+// Year boundaries are computed in Europe/Stockholm — we want a Swedish
+// new-year's-eve order at 00:30 local to land in the new year, not the
+// previous UTC year.
 // ---------------------------------------------------------------------------
 
 export async function suggestOrderReference(): Promise<string> {
-  const year = new Date().getFullYear();
-  const startIso = new Date(`${year}-01-01T00:00:00.000Z`).toISOString();
+  // Year computed in Stockholm time: a new-year's-eve order at 00:30
+  // Stockholm should land in the new year, not the previous UTC year.
+  const stockholmYear = new Intl.DateTimeFormat("sv-SE", {
+    year: "numeric",
+    timeZone: "Europe/Stockholm",
+  }).format(new Date());
+  // Jan 1 is always CET (+01:00) — no DST ambiguity.
+  const startIso = new Date(
+    `${stockholmYear}-01-01T00:00:00+01:00`,
+  ).toISOString();
   const { count, error } = await supabase
     .from("sales_orders")
     .select("id", { count: "exact", head: true })
     .gte("created_at", startIso);
-  const next = (error || count == null ? 0 : count) + 1;
-  return `SO-${year}-${String(next).padStart(3, "0")}`;
+  // Fail-closed: if we can't read the count we'd otherwise return
+  // SO-YYYY-001 every time and write duplicates.
+  if (error) throw new Error(error.message);
+  const next = (count ?? 0) + 1;
+  return `SO-${stockholmYear}-${String(next).padStart(3, "0")}`;
 }

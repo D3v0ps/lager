@@ -7,6 +7,8 @@ import { useEffect, useMemo, useState } from "react";
 import { listProducts } from "@/lib/data";
 import { formatPrice } from "@/lib/format";
 import type { Product } from "@/lib/database.types";
+import { ErrorPage, SkeletonTable } from "@/app/_components/ui";
+import { inputClass } from "@/lib/form-classes";
 
 import { QuickAdjustCell } from "./_components/quick-adjust-cell";
 
@@ -19,9 +21,6 @@ type SortKey =
   | "price-desc";
 
 type StockFilter = "all" | "low" | "out";
-
-const inputClass =
-  "rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500";
 
 export default function ProductsPage() {
   const { tenant } = useParams<{ tenant: string }>();
@@ -93,15 +92,26 @@ export default function ProductsPage() {
 
   if (error) {
     return (
-      <div className="rounded-md border border-red-300 bg-red-50 dark:bg-red-950/30 dark:border-red-800 p-4">
-        <h2 className="font-semibold mb-1">Kunde inte hämta produkter</h2>
-        <p className="text-sm">{error}</p>
-      </div>
+      <ErrorPage
+        title="Kunde inte hämta produkter"
+        message={error}
+        retry={() => {
+          setError(null);
+          listProducts()
+            .then(setProducts)
+            .catch((e: Error) => setError(e.message));
+        }}
+      />
     );
   }
 
   if (products === null) {
-    return <p className="text-sm text-neutral-500">Laddar…</p>;
+    return (
+      <div className="space-y-4">
+        <h1 className="text-2xl font-semibold">Produkter</h1>
+        <SkeletonTable rows={8} />
+      </div>
+    );
   }
 
   if (products.length === 0) {

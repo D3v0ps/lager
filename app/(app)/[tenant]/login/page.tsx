@@ -414,5 +414,3 @@ function TrustBullet({ children }: { children: React.ReactNode }) {
     </li>
   );
 }
-
-// SaldoMark imported from @/app/_brand/Logo at the top of the file

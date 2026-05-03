@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 
 import { createClient } from "@/lib/supabase/client";
 import { getMyRoleInTenant } from "@/lib/team";
+import { isManager } from "@/lib/roles";
+import { useTenantRefresh } from "@/lib/tenant-context";
+import { ErrorBanner, LoadingText } from "@/app/_components/ui";
+import { inputClass, labelClass } from "@/lib/form-classes";
 import type { Tenant, TenantUserRole } from "@/lib/database.types";
 
 const supabase = createClient();
-
-const inputClass =
-  "w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500";
-const labelClass = "block text-sm font-medium mb-1";
 
 const HEX_RE = /^#[0-9a-fA-F]{6}$/;
 const DEFAULT_COLOR = "#171717";
@@ -26,6 +26,7 @@ type Props = {
 };
 
 export function BrandingForm({ tenant }: Props) {
+  const refreshTenant = useTenantRefresh();
   const [logoUrl, setLogoUrl] = useState(tenant.logo_url ?? "");
   const [primaryColor, setPrimaryColor] = useState(
     tenant.primary_color ?? "",
@@ -39,9 +40,14 @@ export function BrandingForm({ tenant }: Props) {
 
   useEffect(() => {
     let active = true;
-    getMyRoleInTenant(tenant.id).then((role) => {
+    getMyRoleInTenant(tenant.id).then((result) => {
       if (!active) return;
-      setMyRole(role);
+      if (result.status === "ok") {
+        setMyRole(result.role);
+      } else {
+        setError(`Kunde inte hämta din roll: ${result.error}`);
+        setMyRole(null);
+      }
       setRoleLoaded(true);
     });
     return () => {
@@ -54,7 +60,7 @@ export function BrandingForm({ tenant }: Props) {
     setLogoError(false);
   }, [logoUrl]);
 
-  const canEdit = myRole === "owner" || myRole === "admin";
+  const canEdit = isManager(myRole);
   const colorForPicker =
     primaryColor && HEX_RE.test(primaryColor) ? primaryColor : DEFAULT_COLOR;
   const showLogoPreview = logoUrl.trim().length > 0 && !logoError;
@@ -82,7 +88,10 @@ export function BrandingForm({ tenant }: Props) {
         })
         .eq("id", tenant.id);
       if (updateError) throw new Error(updateError.message);
-      setInfo("Sparat. Ladda om sidan för att se ändringarna i sidofältet.");
+      // Re-fetch into TenantContext so the sidebar logo / brand color
+      // pick up the change without a manual reload.
+      await refreshTenant();
+      setInfo("Sparat. Ändringarna syns nu i sidofältet.");
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
@@ -91,7 +100,7 @@ export function BrandingForm({ tenant }: Props) {
   }
 
   if (!roleLoaded) {
-    return <p className="text-sm text-neutral-500">Laddar…</p>;
+    return <LoadingText />;
   }
 
   if (!canEdit) {
@@ -138,13 +147,13 @@ export function BrandingForm({ tenant }: Props) {
     <section className="space-y-4">
       <h2 className="text-lg font-semibold">Branding</h2>
 
-      {error && (
-        <div className="rounded-md border border-red-300 bg-red-50 dark:bg-red-950/30 dark:border-red-800 p-3 text-sm">
-          {error}
-        </div>
-      )}
+      {error && <ErrorBanner>{error}</ErrorBanner>}
       {info && (
-        <div className="rounded-md border border-green-300 bg-green-50 dark:bg-green-950/30 dark:border-green-800 p-3 text-sm">
+        <div
+          role="status"
+          aria-live="polite"
+          className="rounded-md border border-green-300 bg-green-50 dark:bg-green-950/30 dark:border-green-800 p-3 text-sm"
+        >
           {info}
         </div>
       )}

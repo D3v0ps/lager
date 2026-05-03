@@ -81,6 +81,11 @@ export function Scanner({ tenant }: Props) {
   const [manualSku, setManualSku] = useState("");
   const [toast, setToast] = useState<string | null>(null);
   const [actionBusy, setActionBusy] = useState(false);
+  // Inline "justera till…" form state. Replaces a window.prompt() that
+  // looked terrible on mobile and broke screen-reader flow.
+  const [adjustingProductId, setAdjustingProductId] = useState<string | null>(
+    null,
+  );
 
   // Feature detection on mount.
   useEffect(() => {
@@ -272,15 +277,17 @@ export function Scanner({ tenant }: Props) {
     }
   }
 
-  function handleAdjustTo(product: Product) {
-    const input = window.prompt("Justera till antal:", String(product.quantity));
-    if (input == null) return;
-    const n = Math.floor(Number(input));
-    if (!Number.isFinite(n) || n < 0) {
+  function startAdjust(product: Product) {
+    setAdjustingProductId(product.id);
+  }
+
+  async function commitAdjust(product: Product, value: number) {
+    if (!Number.isFinite(value) || value < 0) {
       setLookup({ kind: "error", message: "Ogiltigt antal" });
       return;
     }
-    void applyMovement(product, "adjust", n);
+    setAdjustingProductId(null);
+    await applyMovement(product, "adjust", Math.floor(value));
   }
 
   function handleManualSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -387,10 +394,16 @@ export function Scanner({ tenant }: Props) {
         lookup={lookup}
         tenant={tenant}
         busy={actionBusy}
+        adjustingProductId={adjustingProductId}
         onIn={(p) => void applyMovement(p, "in", 1)}
         onOut={(p) => void applyMovement(p, "out", 1)}
-        onAdjust={(p) => handleAdjustTo(p)}
-        onClear={clearLookup}
+        onAdjust={startAdjust}
+        onAdjustSubmit={(p, n) => void commitAdjust(p, n)}
+        onAdjustCancel={() => setAdjustingProductId(null)}
+        onClear={() => {
+          setAdjustingProductId(null);
+          clearLookup();
+        }}
       />
 
       {/* Manual fallback / supplement */}
@@ -426,17 +439,23 @@ function ResultCard({
   lookup,
   tenant,
   busy,
+  adjustingProductId,
   onIn,
   onOut,
   onAdjust,
+  onAdjustSubmit,
+  onAdjustCancel,
   onClear,
 }: {
   lookup: Lookup;
   tenant: string;
   busy: boolean;
+  adjustingProductId: string | null;
   onIn: (p: Product) => void;
   onOut: (p: Product) => void;
   onAdjust: (p: Product) => void;
+  onAdjustSubmit: (p: Product, n: number) => void;
+  onAdjustCancel: () => void;
   onClear: () => void;
 }) {
   if (lookup.kind === "none") return null;
@@ -519,32 +538,41 @@ function ResultCard({
           <div className="text-xs text-neutral-500">i lager</div>
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-2">
-        <button
-          type="button"
-          onClick={() => onIn(product)}
-          disabled={busy}
-          className="rounded-md bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-3 text-sm font-semibold disabled:opacity-50"
-        >
-          Inleverans +1
-        </button>
-        <button
-          type="button"
-          onClick={() => onOut(product)}
-          disabled={busy}
-          className="rounded-md bg-red-600 hover:bg-red-700 text-white px-3 py-3 text-sm font-semibold disabled:opacity-50"
-        >
-          Uttag −1
-        </button>
-        <button
-          type="button"
-          onClick={() => onAdjust(product)}
-          disabled={busy}
-          className="rounded-md border border-neutral-300 dark:border-neutral-700 px-3 py-3 text-sm font-semibold disabled:opacity-50"
-        >
-          Justera till…
-        </button>
-      </div>
+      {adjustingProductId === product.id ? (
+        <AdjustForm
+          product={product}
+          busy={busy}
+          onSubmit={(n) => onAdjustSubmit(product, n)}
+          onCancel={onAdjustCancel}
+        />
+      ) : (
+        <div className="grid grid-cols-3 gap-2">
+          <button
+            type="button"
+            onClick={() => onIn(product)}
+            disabled={busy}
+            className="rounded-md bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-3 text-sm font-semibold disabled:opacity-50"
+          >
+            Inleverans +1
+          </button>
+          <button
+            type="button"
+            onClick={() => onOut(product)}
+            disabled={busy}
+            className="rounded-md bg-red-600 hover:bg-red-700 text-white px-3 py-3 text-sm font-semibold disabled:opacity-50"
+          >
+            Uttag −1
+          </button>
+          <button
+            type="button"
+            onClick={() => onAdjust(product)}
+            disabled={busy}
+            className="rounded-md border border-neutral-300 dark:border-neutral-700 px-3 py-3 text-sm font-semibold disabled:opacity-50"
+          >
+            Justera till…
+          </button>
+        </div>
+      )}
       <button
         type="button"
         onClick={onClear}
@@ -553,5 +581,62 @@ function ResultCard({
         Avfärda
       </button>
     </div>
+  );
+}
+
+
+
+function AdjustForm({
+  product,
+  busy,
+  onSubmit,
+  onCancel,
+}: {
+  product: Product;
+  busy: boolean;
+  onSubmit: (n: number) => void;
+  onCancel: () => void;
+}) {
+  const [value, setValue] = useState(String(product.quantity));
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const n = Number(value);
+    if (Number.isFinite(n) && n >= 0) onSubmit(n);
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-2" aria-label="Justera saldo">
+      <label htmlFor="adjust-qty" className="block text-sm font-medium">
+        Justera till antal
+      </label>
+      <div className="flex gap-2">
+        <input
+          id="adjust-qty"
+          type="number"
+          min={0}
+          step={1}
+          inputMode="numeric"
+          autoFocus
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          className="flex-1 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-neutral-500"
+        />
+        <button
+          type="submit"
+          disabled={busy}
+          className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-3 text-sm font-semibold disabled:opacity-50"
+        >
+          Spara
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="rounded-md border border-neutral-300 dark:border-neutral-700 px-4 py-3 text-sm"
+        >
+          Avbryt
+        </button>
+      </div>
+    </form>
   );
 }
