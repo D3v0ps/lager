@@ -167,7 +167,7 @@ export default function TeamPage() {
           <h2 className="text-lg font-semibold mb-3">Bjud in ny medlem</h2>
           <form
             onSubmit={handleInvite}
-            className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4 grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-3 items-end"
+            className="rounded-lg border border-white/10 bg-background-elevated/40 p-4 grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-3 items-end"
             aria-describedby={error ? "team-form-error" : undefined}
           >
             <div>
@@ -206,7 +206,7 @@ export default function TeamPage() {
             <button
               type="submit"
               disabled={busy}
-              className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+              className="rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium disabled:opacity-50"
             >
               {busy ? "Skickar…" : "Bjud in"}
             </button>
@@ -228,7 +228,7 @@ export default function TeamPage() {
         {members === null ? (
           <SkeletonRows rows={3} className="h-10" />
         ) : isAlone ? (
-          <div className="rounded-lg border border-dashed border-neutral-300 dark:border-neutral-700 bg-neutral-50/40 dark:bg-neutral-900/30 p-6 text-center">
+          <div className="rounded-lg border border-dashed border-white/15 bg-neutral-50/40 dark:bg-neutral-900/30 p-6 text-center">
             <p className="text-sm font-medium">
               Du är ensam i {tenant.name}.
             </p>
@@ -239,9 +239,9 @@ export default function TeamPage() {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+          <div className="overflow-x-auto rounded-lg border border-white/10 bg-background-elevated/40">
             <table className="w-full text-sm">
-              <thead className="bg-neutral-100 dark:bg-neutral-800/60 text-left">
+              <thead className="bg-white/[0.04] text-left">
                 <tr>
                   <th className="px-4 py-2 font-medium">E-post</th>
                   <th className="px-4 py-2 font-medium">Roll</th>
@@ -253,7 +253,7 @@ export default function TeamPage() {
                 {members.map((m) => (
                   <tr
                     key={m.user_id}
-                    className="border-t border-neutral-200 dark:border-neutral-800"
+                    className="border-t border-white/10"
                   >
                     <td className="px-4 py-2">{m.email}</td>
                     <td className="px-4 py-2">
@@ -267,7 +267,7 @@ export default function TeamPage() {
                               e.target.value as TenantUserRole,
                             )
                           }
-                          className="rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-2 py-1 text-sm"
+                          className="rounded-md border border-white/15 bg-background-elevated/40 px-2 py-1 text-sm"
                         >
                           {INVITABLE_ROLES.map((r) => (
                             <option key={r} value={r}>
@@ -288,7 +288,7 @@ export default function TeamPage() {
                           <button
                             type="button"
                             onClick={() => handleRemove(m.user_id, m.email)}
-                            className="text-red-600 dark:text-red-400 hover:underline"
+                            className="text-red-400 hover:underline"
                           >
                             Ta bort
                           </button>
@@ -311,9 +311,9 @@ export default function TeamPage() {
               ({invitations.length})
             </span>
           </h2>
-          <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+          <div className="overflow-x-auto rounded-lg border border-white/10 bg-background-elevated/40">
             <table className="w-full text-sm">
-              <thead className="bg-neutral-100 dark:bg-neutral-800/60 text-left">
+              <thead className="bg-white/[0.04] text-left">
                 <tr>
                   <th className="px-4 py-2 font-medium">E-post</th>
                   <th className="px-4 py-2 font-medium">Roll</th>
@@ -325,7 +325,7 @@ export default function TeamPage() {
                 {invitations.map((inv) => (
                   <tr
                     key={inv.id}
-                    className="border-t border-neutral-200 dark:border-neutral-800"
+                    className="border-t border-white/10"
                   >
                     <td className="px-4 py-2">{inv.email}</td>
                     <td className="px-4 py-2">{roleLabel(inv.role)}</td>
@@ -337,7 +337,7 @@ export default function TeamPage() {
                         <button
                           type="button"
                           onClick={() => handleRevoke(inv.id, inv.email)}
-                          className="text-red-600 dark:text-red-400 hover:underline"
+                          className="text-red-400 hover:underline"
                         >
                           Återkalla
                         </button>

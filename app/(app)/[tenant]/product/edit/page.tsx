@@ -53,7 +53,7 @@ function EditProduct() {
         <h1 className="text-2xl font-semibold mb-2">Produkten hittades inte</h1>
         <Link
           href={`/${tenant}/`}
-          className="inline-block rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 mt-4"
+          className="inline-block rounded-md bg-foreground text-background px-4 py-2 mt-4"
         >
           Tillbaka
         </Link>

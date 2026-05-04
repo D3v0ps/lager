@@ -15,7 +15,7 @@ type Props = {
 export default function CategoryValueChart({ stats }: Props) {
   if (stats.length === 0) {
     return (
-      <section className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4">
+      <section className="rounded-lg border border-white/10 bg-background-elevated/40 p-4">
         <h2 className="text-base font-semibold mb-2">
           Lagervärde per kategori
         </h2>
@@ -36,7 +36,7 @@ export default function CategoryValueChart({ stats }: Props) {
   const totalHeight = stats.length * (rowHeight + gap);
 
   return (
-    <section className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4">
+    <section className="rounded-lg border border-white/10 bg-background-elevated/40 p-4">
       <h2 className="text-base font-semibold mb-3">Lagervärde per kategori</h2>
       <div className="overflow-x-auto">
         <svg

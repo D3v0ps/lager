@@ -76,7 +76,7 @@ function ProductDetail() {
         <h1 className="text-2xl font-semibold mb-2">Produkten hittades inte</h1>
         <Link
           href={`/${tenant}/`}
-          className="inline-block rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 mt-4"
+          className="inline-block rounded-md bg-foreground text-background px-4 py-2 mt-4"
         >
           Tillbaka till listan
         </Link>
@@ -114,7 +114,7 @@ function ProductDetail() {
           <div className="text-right">
             <div
               className={`text-3xl font-semibold ${
-                low ? "text-red-600 dark:text-red-400" : ""
+                low ? "text-red-400" : ""
               }`}
             >
               {product.quantity}
@@ -131,7 +131,7 @@ function ProductDetail() {
       </div>
 
       {product.notes && (
-        <div className="rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4 text-sm whitespace-pre-wrap">
+        <div className="rounded-md border border-white/10 bg-background-elevated/40 p-4 text-sm whitespace-pre-wrap">
           {product.notes}
         </div>
       )}
@@ -150,9 +150,9 @@ function ProductDetail() {
         {movements.length === 0 ? (
           <p className="text-sm text-neutral-500">Inga rörelser ännu.</p>
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+          <div className="overflow-x-auto rounded-lg border border-white/10 bg-background-elevated/40">
             <table className="w-full text-sm">
-              <thead className="bg-neutral-100 dark:bg-neutral-800/60 text-left">
+              <thead className="bg-white/[0.04] text-left">
                 <tr>
                   <th className="px-4 py-2 font-medium">Tid</th>
                   <th className="px-4 py-2 font-medium">Typ</th>
@@ -164,7 +164,7 @@ function ProductDetail() {
                 {movements.map((m) => (
                   <tr
                     key={m.id}
-                    className="border-t border-neutral-200 dark:border-neutral-800"
+                    className="border-t border-white/10"
                   >
                     <td className="px-4 py-2 text-neutral-500">
                       {formatDate(m.created_at)}
@@ -185,10 +185,10 @@ function ProductDetail() {
         )}
       </section>
 
-      <section className="flex items-center justify-between gap-3 border-t border-neutral-200 dark:border-neutral-800 pt-6">
+      <section className="flex items-center justify-between gap-3 border-t border-white/10 pt-6">
         <Link
           href={`/${tenant}/product/edit/?id=${product.id}`}
-          className="rounded-md border border-neutral-300 dark:border-neutral-700 px-3 py-2 text-sm"
+          className="rounded-md border border-white/15 px-3 py-2 text-sm"
         >
           Redigera produkt
         </Link>
@@ -206,7 +206,7 @@ function ProductDetail() {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4">
+    <div className="rounded-md border border-white/10 bg-background-elevated/40 p-4">
       <div className="text-xs uppercase tracking-wide text-neutral-500">
         {label}
       </div>
@@ -252,7 +252,7 @@ function MovementForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4 space-y-3"
+      className="rounded-lg border border-white/10 bg-background-elevated/40 p-4 space-y-3"
     >
       {error && (
         <div className="rounded-md border border-red-300 bg-red-50 dark:bg-red-950/30 dark:border-red-800 p-2 text-sm">
@@ -269,7 +269,7 @@ function MovementForm({
             name="type"
             value={type}
             onChange={(e) => setType(e.target.value as MovementType)}
-            className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-white/15 bg-background-elevated/40 px-3 py-2 text-sm"
           >
             <option value="in">Inleverans (+)</option>
             <option value="out">Uttag (-)</option>
@@ -288,7 +288,7 @@ function MovementForm({
             step={1}
             required
             defaultValue={type === "adjust" ? currentQuantity : 1}
-            className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-white/15 bg-background-elevated/40 px-3 py-2 text-sm"
           />
         </div>
         <div>
@@ -300,14 +300,14 @@ function MovementForm({
             name="note"
             type="text"
             placeholder="Valfritt"
-            className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm"
+            className="w-full rounded-md border border-white/15 bg-background-elevated/40 px-3 py-2 text-sm"
           />
         </div>
       </div>
       <button
         type="submit"
         disabled={busy}
-        className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+        className="rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium disabled:opacity-50"
       >
         {busy ? "Registrerar…" : "Registrera"}
       </button>

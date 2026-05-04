@@ -23,7 +23,7 @@ type Props = {
 };
 
 const inputClass =
-  "w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500";
+  "w-full rounded-md border border-white/15 bg-background-elevated/40 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500";
 
 let counter = 0;
 function nextKey(): string {
@@ -91,10 +91,10 @@ export default function PoLineItems({ products, lines, setLines }: Props) {
 
   return (
     <div className="space-y-3">
-      <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+      <div className="rounded-lg border border-white/10 bg-background-elevated/40">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-neutral-100 dark:bg-neutral-800/60 text-left">
+            <thead className="bg-white/[0.04] text-left">
               <tr>
                 <th className="px-3 py-2 font-medium">Produkt</th>
                 <th className="px-3 py-2 font-medium w-24 text-right">
@@ -126,7 +126,7 @@ export default function PoLineItems({ products, lines, setLines }: Props) {
                   return (
                     <tr
                       key={l.key}
-                      className="border-t border-neutral-200 dark:border-neutral-800"
+                      className="border-t border-white/10"
                     >
                       <td className="px-3 py-2">
                         <div className="font-medium">
@@ -178,7 +178,7 @@ export default function PoLineItems({ products, lines, setLines }: Props) {
                           type="button"
                           onClick={() => removeLine(l.key)}
                           aria-label="Ta bort rad"
-                          className="text-red-600 dark:text-red-400 hover:underline text-xs"
+                          className="text-red-400 hover:underline text-xs"
                         >
                           Ta bort
                         </button>
@@ -190,7 +190,7 @@ export default function PoLineItems({ products, lines, setLines }: Props) {
             </tbody>
             {lines.length > 0 && (
               <tfoot>
-                <tr className="border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-800/40">
+                <tr className="border-t border-white/10 bg-neutral-50 dark:bg-neutral-800/40">
                   <td colSpan={3} className="px-3 py-2 text-right font-medium">
                     Totalt
                   </td>
@@ -206,7 +206,7 @@ export default function PoLineItems({ products, lines, setLines }: Props) {
       </div>
 
       {pickerOpen ? (
-        <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-3 space-y-2">
+        <div className="rounded-lg border border-white/10 bg-background-elevated/40 p-3 space-y-2">
           <div className="flex gap-2 items-center">
             <input
               type="search"
@@ -222,7 +222,7 @@ export default function PoLineItems({ products, lines, setLines }: Props) {
                 setPickerOpen(false);
                 setSearch("");
               }}
-              className="rounded-md border border-neutral-300 dark:border-neutral-700 px-3 py-1 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              className="rounded-md border border-white/15 px-3 py-1 text-sm hover:bg-white/[0.05]"
             >
               Stäng
             </button>
@@ -232,13 +232,13 @@ export default function PoLineItems({ products, lines, setLines }: Props) {
               Inga produkter att visa.
             </p>
           ) : (
-            <ul className="max-h-64 overflow-y-auto divide-y divide-neutral-200 dark:divide-neutral-800">
+            <ul className="max-h-64 overflow-y-auto divide-y divide-white/5">
               {filtered.map((p) => (
                 <li key={p.id}>
                   <button
                     type="button"
                     onClick={() => addProduct(p)}
-                    className="w-full text-left px-2 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-800/40 flex items-center justify-between gap-3"
+                    className="w-full text-left px-2 py-2 hover:bg-white/[0.03] flex items-center justify-between gap-3"
                   >
                     <span>
                       <span className="block text-sm font-medium">
@@ -262,7 +262,7 @@ export default function PoLineItems({ products, lines, setLines }: Props) {
           <button
             type="button"
             onClick={() => setPickerOpen(true)}
-            className="rounded-md border border-neutral-300 dark:border-neutral-700 px-3 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800"
+            className="rounded-md border border-white/15 px-3 py-2 text-sm hover:bg-white/[0.05]"
           >
             + Lägg till produkt
           </button>

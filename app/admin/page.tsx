@@ -70,7 +70,7 @@ export default function AdminHomePage() {
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Kunder</h1>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+          <p className="text-sm text-foreground-muted mt-1">
             Skapa och hantera kund-portaler.
           </p>
         </div>
@@ -78,7 +78,7 @@ export default function AdminHomePage() {
           type="button"
           onClick={() => setShowForm((v) => !v)}
           aria-expanded={showForm}
-          className="inline-flex items-center gap-1.5 self-start rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-3.5 py-2 text-sm font-medium hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
+          className="inline-flex items-center gap-1.5 self-start rounded-md bg-foreground text-background px-3.5 py-2 text-sm font-medium hover:bg-foreground/90 transition-colors"
         >
           {showForm ? (
             <>
@@ -211,7 +211,7 @@ export default function AdminHomePage() {
         <div className="overflow-hidden">
           <form
             onSubmit={handleCreate}
-            className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-5 space-y-4"
+            className="rounded-xl border border-white/10 bg-background-elevated/40 p-5 space-y-4"
           >
             <div>
               <h2 className="text-base font-semibold">Skapa ny kund</h2>
@@ -223,7 +223,7 @@ export default function AdminHomePage() {
               <div>
                 <label
                   htmlFor="slug"
-                  className="block text-sm font-medium mb-1.5 text-neutral-700 dark:text-neutral-300"
+                  className="block text-sm font-medium mb-1.5 text-foreground/85"
                 >
                   Slug (URL)
                 </label>
@@ -234,7 +234,7 @@ export default function AdminHomePage() {
                   pattern="^[a-z0-9][a-z0-9-]{0,62}$"
                   placeholder="dittforetag"
                   required
-                  className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-950 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-neutral-900/15 dark:focus:ring-white/20 focus:border-neutral-400 dark:focus:border-neutral-500 transition-colors"
+                  className="w-full rounded-md border border-white/15 bg-background px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-neutral-900/15 dark:focus:ring-white/20 focus:border-neutral-400 dark:focus:border-neutral-500 transition-colors"
                 />
                 <p className="text-xs text-neutral-500 mt-1.5">
                   Endast a–z, 0–9 och bindestreck. URL blir{" "}
@@ -244,7 +244,7 @@ export default function AdminHomePage() {
               <div>
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium mb-1.5 text-neutral-700 dark:text-neutral-300"
+                  className="block text-sm font-medium mb-1.5 text-foreground/85"
                 >
                   Företagsnamn
                 </label>
@@ -254,7 +254,7 @@ export default function AdminHomePage() {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Ditt företag AB"
                   required
-                  className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-950 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/15 dark:focus:ring-white/20 focus:border-neutral-400 dark:focus:border-neutral-500 transition-colors"
+                  className="w-full rounded-md border border-white/15 bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/15 dark:focus:ring-white/20 focus:border-neutral-400 dark:focus:border-neutral-500 transition-colors"
                 />
               </div>
             </div>
@@ -262,7 +262,7 @@ export default function AdminHomePage() {
               <button
                 type="submit"
                 disabled={creating}
-                className="inline-flex items-center gap-2 rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-4 py-2 text-sm font-medium hover:bg-neutral-800 dark:hover:bg-neutral-200 disabled:opacity-60 transition-colors"
+                className="inline-flex items-center gap-2 rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium hover:bg-foreground/90 disabled:opacity-60 transition-colors"
               >
                 {creating && (
                   <svg
@@ -321,7 +321,7 @@ export default function AdminHomePage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Sök kund…"
-            className="w-full rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 pl-9 pr-3 py-2 text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/15 dark:focus:ring-white/20 focus:border-neutral-400 dark:focus:border-neutral-500 transition-colors"
+            className="w-full rounded-md border border-white/10 bg-background-elevated/40 pl-9 pr-3 py-2 text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/15 dark:focus:ring-white/20 focus:border-neutral-400 dark:focus:border-neutral-500 transition-colors"
             aria-label="Sök kund"
           />
         </div>
@@ -337,7 +337,7 @@ export default function AdminHomePage() {
           Ingen kund matchade <span className="font-medium">{query}</span>.
         </p>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+        <div className="overflow-hidden rounded-xl border border-white/10 bg-background-elevated/40">
           <table className="w-full text-sm">
             <thead className="bg-neutral-50 dark:bg-neutral-800/40 text-left text-xs uppercase tracking-wide text-neutral-500">
               <tr>
@@ -358,13 +358,13 @@ export default function AdminHomePage() {
               {(filtered ?? []).map((t) => (
                 <tr
                   key={t.id}
-                  className="border-t border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50/60 dark:hover:bg-neutral-800/30 transition-colors"
+                  className="border-t border-white/10 hover:bg-neutral-50/60 dark:hover:bg-neutral-800/30 transition-colors"
                 >
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <Avatar name={t.name} />
                       <div className="min-w-0">
-                        <div className="font-medium text-neutral-900 dark:text-neutral-100 truncate">
+                        <div className="font-medium text-foreground truncate">
                           {t.name}
                         </div>
                         <div className="md:hidden text-xs text-neutral-500 font-mono truncate">
@@ -386,7 +386,7 @@ export default function AdminHomePage() {
                     <div className="inline-flex items-center gap-3">
                       <Link
                         href={`/${t.slug}/`}
-                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                        className="text-amber-400 hover:underline"
                       >
                         Öppna portal →
                       </Link>
@@ -405,9 +405,9 @@ export default function AdminHomePage() {
         </div>
       )}
 
-      <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/60 dark:bg-neutral-900/40 p-3.5 text-xs text-neutral-600 dark:text-neutral-400">
+      <div className="rounded-lg border border-white/10 bg-neutral-50/60 dark:bg-neutral-900/40 p-3.5 text-xs text-foreground-muted">
         <p>
-          <strong className="text-neutral-700 dark:text-neutral-300">
+          <strong className="text-foreground/85">
             Notera:
           </strong>{" "}
           Användarkonton skapas i Supabase Dashboard → Authentication → Users.
@@ -428,8 +428,8 @@ function StatCard({
   icon: React.ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4 flex items-center gap-3">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+    <div className="rounded-xl border border-white/10 bg-background-elevated/40 p-4 flex items-center gap-3">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-foreground/85">
         {icon}
       </div>
       <div>
@@ -470,7 +470,7 @@ function Avatar({ name }: { name: string }) {
 
 function EmptyState({ onCreate }: { onCreate: () => void }) {
   return (
-    <div className="rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 bg-white/40 dark:bg-neutral-900/40 p-10 text-center">
+    <div className="rounded-xl border border-dashed border-white/15 bg-white/40 dark:bg-neutral-900/40 p-10 text-center">
       <svg
         viewBox="0 0 120 120"
         fill="none"
@@ -512,14 +512,14 @@ function EmptyState({ onCreate }: { onCreate: () => void }) {
         />
       </svg>
       <h2 className="mt-5 text-base font-semibold">Inga kunder än</h2>
-      <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400 max-w-sm mx-auto">
+      <p className="mt-1 text-sm text-foreground-muted max-w-sm mx-auto">
         Skapa din första kund-portal för att komma igång. Du kan bjuda in
         medlemmar i nästa steg.
       </p>
       <button
         type="button"
         onClick={onCreate}
-        className="mt-5 inline-flex items-center gap-1.5 rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-4 py-2 text-sm font-medium hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
+        className="mt-5 inline-flex items-center gap-1.5 rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium hover:bg-foreground/90 transition-colors"
       >
         <svg
           viewBox="0 0 20 20"

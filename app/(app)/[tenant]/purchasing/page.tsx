@@ -17,7 +17,7 @@ import StatusBadge from "./_components/status-badge";
 type StatusFilter = PurchaseOrderStatus | "all";
 
 const inputClass =
-  "rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500";
+  "rounded-md border border-white/15 bg-background-elevated/40 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500";
 
 export default function PurchasingPage() {
   const { tenant } = useParams<{ tenant: string }>();
@@ -54,12 +54,12 @@ export default function PurchasingPage() {
     return (
       <div className="text-center py-16">
         <h1 className="text-2xl font-semibold mb-2">Inga inköpsorder än</h1>
-        <p className="text-neutral-600 dark:text-neutral-400 mb-6">
+        <p className="text-foreground-muted mb-6">
           Skapa din första inköpsorder för att beställa från en leverantör.
         </p>
         <Link
           href={`/${tenant}/purchasing/new/`}
-          className="inline-block rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2"
+          className="inline-block rounded-md bg-foreground text-background px-4 py-2"
         >
           + Ny inköpsorder
         </Link>
@@ -72,7 +72,7 @@ export default function PurchasingPage() {
       <div className="flex items-center justify-between mb-4 gap-2 flex-wrap">
         <div>
           <h1 className="text-2xl font-semibold">Inköp</h1>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
+          <p className="text-sm text-foreground-muted">
             Översikt över dina inköpsorder.
           </p>
         </div>
@@ -91,7 +91,7 @@ export default function PurchasingPage() {
           </select>
           <Link
             href={`/${tenant}/purchasing/new/`}
-            className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-3 py-2 text-sm font-medium"
+            className="rounded-md bg-foreground text-background px-3 py-2 text-sm font-medium"
           >
             + Ny inköpsorder
           </Link>
@@ -99,15 +99,15 @@ export default function PurchasingPage() {
       </div>
 
       {visible.length === 0 ? (
-        <div className="text-center py-12 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
-          <p className="text-neutral-600 dark:text-neutral-400">
+        <div className="text-center py-12 rounded-lg border border-white/10 bg-background-elevated/40">
+          <p className="text-foreground-muted">
             Inga inköpsorder matchar filtret.
           </p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+        <div className="overflow-x-auto rounded-lg border border-white/10 bg-background-elevated/40">
           <table className="w-full text-sm">
-            <thead className="bg-neutral-100 dark:bg-neutral-800/60 text-left">
+            <thead className="bg-white/[0.04] text-left">
               <tr>
                 <th className="px-4 py-2 font-medium">PO-ref</th>
                 <th className="px-4 py-2 font-medium">Leverantör</th>
@@ -127,12 +127,12 @@ export default function PurchasingPage() {
                 return (
                   <tr
                     key={o.id}
-                    className="border-t border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/40"
+                    className="border-t border-white/10 hover:bg-white/[0.03]"
                   >
                     <td className="px-4 py-2 font-mono">
                       <Link
                         href={`/${tenant}/purchasing/order/?id=${o.id}`}
-                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                        className="text-amber-400 hover:underline"
                       >
                         {o.reference ?? o.id.slice(0, 8)}
                       </Link>

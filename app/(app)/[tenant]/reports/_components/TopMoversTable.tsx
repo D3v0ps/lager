@@ -29,8 +29,8 @@ export default function TopMoversTable({ rows }: Props) {
   const { tenant } = useParams<{ tenant: string }>();
 
   return (
-    <section className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
-      <header className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-800">
+    <section className="rounded-lg border border-white/10 bg-background-elevated/40">
+      <header className="px-4 py-3 border-b border-white/10">
         <h2 className="text-base font-semibold">Snabbast omsatta produkter</h2>
         <p className="text-xs text-neutral-500 mt-0.5">
           Mest sålda de senaste 90 dagarna.
@@ -43,7 +43,7 @@ export default function TopMoversTable({ rows }: Props) {
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-neutral-100 dark:bg-neutral-800/60 text-left">
+            <thead className="bg-white/[0.04] text-left">
               <tr>
                 <th className="px-4 py-2 font-medium">SKU</th>
                 <th className="px-4 py-2 font-medium">Namn</th>
@@ -64,13 +64,13 @@ export default function TopMoversTable({ rows }: Props) {
                 return (
                   <tr
                     key={r.id}
-                    className="border-t border-neutral-200 dark:border-neutral-800"
+                    className="border-t border-white/10"
                   >
                     <td className="px-4 py-2 font-mono">{r.sku}</td>
                     <td className="px-4 py-2">
                       <Link
                         href={`/${tenant}/product/?id=${r.id}`}
-                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                        className="text-amber-400 hover:underline"
                       >
                         {r.name}
                       </Link>
@@ -82,8 +82,8 @@ export default function TopMoversTable({ rows }: Props) {
                     <td
                       className={`px-4 py-2 text-right ${
                         lowWeeks
-                          ? "text-red-600 dark:text-red-400 font-medium"
-                          : "text-neutral-600 dark:text-neutral-400"
+                          ? "text-red-400 font-medium"
+                          : "text-foreground-muted"
                       }`}
                     >
                       {formatWeeks(r.weeksLeft)}

@@ -79,7 +79,7 @@ function OrderDetail() {
         <h1 className="text-2xl font-semibold mb-2">Ordern hittades inte</h1>
         <Link
           href={`/${tenant}/purchasing/`}
-          className="inline-block rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 mt-4"
+          className="inline-block rounded-md bg-foreground text-background px-4 py-2 mt-4"
         >
           Tillbaka till listan
         </Link>
@@ -156,7 +156,7 @@ function OrderDetail() {
       </div>
 
       {order.notes && (
-        <div className="rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4 text-sm whitespace-pre-wrap">
+        <div className="rounded-md border border-white/10 bg-background-elevated/40 p-4 text-sm whitespace-pre-wrap">
           {order.notes}
         </div>
       )}
@@ -166,9 +166,9 @@ function OrderDetail() {
         {items.length === 0 ? (
           <p className="text-sm text-neutral-500">Inga rader.</p>
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+          <div className="overflow-x-auto rounded-lg border border-white/10 bg-background-elevated/40">
             <table className="w-full text-sm">
-              <thead className="bg-neutral-100 dark:bg-neutral-800/60 text-left">
+              <thead className="bg-white/[0.04] text-left">
                 <tr>
                   <th className="px-4 py-2 font-medium">SKU</th>
                   <th className="px-4 py-2 font-medium">Produkt</th>
@@ -183,7 +183,7 @@ function OrderDetail() {
                   return (
                     <tr
                       key={it.id}
-                      className="border-t border-neutral-200 dark:border-neutral-800"
+                      className="border-t border-white/10"
                     >
                       <td className="px-4 py-2 font-mono">
                         {it.products?.sku ?? "—"}
@@ -192,7 +192,7 @@ function OrderDetail() {
                         {it.products ? (
                           <Link
                             href={`/${tenant}/product/?id=${it.products.id}`}
-                            className="text-blue-600 dark:text-blue-400 hover:underline"
+                            className="text-amber-400 hover:underline"
                           >
                             {it.products.name}
                           </Link>
@@ -214,7 +214,7 @@ function OrderDetail() {
                 })}
               </tbody>
               <tfoot>
-                <tr className="border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-800/40">
+                <tr className="border-t border-white/10 bg-neutral-50 dark:bg-neutral-800/40">
                   <td colSpan={4} className="px-4 py-2 text-right font-medium">
                     Totalt
                   </td>
@@ -234,7 +234,7 @@ function OrderDetail() {
         </div>
       )}
 
-      <section className="flex flex-wrap items-center justify-between gap-3 border-t border-neutral-200 dark:border-neutral-800 pt-6">
+      <section className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-6">
         <div className="flex flex-wrap gap-2">
           {order.status === "draft" && (
             <button
@@ -272,7 +272,7 @@ function OrderDetail() {
                 if (!confirm("Avbryt inköpsorder?")) return;
                 void runAction(() => markCancelled(order.id));
               }}
-              className="rounded-md border border-neutral-300 dark:border-neutral-700 px-3 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
+              className="rounded-md border border-white/15 px-3 py-2 text-sm hover:bg-white/[0.05] disabled:opacity-50"
             >
               Avbryt order
             </button>
@@ -295,7 +295,7 @@ function OrderDetail() {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4">
+    <div className="rounded-md border border-white/10 bg-background-elevated/40 p-4">
       <div className="text-xs uppercase tracking-wide text-neutral-500">
         {label}
       </div>

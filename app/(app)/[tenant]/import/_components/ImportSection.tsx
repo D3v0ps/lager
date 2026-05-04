@@ -167,24 +167,24 @@ export function ImportSection() {
     importState.kind !== "running";
 
   return (
-    <section className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-5 space-y-4">
+    <section className="rounded-lg border border-white/10 bg-background-elevated/40 p-5 space-y-4">
       <div>
         <h2 className="text-lg font-semibold">Importera produkter</h2>
-        <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
+        <p className="text-sm text-foreground-muted mt-1">
           Ladda upp en CSV med kolumnerna {PRODUCT_COLUMNS.join(", ")} (i den
           ordningen). Existerande SKU:er uppdateras, nya skapas.
         </p>
         <button
           type="button"
           onClick={handleDownloadTemplate}
-          className="text-sm text-blue-600 dark:text-blue-400 hover:underline mt-2"
+          className="text-sm text-amber-400 hover:underline mt-2"
         >
           Ladda ner mall
         </button>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <label className="rounded-md border border-neutral-300 dark:border-neutral-700 px-3 py-2 text-sm cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800">
+        <label className="rounded-md border border-white/15 px-3 py-2 text-sm cursor-pointer hover:bg-white/[0.05]">
           Välj fil
           <input
             ref={fileInputRef}
@@ -195,7 +195,7 @@ export function ImportSection() {
           />
         </label>
         {filename && (
-          <span className="text-sm text-neutral-600 dark:text-neutral-400">
+          <span className="text-sm text-foreground-muted">
             {filename}
           </span>
         )}
@@ -234,7 +234,7 @@ export function ImportSection() {
             type="button"
             onClick={handleImport}
             disabled={!canImport}
-            className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+            className="rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium disabled:opacity-50"
           >
             {importState.kind === "running"
               ? `Importerar ${importState.current}/${importState.total}…`
@@ -254,7 +254,7 @@ export function ImportSection() {
       )}
 
       {importState.kind === "done" && (
-        <div className="rounded-md border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-800/40 p-3 text-sm space-y-2">
+        <div className="rounded-md border border-white/10 bg-neutral-50 dark:bg-neutral-800/40 p-3 text-sm space-y-2">
           <p className="font-medium">
             {importState.summary.created} skapade,{" "}
             {importState.summary.updated} uppdaterade,{" "}
@@ -267,7 +267,7 @@ export function ImportSection() {
                 setErrorsExpanded((e.target as HTMLDetailsElement).open)
               }
             >
-              <summary className="cursor-pointer text-blue-600 dark:text-blue-400 hover:underline">
+              <summary className="cursor-pointer text-amber-400 hover:underline">
                 Visa fel ({importState.summary.errors.length})
               </summary>
               <ul className="mt-2 space-y-1 list-disc list-inside">
@@ -310,7 +310,7 @@ function PreviewTable({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between text-sm">
-        <span className="text-neutral-600 dark:text-neutral-400">
+        <span className="text-foreground-muted">
           {rows.length} {rows.length === 1 ? "rad" : "rader"} totalt
           {invalidCount > 0 && (
             <>
@@ -328,9 +328,9 @@ function PreviewTable({
         )}
       </div>
 
-      <div className="overflow-x-auto rounded-md border border-neutral-200 dark:border-neutral-800">
+      <div className="overflow-x-auto rounded-md border border-white/10">
         <table className="w-full text-xs">
-          <thead className="bg-neutral-100 dark:bg-neutral-800/60 text-left">
+          <thead className="bg-white/[0.04] text-left">
             <tr>
               <th className="px-2 py-1.5 font-medium">Rad</th>
               {PRODUCT_COLUMNS.map((c) => (
@@ -346,7 +346,7 @@ function PreviewTable({
               return (
                 <tr
                   key={row.lineNumber}
-                  className={`border-t border-neutral-200 dark:border-neutral-800 ${
+                  className={`border-t border-white/10 ${
                     bad ? "bg-red-50 dark:bg-red-950/30" : ""
                   }`}
                 >

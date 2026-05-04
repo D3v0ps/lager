@@ -77,12 +77,12 @@ export default function OrdersPage() {
     return (
       <div className="text-center py-16">
         <h1 className="text-2xl font-semibold mb-2">Inga ordrar än</h1>
-        <p className="text-neutral-600 dark:text-neutral-400 mb-6">
+        <p className="text-foreground-muted mb-6">
           Skapa din första kundorder för att komma igång.
         </p>
         <Link
           href={`/${tenant}/orders/new/`}
-          className="inline-block rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2"
+          className="inline-block rounded-md bg-foreground text-background px-4 py-2"
         >
           + Ny order
         </Link>
@@ -103,7 +103,7 @@ export default function OrdersPage() {
           <span className="text-sm text-neutral-500">{countLabel}</span>
           <Link
             href={`/${tenant}/orders/new/`}
-            className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-3 py-1.5 text-sm font-medium"
+            className="rounded-md bg-foreground text-background px-3 py-1.5 text-sm font-medium"
           >
             + Ny order
           </Link>
@@ -135,8 +135,8 @@ export default function OrdersPage() {
       </div>
 
       {visible.length === 0 ? (
-        <div className="text-center py-16 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 space-y-3">
-          <p className="text-neutral-600 dark:text-neutral-400">
+        <div className="text-center py-16 rounded-lg border border-white/10 bg-background-elevated/40 space-y-3">
+          <p className="text-foreground-muted">
             Inga ordrar matchar dina filter.
           </p>
           <button
@@ -145,15 +145,15 @@ export default function OrdersPage() {
               setStatusFilter("all");
               setSearch("");
             }}
-            className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+            className="text-sm text-amber-400 hover:underline"
           >
             Rensa filter
           </button>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+        <div className="overflow-x-auto rounded-lg border border-white/10 bg-background-elevated/40">
           <table className="w-full text-sm">
-            <thead className="bg-neutral-100 dark:bg-neutral-800/60 text-left">
+            <thead className="bg-white/[0.04] text-left">
               <tr>
                 <th className="px-4 py-2 font-medium">Order-ref</th>
                 <th className="px-4 py-2 font-medium">Kund</th>
@@ -167,12 +167,12 @@ export default function OrdersPage() {
               {visible.map((o) => (
                 <tr
                   key={o.id}
-                  className="border-t border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/40"
+                  className="border-t border-white/10 hover:bg-white/[0.03]"
                 >
                   <td className="px-4 py-2 font-mono">
                     <Link
                       href={`/${tenant}/orders/order/?id=${o.id}`}
-                      className="text-blue-600 dark:text-blue-400 hover:underline"
+                      className="text-amber-400 hover:underline"
                     >
                       {o.reference ?? o.id.slice(0, 8)}
                     </Link>

@@ -73,7 +73,7 @@ export default function SuppliersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Leverantörer</h1>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
+          <p className="text-sm text-foreground-muted">
             Hantera dina leverantörer och kontakter.
           </p>
         </div>
@@ -81,7 +81,7 @@ export default function SuppliersPage() {
           <button
             type="button"
             onClick={() => setMode({ kind: "new" })}
-            className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-3 py-2 text-sm font-medium"
+            className="rounded-md bg-foreground text-background px-3 py-2 text-sm font-medium"
           >
             + Ny leverantör
           </button>
@@ -116,23 +116,23 @@ export default function SuppliersPage() {
       )}
 
       {suppliers.length === 0 && mode.kind === "list" ? (
-        <div className="text-center py-16 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+        <div className="text-center py-16 rounded-lg border border-white/10 bg-background-elevated/40">
           <h2 className="text-lg font-semibold mb-2">Inga leverantörer än</h2>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-6">
+          <p className="text-sm text-foreground-muted mb-6">
             Lägg till din första leverantör för att kunna skapa inköpsorder.
           </p>
           <button
             type="button"
             onClick={() => setMode({ kind: "new" })}
-            className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 text-sm font-medium"
+            className="rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium"
           >
             + Ny leverantör
           </button>
         </div>
       ) : suppliers.length > 0 ? (
-        <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+        <div className="overflow-x-auto rounded-lg border border-white/10 bg-background-elevated/40">
           <table className="w-full text-sm">
-            <thead className="bg-neutral-100 dark:bg-neutral-800/60 text-left">
+            <thead className="bg-white/[0.04] text-left">
               <tr>
                 <th className="px-4 py-2 font-medium">Namn</th>
                 <th className="px-4 py-2 font-medium">Kontaktperson</th>
@@ -148,17 +148,17 @@ export default function SuppliersPage() {
                 return (
                   <tr
                     key={s.id}
-                    className="border-t border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/40"
+                    className="border-t border-white/10 hover:bg-white/[0.03]"
                   >
                     <td className="px-4 py-2 font-medium">{s.name}</td>
-                    <td className="px-4 py-2 text-neutral-600 dark:text-neutral-400">
+                    <td className="px-4 py-2 text-foreground-muted">
                       {s.contact_name ?? "—"}
                     </td>
-                    <td className="px-4 py-2 text-neutral-600 dark:text-neutral-400">
+                    <td className="px-4 py-2 text-foreground-muted">
                       {s.email ? (
                         <a
                           href={`mailto:${s.email}`}
-                          className="text-blue-600 dark:text-blue-400 hover:underline"
+                          className="text-amber-400 hover:underline"
                         >
                           {s.email}
                         </a>
@@ -166,7 +166,7 @@ export default function SuppliersPage() {
                         "—"
                       )}
                     </td>
-                    <td className="px-4 py-2 text-neutral-600 dark:text-neutral-400">
+                    <td className="px-4 py-2 text-foreground-muted">
                       {s.phone ?? "—"}
                     </td>
                     <td
@@ -181,7 +181,7 @@ export default function SuppliersPage() {
                         <button
                           type="button"
                           onClick={() => setMode({ kind: "edit", supplier: s })}
-                          className="rounded-md border border-neutral-300 dark:border-neutral-700 px-2 py-1 text-xs hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                          className="rounded-md border border-white/15 px-2 py-1 text-xs hover:bg-white/[0.05]"
                         >
                           Redigera
                         </button>

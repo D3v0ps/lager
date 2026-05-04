@@ -80,7 +80,7 @@ function OrderDetail() {
         <h1 className="text-2xl font-semibold mb-2">Ordern hittades inte</h1>
         <Link
           href={`/${tenant}/orders/`}
-          className="inline-block rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 mt-4"
+          className="inline-block rounded-md bg-foreground text-background px-4 py-2 mt-4"
         >
           Tillbaka till ordrar
         </Link>
@@ -174,7 +174,7 @@ function OrderDetail() {
       </div>
 
       {/* Plocklista / packsedel-vy */}
-      <div className="print-block rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6">
+      <div className="print-block rounded-lg border border-white/10 bg-background-elevated/40 p-6">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div>
             <div className="text-sm text-neutral-500 uppercase tracking-wide">
@@ -219,7 +219,7 @@ function OrderDetail() {
 
         <div className="mt-6 overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="border-b-2 border-neutral-300 dark:border-neutral-700 text-left">
+            <thead className="border-b-2 border-white/15 text-left">
               <tr>
                 {isPicking && (
                   <th className="py-2 pr-2 font-medium w-10">Plockad</th>
@@ -237,7 +237,7 @@ function OrderDetail() {
                 return (
                   <tr
                     key={it.id}
-                    className="border-b border-neutral-200 dark:border-neutral-800"
+                    className="border-b border-white/10"
                   >
                     {isPicking && (
                       <td className="py-3 pr-2">
@@ -282,7 +282,7 @@ function OrderDetail() {
               )}
             </tbody>
             <tfoot>
-              <tr className="border-t-2 border-neutral-300 dark:border-neutral-700">
+              <tr className="border-t-2 border-white/15">
                 <td
                   colSpan={isPicking ? 5 : 4}
                   className="py-3 pr-2 text-right text-sm uppercase tracking-wide text-neutral-500"
@@ -298,7 +298,7 @@ function OrderDetail() {
         </div>
 
         {order.notes && (
-          <div className="mt-6 rounded-md border border-neutral-200 dark:border-neutral-800 p-3 text-sm whitespace-pre-wrap">
+          <div className="mt-6 rounded-md border border-white/10 p-3 text-sm whitespace-pre-wrap">
             <div className="text-xs text-neutral-500 uppercase tracking-wide mb-1">
               Anteckningar
             </div>
@@ -308,7 +308,7 @@ function OrderDetail() {
       </div>
 
       {/* Status actions */}
-      <section className="no-print rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-5">
+      <section className="no-print rounded-lg border border-white/10 bg-background-elevated/40 p-5">
         <h2 className="text-lg font-semibold mb-3">Status</h2>
         <div className="flex flex-wrap gap-2">
           {status === "draft" && (
@@ -364,7 +364,7 @@ function OrderDetail() {
           <button
             type="button"
             onClick={() => window.print()}
-            className="rounded-md border border-neutral-300 dark:border-neutral-700 px-4 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 ml-auto"
+            className="rounded-md border border-white/15 px-4 py-2 text-sm hover:bg-white/[0.05] ml-auto"
           >
             Skriv ut
           </button>
@@ -383,7 +383,7 @@ function OrderDetail() {
       </section>
 
       {status !== "shipped" && (
-        <section className="no-print flex items-center justify-end border-t border-neutral-200 dark:border-neutral-800 pt-6">
+        <section className="no-print flex items-center justify-end border-t border-white/10 pt-6">
           <button
             type="button"
             onClick={handleDelete}

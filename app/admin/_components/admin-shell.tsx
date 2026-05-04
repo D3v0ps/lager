@@ -81,12 +81,12 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           <h1 className="mt-6 text-2xl font-semibold tracking-tight">
             Admin-läge
           </h1>
-          <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
+          <p className="mt-2 text-sm text-foreground-muted">
             Logga in på en kund-portal som admin för att komma åt admin-vyn.
           </p>
           <Link
             href="/demo/login/"
-            className="mt-6 inline-flex items-center gap-2 rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-4 py-2 text-sm font-medium hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
+            className="mt-6 inline-flex items-center gap-2 rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium hover:bg-foreground/90 transition-colors"
           >
             Till login
             <svg
@@ -115,13 +115,13 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           <h1 className="mt-6 text-2xl font-semibold tracking-tight">
             Åtkomst nekad
           </h1>
-          <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
+          <p className="mt-2 text-sm text-foreground-muted">
             Ditt konto har inte admin-roll. Be en befintlig admin om åtkomst,
             eller gå tillbaka till sajten.
           </p>
           <Link
             href="/"
-            className="mt-6 inline-flex items-center gap-2 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+            className="mt-6 inline-flex items-center gap-2 rounded-md border border-white/15 bg-background-elevated/40 px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
           >
             ← Till sajten
           </Link>
@@ -142,7 +142,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         aria-hidden="true"
         className="h-0.5 w-full bg-gradient-to-r from-red-500 via-red-600 to-red-500 dark:from-red-600 dark:via-red-500 dark:to-red-600"
       />
-      <header className="border-b border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-neutral-900/90 backdrop-blur sticky top-0 z-30">
+      <header className="border-b border-white/10 bg-white/90 dark:bg-neutral-900/90 backdrop-blur sticky top-0 z-30">
         <div className="mx-auto max-w-5xl px-4 py-3.5 flex items-center justify-between gap-3">
           <Link
             href="/admin/"
@@ -161,7 +161,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
               admin
             </span>
             {tenantCount !== null && (
-              <span className="hidden sm:inline-flex items-center rounded-full border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-800/60 px-2 py-0.5 text-[11px] font-medium text-neutral-600 dark:text-neutral-300">
+              <span className="hidden sm:inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[11px] font-medium text-neutral-600 dark:text-neutral-300">
                 {tenantCount} {tenantCount === 1 ? "kund" : "kunder"}
               </span>
             )}
@@ -169,20 +169,20 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           <nav className="flex gap-1 sm:gap-3 text-sm items-center">
             <Link
               href="/admin/"
-              className="rounded-md px-2.5 py-1.5 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              className="rounded-md px-2.5 py-1.5 text-neutral-700 dark:text-neutral-200 hover:bg-white/[0.05] transition-colors"
             >
               Kunder
             </Link>
             <Link
               href="/"
-              className="rounded-md px-2.5 py-1.5 text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              className="rounded-md px-2.5 py-1.5 text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-white/[0.05] transition-colors"
             >
               Till sajten
             </Link>
             <button
               type="button"
               onClick={handleSignOut}
-              className="rounded-md px-2.5 py-1.5 text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              className="rounded-md px-2.5 py-1.5 text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-white/[0.05] transition-colors"
             >
               Logga ut
             </button>

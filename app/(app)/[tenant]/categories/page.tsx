@@ -106,7 +106,7 @@ export default function CategoriesPage() {
     return (
       <div className="text-center py-16">
         <h1 className="text-2xl font-semibold mb-2">Kategorier</h1>
-        <p className="text-neutral-600 dark:text-neutral-400">
+        <p className="text-foreground-muted">
           Inga produkter än. Lägg till en produkt för att börja.
         </p>
       </div>
@@ -118,7 +118,7 @@ export default function CategoriesPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6">
         <div>
           <h1 className="text-2xl font-semibold">Kategorier</h1>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
+          <p className="text-sm text-foreground-muted">
             Översikt av ditt sortiment per kategori.
           </p>
         </div>
@@ -127,9 +127,9 @@ export default function CategoriesPage() {
         </span>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+      <div className="overflow-x-auto rounded-lg border border-white/10 bg-background-elevated/40">
         <table className="w-full text-sm">
-          <thead className="bg-neutral-100 dark:bg-neutral-800/60 text-left">
+          <thead className="bg-white/[0.04] text-left">
             <tr>
               <th className="px-4 py-2 font-medium">Kategori</th>
               <th className="px-4 py-2 font-medium text-right">
@@ -157,12 +157,12 @@ export default function CategoriesPage() {
               return (
                 <tr
                   key={r.key}
-                  className="border-t border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/40"
+                  className="border-t border-white/10 hover:bg-white/[0.03]"
                 >
                   <td className="px-4 py-2">
                     <Link
                       href={href}
-                      className="text-blue-600 dark:text-blue-400 hover:underline"
+                      className="text-amber-400 hover:underline"
                     >
                       {r.isUncategorized ? (
                         <span className="text-neutral-500 italic">
@@ -181,7 +181,7 @@ export default function CategoriesPage() {
                   <td
                     className={`px-4 py-2 text-right ${
                       r.belowReorderCount > 0
-                        ? "text-red-600 dark:text-red-400 font-medium"
+                        ? "text-red-400 font-medium"
                         : "text-neutral-500"
                     }`}
                   >

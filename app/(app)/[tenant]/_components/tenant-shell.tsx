@@ -80,9 +80,6 @@ export default function TenantShell({
       })
       .catch((err) => {
         if (!mounted) return;
-        // Don't leave the user on an infinite "Laddar…": treat a failed
-        // session lookup as anonymous so the redirect-to-login useEffect
-        // kicks in.
         console.warn("[tenant-shell] getCurrentSession failed:", err);
         setStatus("anonymous");
       });
@@ -101,7 +98,6 @@ export default function TenantShell({
     }
   }, [status, isLoginPath, router, tenant]);
 
-  // Close mobile nav on route change.
   useEffect(() => {
     setNavOpen(false);
   }, [pathname]);
@@ -109,15 +105,17 @@ export default function TenantShell({
   if (isLoginPath) {
     return (
       <div className="min-h-screen flex flex-col">
-        <main id="main" className="flex-1">{children}</main>
+        <main id="main" className="flex-1">
+          {children}
+        </main>
       </div>
     );
   }
 
   if (status !== "authenticated") {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-sm text-neutral-500">Laddar…</p>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <p className="text-sm text-foreground-muted">Laddar…</p>
       </div>
     );
   }
@@ -160,19 +158,16 @@ function AuthenticatedShell({
   const tenantState = useTenantState();
   const tenantData = tenantState.tenant;
   const sections = buildNav(tenant);
-  const brandColor = tenantData?.primary_color ?? "#0F172A";
+  const brandColor = tenantData?.primary_color ?? "#F59E0B";
   const logoUrl = tenantData?.logo_url ?? null;
   const tenantName = tenantData?.name ?? tenant;
 
-  // Signed in but not a member of this tenant — RLS returned no row.
-  // Show a clear "no access"-screen with sign-out option instead of
-  // letting child pages hang on "Laddar..." forever.
   if (tenantState.status === "missing") {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="min-h-screen flex items-center justify-center px-4 bg-background">
         <div className="max-w-md text-center space-y-4">
           <h1 className="text-2xl font-semibold">Ingen åtkomst</h1>
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-foreground-muted">
             Du är inloggad men har inte tillgång till{" "}
             <span className="font-mono">{tenant}</span>. Kontrollera att du
             loggat in på rätt portal eller be en admin lägga till ditt konto
@@ -182,7 +177,7 @@ function AuthenticatedShell({
             <button
               type="button"
               onClick={handleSignOut}
-              className="rounded-md border border-neutral-300 dark:border-neutral-700 px-4 py-2 text-sm"
+              className="rounded-md border border-white/15 px-4 py-2 text-sm hover:bg-white/[0.05]"
             >
               Logga ut
             </button>
@@ -193,10 +188,10 @@ function AuthenticatedShell({
   }
   if (tenantState.status === "error") {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="min-h-screen flex items-center justify-center px-4 bg-background">
         <div className="max-w-md text-center space-y-3">
           <h1 className="text-2xl font-semibold">Något gick fel</h1>
-          <p className="text-sm text-neutral-500 font-mono">
+          <p className="text-sm text-foreground-muted font-mono">
             {tenantState.error}
           </p>
         </div>
@@ -206,17 +201,18 @@ function AuthenticatedShell({
 
   return (
     <div
-      className="min-h-screen flex flex-col lg:flex-row"
+      className="min-h-screen flex flex-col lg:flex-row bg-background"
       style={{ "--brand": brandColor } as React.CSSProperties}
     >
-      {/* Topbar (mobile + desktop) */}
-      <header className="lg:hidden border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+      {/* Mobile topbar */}
+      <header className="lg:hidden border-b border-white/5 bg-background-elevated/70 backdrop-blur sticky top-0 z-40">
         <div className="px-4 py-3 flex items-center justify-between">
           <Link
-            href={`/${tenant}/`}
-            className="font-semibold text-lg flex items-center gap-2"
+            href={`/${tenant}/dashboard/`}
+            className="font-semibold flex items-center gap-2"
           >
             {logoUrl ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
               <img
                 src={logoUrl}
                 alt={tenantName}
@@ -225,51 +221,57 @@ function AuthenticatedShell({
             ) : (
               <>
                 <SaldoMark className="h-6 w-6" />
-                <span>Saldo</span>
+                <span>{tenantName}</span>
               </>
             )}
-            <span className="text-neutral-400 font-normal text-sm">
-              {tenant}
-            </span>
           </Link>
           <button
             type="button"
             onClick={() => setNavOpen((v) => !v)}
             aria-label="Öppna meny"
-            className="rounded-md border border-neutral-300 dark:border-neutral-700 px-2 py-1.5 text-sm"
+            className="rounded-md border border-white/15 px-3 py-1.5 text-sm hover:bg-white/[0.05]"
           >
             {navOpen ? "Stäng" : "Meny"}
           </button>
         </div>
+        <div
+          aria-hidden="true"
+          className="h-px"
+          style={{ background: "var(--brand-gradient)", opacity: 0.3 }}
+        />
       </header>
 
       {/* Sidebar */}
       <aside
         className={`${
           navOpen ? "block" : "hidden"
-        } lg:block lg:w-60 lg:flex-shrink-0 lg:border-r border-b lg:border-b-0 border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900`}
+        } lg:block lg:w-64 lg:flex-shrink-0 lg:border-r border-b lg:border-b-0 border-white/5 bg-background-elevated/30`}
       >
-        <div className="hidden lg:block px-5 py-5 border-b border-neutral-200 dark:border-neutral-800">
-          <Link href={`/${tenant}/`} className="block">
+        <div className="hidden lg:block px-5 py-5 border-b border-white/5">
+          <Link href={`/${tenant}/dashboard/`} className="block group">
             {logoUrl ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
               <img
                 src={logoUrl}
                 alt={tenantName}
-                className="h-8 max-w-full object-contain"
+                className="h-9 max-w-full object-contain"
               />
             ) : (
-              <span className="inline-flex items-center gap-2 font-semibold text-lg">
-                <SaldoMark className="h-7 w-7" />
-                Saldo
+              <span className="inline-flex items-center gap-2.5 font-semibold tracking-tight">
+                <SaldoMark className="h-7 w-7 transition-transform duration-300 group-hover:rotate-3" />
+                <span className="text-base">Saldo</span>
               </span>
             )}
           </Link>
-          <p className="text-xs text-neutral-500 mt-0.5 font-mono">{tenant}</p>
+          <div className="mt-2 flex items-center gap-1.5 text-[11px] text-foreground-muted">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-mono truncate">{tenantName}</span>
+          </div>
         </div>
-        <nav className="px-3 py-4 space-y-5">
+        <nav className="px-3 py-4 space-y-5 lg:overflow-y-auto lg:max-h-[calc(100vh-7rem)]">
           {sections.map((section) => (
             <div key={section.title}>
-              <p className="px-2 text-[11px] font-medium uppercase tracking-wider text-neutral-500 mb-1.5">
+              <p className="px-2.5 text-[10.5px] font-medium uppercase tracking-[0.18em] text-foreground-muted/80 mb-1.5">
                 {section.title}
               </p>
               <ul className="space-y-0.5">
@@ -281,13 +283,23 @@ function AuthenticatedShell({
                     <li key={item.href}>
                       <Link
                         href={item.href}
-                        className={`block rounded-md px-2 py-1.5 text-sm ${
+                        className={`flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm transition-colors ${
                           active
-                            ? "bg-neutral-100 dark:bg-neutral-800 font-medium"
-                            : "hover:bg-neutral-100 dark:hover:bg-neutral-800/60"
+                            ? "bg-white/[0.06] text-foreground"
+                            : "text-foreground/80 hover:text-foreground hover:bg-white/[0.03]"
                         }`}
                       >
-                        {item.label}
+                        {active && (
+                          <span
+                            className="h-1 w-1 rounded-full"
+                            style={{
+                              background: "var(--brand-gradient)",
+                            }}
+                          />
+                        )}
+                        <span className={active ? "" : "ml-[0.875rem]"}>
+                          {item.label}
+                        </span>
                       </Link>
                     </li>
                   );
@@ -295,17 +307,17 @@ function AuthenticatedShell({
               </ul>
             </div>
           ))}
-          <div className="pt-3 border-t border-neutral-200 dark:border-neutral-800 space-y-1">
+          <div className="pt-4 border-t border-white/5 space-y-1.5">
             <Link
               href={`/${tenant}/products/new/`}
-              className="block rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-2 py-1.5 text-sm text-center"
+              className="block rounded-md bg-foreground text-background px-2.5 py-1.5 text-sm font-medium text-center hover:bg-foreground/90 transition-colors"
             >
               + Ny produkt
             </Link>
             <button
               type="button"
               onClick={handleSignOut}
-              className="block w-full text-left rounded-md px-2 py-1.5 text-sm text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800/60"
+              className="block w-full text-left rounded-md px-2.5 py-1.5 text-sm text-foreground-muted hover:text-foreground hover:bg-white/[0.03] transition-colors"
             >
               Logga ut
             </button>
@@ -314,7 +326,9 @@ function AuthenticatedShell({
       </aside>
 
       <main id="main" className="flex-1 min-w-0">
-        <div className="mx-auto max-w-5xl px-4 py-8">{children}</div>
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-10">
+          {children}
+        </div>
       </main>
     </div>
   );

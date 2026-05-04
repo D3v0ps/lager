@@ -118,12 +118,12 @@ export default function ProductsPage() {
     return (
       <div className="text-center py-16">
         <h1 className="text-2xl font-semibold mb-2">Inga produkter än</h1>
-        <p className="text-neutral-600 dark:text-neutral-400 mb-6">
+        <p className="text-foreground-muted mb-6">
           Lägg till din första produkt för att komma igång.
         </p>
         <Link
           href={`/${tenant}/products/new/`}
-          className="inline-block rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2"
+          className="inline-block rounded-md bg-foreground text-background px-4 py-2"
         >
           + Ny produkt
         </Link>
@@ -190,22 +190,22 @@ export default function ProductsPage() {
       </div>
 
       {visible.length === 0 ? (
-        <div className="text-center py-16 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
-          <p className="text-neutral-600 dark:text-neutral-400 mb-4">
+        <div className="text-center py-16 rounded-lg border border-white/10 bg-background-elevated/40">
+          <p className="text-foreground-muted mb-4">
             Inga produkter matchar dina filter
           </p>
           <button
             type="button"
             onClick={clearFilters}
-            className="rounded-md border border-neutral-300 dark:border-neutral-700 px-4 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800"
+            className="rounded-md border border-white/15 px-4 py-2 text-sm hover:bg-white/[0.05]"
           >
             Rensa filter
           </button>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+        <div className="overflow-x-auto rounded-lg border border-white/10 bg-background-elevated/40">
           <table className="w-full text-sm">
-            <thead className="bg-neutral-100 dark:bg-neutral-800/60 text-left">
+            <thead className="bg-white/[0.04] text-left">
               <tr>
                 <th className="px-4 py-2 font-medium">SKU</th>
                 <th className="px-4 py-2 font-medium">Namn</th>
@@ -221,13 +221,13 @@ export default function ProductsPage() {
                 return (
                   <tr
                     key={p.id}
-                    className="border-t border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/40"
+                    className="border-t border-white/10 hover:bg-white/[0.03]"
                   >
                     <td className="px-4 py-2 font-mono">{p.sku}</td>
                     <td className="px-4 py-2">
                       <Link
                         href={`/${tenant}/product/?id=${p.id}`}
-                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                        className="text-amber-400 hover:underline"
                       >
                         {p.name}
                       </Link>

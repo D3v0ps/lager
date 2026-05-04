@@ -23,7 +23,7 @@ import {
 import { useTenant } from "@/lib/tenant-context";
 
 const inputClass =
-  "w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500";
+  "w-full rounded-md border border-white/15 bg-background-elevated/40 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500";
 const labelClass = "block text-sm font-medium mb-1";
 
 export default function Page() {
@@ -222,7 +222,7 @@ function NewOrder() {
           </div>
         )}
 
-        <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-5 space-y-4">
+        <div className="rounded-lg border border-white/10 bg-background-elevated/40 p-5 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="customer" className={labelClass}>
@@ -245,7 +245,7 @@ function NewOrder() {
                 <button
                   type="button"
                   onClick={() => setShowInlineCustomer((v) => !v)}
-                  className="rounded-md border border-neutral-300 dark:border-neutral-700 px-3 py-2 text-sm whitespace-nowrap hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                  className="rounded-md border border-white/15 px-3 py-2 text-sm whitespace-nowrap hover:bg-white/[0.05]"
                 >
                   Ny kund
                 </button>
@@ -266,7 +266,7 @@ function NewOrder() {
           </div>
 
           {showInlineCustomer && (
-            <div className="rounded-md border border-dashed border-neutral-300 dark:border-neutral-700 p-3 space-y-3">
+            <div className="rounded-md border border-dashed border-white/15 p-3 space-y-3">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                   <label htmlFor="new-customer-name" className={labelClass}>
@@ -297,14 +297,14 @@ function NewOrder() {
                   type="button"
                   onClick={handleCreateInlineCustomer}
                   disabled={creatingCustomer}
-                  className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-3 py-1.5 text-sm font-medium disabled:opacity-50"
+                  className="rounded-md bg-foreground text-background px-3 py-1.5 text-sm font-medium disabled:opacity-50"
                 >
                   {creatingCustomer ? "Skapar…" : "Skapa kund"}
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowInlineCustomer(false)}
-                  className="rounded-md border border-neutral-300 dark:border-neutral-700 px-3 py-1.5 text-sm"
+                  className="rounded-md border border-white/15 px-3 py-1.5 text-sm"
                 >
                   Avbryt
                 </button>
@@ -340,13 +340,13 @@ function NewOrder() {
           </div>
         </div>
 
-        <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-5">
+        <div className="rounded-lg border border-white/10 bg-background-elevated/40 p-5">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-lg font-semibold">Orderrader</h2>
             <button
               type="button"
               onClick={addRow}
-              className="rounded-md border border-neutral-300 dark:border-neutral-700 px-3 py-1.5 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              className="rounded-md border border-white/15 px-3 py-1.5 text-sm hover:bg-white/[0.05]"
             >
               + Lägg till rad
             </button>
@@ -366,7 +366,7 @@ function NewOrder() {
             ))}
           </div>
 
-          <div className="mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+          <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between">
             <span className="text-sm text-neutral-500">Totalt</span>
             <span className="text-lg font-semibold">{formatPrice(total)}</span>
           </div>
@@ -376,13 +376,13 @@ function NewOrder() {
           <button
             type="submit"
             disabled={busy}
-            className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+            className="rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium disabled:opacity-50"
           >
             {busy ? "Sparar…" : "Spara som utkast"}
           </button>
           <Link
             href={`/${tenantSlug}/orders/`}
-            className="rounded-md border border-neutral-300 dark:border-neutral-700 px-4 py-2 text-sm"
+            className="rounded-md border border-white/15 px-4 py-2 text-sm"
           >
             Avbryt
           </Link>
@@ -423,7 +423,7 @@ function OrderRowEditor({
   const lineTotal = row.quantity * row.unit_price;
 
   return (
-    <div className="flex flex-col md:grid md:grid-cols-12 gap-2 md:items-start rounded-md md:rounded-none border md:border-0 border-neutral-200 dark:border-neutral-800 p-3 md:p-0">
+    <div className="flex flex-col md:grid md:grid-cols-12 gap-2 md:items-start rounded-md md:rounded-none border md:border-0 border-white/10 p-3 md:p-0">
       <div className="md:col-span-6 relative">
         <label className="md:hidden text-xs text-neutral-500 mb-1 block">
           Produkt
@@ -441,7 +441,7 @@ function OrderRowEditor({
           className={inputClass}
         />
         {open && matches.length > 0 && (
-          <ul className="absolute z-10 mt-1 w-full max-h-60 overflow-auto rounded-md border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-lg text-sm">
+          <ul className="absolute z-10 mt-1 w-full max-h-60 overflow-auto rounded-md border border-neutral-200 dark:border-neutral-700 bg-background-elevated/40 shadow-lg text-sm">
             {matches.map((p) => (
               <li key={p.id}>
                 <button
@@ -450,7 +450,7 @@ function OrderRowEditor({
                     onPickProduct(p);
                     setOpen(false);
                   }}
-                  className="w-full text-left px-3 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                  className="w-full text-left px-3 py-2 hover:bg-white/[0.05]"
                 >
                   <span className="font-mono text-neutral-500 mr-2">
                     {p.sku}
@@ -514,7 +514,7 @@ function OrderRowEditor({
             onClick={onRemove}
             disabled={!canRemove}
             aria-label="Ta bort rad"
-            className="rounded-md border border-neutral-300 dark:border-neutral-700 min-w-11 min-h-11 md:min-w-0 md:min-h-0 px-3 md:px-2 py-1 text-sm text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-30"
+            className="rounded-md border border-white/15 min-w-11 min-h-11 md:min-w-0 md:min-h-0 px-3 md:px-2 py-1 text-sm text-foreground-muted hover:bg-white/[0.05] disabled:opacity-30"
           >
             ×
           </button>

@@ -35,10 +35,10 @@ export function ExportSection() {
   }
 
   return (
-    <section className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-5 space-y-4">
+    <section className="rounded-lg border border-white/10 bg-background-elevated/40 p-5 space-y-4">
       <div>
         <h2 className="text-lg font-semibold">Exportera produkter</h2>
-        <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
+        <p className="text-sm text-foreground-muted mt-1">
           Ladda ner alla produkter som CSV. Bra för backup eller redigering i
           Excel.
         </p>
@@ -47,7 +47,7 @@ export function ExportSection() {
         type="button"
         onClick={handleExport}
         disabled={status.kind === "busy"}
-        className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+        className="rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium disabled:opacity-50"
       >
         {status.kind === "busy" ? "Hämtar…" : "Ladda ner CSV"}
       </button>

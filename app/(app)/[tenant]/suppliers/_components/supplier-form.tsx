@@ -12,7 +12,7 @@ type Props = {
 };
 
 const inputClass =
-  "w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500";
+  "w-full rounded-md border border-white/15 bg-background-elevated/40 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500";
 const labelClass = "block text-sm font-medium mb-1";
 
 export default function SupplierForm({ supplier, onCancel, onSaved }: Props) {
@@ -64,7 +64,7 @@ export default function SupplierForm({ supplier, onCancel, onSaved }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4 space-y-4"
+      className="rounded-lg border border-white/10 bg-background-elevated/40 p-4 space-y-4"
     >
       <h2 className="text-base font-semibold">
         {isEdit ? "Redigera leverantör" : "Ny leverantör"}
@@ -138,14 +138,14 @@ export default function SupplierForm({ supplier, onCancel, onSaved }: Props) {
         <button
           type="submit"
           disabled={busy}
-          className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+          className="rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium disabled:opacity-50"
         >
           {busy ? "Sparar…" : isEdit ? "Spara ändringar" : "Skapa leverantör"}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-md border border-neutral-300 dark:border-neutral-700 px-4 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800"
+          className="rounded-md border border-white/15 px-4 py-2 text-sm hover:bg-white/[0.05]"
         >
           Avbryt
         </button>

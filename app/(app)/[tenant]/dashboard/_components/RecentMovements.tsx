@@ -5,65 +5,86 @@ import { useParams } from "next/navigation";
 
 import type { MovementWithProduct } from "@/lib/data";
 import { formatDate, movementLabel } from "@/lib/format";
+import { Card, CardHeader } from "@/app/_components/ui";
 
 type Props = {
   movements: MovementWithProduct[];
 };
 
-function typeIcon(type: "in" | "out" | "adjust"): string {
-  if (type === "in") return "+";
-  if (type === "out") return "-";
-  return "=";
-}
-
 export default function RecentMovements({ movements }: Props) {
   const { tenant } = useParams<{ tenant: string }>();
+
   return (
-    <section className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
-      <header className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-800">
-        <h2 className="text-base font-semibold">Senaste rörelser</h2>
-      </header>
+    <Card>
+      <CardHeader
+        title="Senaste rörelser"
+        subtitle="Realtid · senaste 10"
+        actions={
+          <Link
+            href={`/${tenant}/movements/`}
+            className="text-xs text-foreground-muted hover:text-foreground transition-colors"
+          >
+            Se alla →
+          </Link>
+        }
+      />
       {movements.length === 0 ? (
-        <p className="px-4 py-6 text-sm text-neutral-500">
-          Inga rörelser registrerade ännu.
+        <p className="px-5 py-8 text-sm text-foreground-muted text-center">
+          Inga lagerrörelser registrerade än.
         </p>
       ) : (
-        <ul className="divide-y divide-neutral-200 dark:divide-neutral-800">
+        <ul className="divide-y divide-white/5">
           {movements.map((m) => (
-            <li key={m.id} className="px-4 py-3 text-sm">
-              <div className="flex items-baseline justify-between gap-2">
-                <Link
-                  href={`/${tenant}/product/?id=${m.product_id}`}
-                  className="text-blue-600 dark:text-blue-400 hover:underline truncate"
-                >
-                  {m.products?.name ?? "Okänd"}
-                </Link>
-                <span className="text-xs text-neutral-500 shrink-0">
-                  {formatDate(m.created_at)}
-                </span>
-              </div>
-              <div className="mt-1 flex items-center gap-2 text-neutral-600 dark:text-neutral-400">
-                <span
-                  className={`font-mono font-medium ${
-                    m.type === "in"
-                      ? "text-green-600 dark:text-green-400"
-                      : m.type === "out"
-                        ? "text-red-600 dark:text-red-400"
-                        : "text-neutral-500"
-                  }`}
-                >
-                  {typeIcon(m.type)}
-                  {Math.abs(m.quantity)}
-                </span>
-                <span className="text-neutral-500">{movementLabel(m.type)}</span>
-                {m.note ? (
-                  <span className="text-neutral-500 truncate">— {m.note}</span>
-                ) : null}
+            <li
+              key={m.id}
+              className="flex items-center gap-3 px-5 py-3 hover:bg-white/[0.02] transition-colors"
+            >
+              <DeltaBadge type={m.type} quantity={m.quantity} />
+              <div className="min-w-0 flex-1">
+                <div className="flex items-baseline justify-between gap-3">
+                  <Link
+                    href={`/${tenant}/product/?id=${m.product_id}`}
+                    className="text-sm hover:text-amber-400 transition-colors truncate"
+                  >
+                    {m.products?.name ?? "Okänd produkt"}
+                  </Link>
+                  <span className="text-[11px] text-foreground-muted shrink-0 tabular-nums">
+                    {formatDate(m.created_at)}
+                  </span>
+                </div>
+                <p className="text-[11px] text-foreground-muted truncate mt-0.5">
+                  <span>{movementLabel(m.type)}</span>
+                  {m.note ? <span> · {m.note}</span> : null}
+                </p>
               </div>
             </li>
           ))}
         </ul>
       )}
-    </section>
+    </Card>
+  );
+}
+
+function DeltaBadge({
+  type,
+  quantity,
+}: {
+  type: "in" | "out" | "adjust";
+  quantity: number;
+}) {
+  const sign = type === "in" ? "+" : type === "out" ? "−" : "=";
+  const tone =
+    type === "in"
+      ? "bg-emerald-500/10 text-emerald-400"
+      : type === "out"
+        ? "bg-rose-500/10 text-rose-400"
+        : "bg-violet-500/10 text-violet-400";
+  return (
+    <div
+      className={`shrink-0 h-9 w-12 rounded-md flex items-center justify-center font-mono text-sm font-medium tabular-nums ${tone}`}
+    >
+      {sign}
+      {Math.abs(quantity)}
+    </div>
   );
 }

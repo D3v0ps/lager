@@ -11,7 +11,7 @@ import {
 import { useTenant } from "@/lib/tenant-context";
 
 const inputClass =
-  "w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500";
+  "w-full rounded-md border border-white/15 bg-background-elevated/40 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500";
 const labelClass = "block text-sm font-medium mb-1";
 
 type Props = {
@@ -183,7 +183,7 @@ export function CustomerForm({
         <button
           type="submit"
           disabled={busy}
-          className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+          className="rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium disabled:opacity-50"
         >
           {busy ? "Sparar…" : submitLabel}
         </button>

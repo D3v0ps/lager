@@ -29,8 +29,8 @@ export default function ValueByProductTable({ rows }: Props) {
   const visible = rows.slice(0, limit);
 
   return (
-    <section className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
-      <header className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-800">
+    <section className="rounded-lg border border-white/10 bg-background-elevated/40">
+      <header className="px-4 py-3 border-b border-white/10">
         <h2 className="text-base font-semibold">Marginal per produkt</h2>
         <p className="text-xs text-neutral-500 mt-0.5">
           Sorterat på lagervärde. Marginal beräknas från inköpspris — sätt
@@ -45,7 +45,7 @@ export default function ValueByProductTable({ rows }: Props) {
         <>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-neutral-100 dark:bg-neutral-800/60 text-left">
+              <thead className="bg-white/[0.04] text-left">
                 <tr>
                   <th className="px-4 py-2 font-medium">SKU</th>
                   <th className="px-4 py-2 font-medium">Namn</th>
@@ -77,12 +77,12 @@ export default function ValueByProductTable({ rows }: Props) {
                   return (
                     <tr
                       key={r.id}
-                      className="border-t border-neutral-200 dark:border-neutral-800"
+                      className="border-t border-white/10"
                     >
                       <td className="px-4 py-2 font-mono">{r.sku}</td>
                       <td
                         className={`px-4 py-2 ${
-                          zero ? "text-red-600 dark:text-red-400" : ""
+                          zero ? "text-red-400" : ""
                         }`}
                       >
                         <Link
@@ -97,7 +97,7 @@ export default function ValueByProductTable({ rows }: Props) {
                       </td>
                       <td
                         className={`px-4 py-2 text-right font-medium ${
-                          zero ? "text-red-600 dark:text-red-400" : ""
+                          zero ? "text-red-400" : ""
                         }`}
                       >
                         {r.quantity}
@@ -126,11 +126,11 @@ export default function ValueByProductTable({ rows }: Props) {
             </table>
           </div>
           {rows.length > 20 ? (
-            <div className="px-4 py-3 border-t border-neutral-200 dark:border-neutral-800 text-sm">
+            <div className="px-4 py-3 border-t border-white/10 text-sm">
               <button
                 type="button"
                 onClick={() => setExpanded((v) => !v)}
-                className="text-blue-600 dark:text-blue-400 hover:underline"
+                className="text-amber-400 hover:underline"
               >
                 {expanded
                   ? "Visa färre"

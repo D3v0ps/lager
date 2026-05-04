@@ -143,20 +143,20 @@ export default function SetupChecklist() {
     return (
       <section
         aria-busy="true"
-        className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6"
+        className="rounded-2xl border border-white/10 bg-background-elevated/40 p-6"
       >
         <div className="flex items-baseline justify-between mb-3">
-          <div className="h-5 w-48 rounded bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
-          <div className="h-4 w-20 rounded bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+          <div className="h-5 w-48 rounded bg-white/5 animate-pulse" />
+          <div className="h-4 w-20 rounded bg-white/5 animate-pulse" />
         </div>
-        <div className="h-1.5 rounded-full bg-neutral-200 dark:bg-neutral-800 mb-5" />
-        <ul className="divide-y divide-neutral-200 dark:divide-neutral-800">
+        <div className="h-1.5 rounded-full bg-white/5 mb-5" />
+        <ul className="divide-y divide-white/5">
           {STEPS.map((s) => (
             <li key={s.id} className="flex items-center gap-3 py-3">
-              <div className="h-5 w-5 rounded-full bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+              <div className="h-5 w-5 rounded-full bg-white/5 animate-pulse" />
               <div className="flex-1 space-y-1.5">
-                <div className="h-4 w-1/3 rounded bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
-                <div className="h-3 w-2/3 rounded bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+                <div className="h-4 w-1/3 rounded bg-white/5 animate-pulse" />
+                <div className="h-3 w-2/3 rounded bg-white/5 animate-pulse" />
               </div>
             </li>
           ))}
@@ -175,13 +175,13 @@ export default function SetupChecklist() {
 
   if (allDone) {
     return (
-      <section className="rounded-lg border border-emerald-200 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950/30 p-4 flex items-center gap-3">
+      <section className="rounded-2xl border border-emerald-400/20 bg-emerald-500/[0.06] p-4 flex items-center gap-3">
         <CheckIcon done className="shrink-0" />
         <div className="flex-1">
-          <p className="text-sm font-medium text-emerald-900 dark:text-emerald-200">
+          <p className="text-sm font-medium text-emerald-200">
             Klart! Allt på plats.
           </p>
-          <p className="text-xs text-emerald-800/80 dark:text-emerald-300/80">
+          <p className="text-xs text-emerald-300/70">
             Tack för att du satte upp Saldo. Du är redo att köra.
           </p>
         </div>
@@ -189,7 +189,7 @@ export default function SetupChecklist() {
           type="button"
           onClick={handleDismiss}
           aria-label="Stäng"
-          className="rounded-md p-1.5 text-emerald-900/70 dark:text-emerald-200/70 hover:bg-emerald-100 dark:hover:bg-emerald-900/40"
+          className="rounded-md p-1.5 text-emerald-200/70 hover:bg-emerald-500/10"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -206,61 +206,79 @@ export default function SetupChecklist() {
   }
 
   return (
-    <section className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6">
-      <div className="flex items-baseline justify-between mb-3">
-        <h2 className="text-base font-semibold">Kom igång med Saldo</h2>
-        <span className="text-sm text-neutral-500">
-          {doneCount} av {totalCount} klara
-        </span>
-      </div>
-      <div className="h-1.5 rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden mb-5">
-        <div
-          className="h-full bg-emerald-500 transition-[width] duration-300"
-          style={{ width: `${progressPct}%` }}
-          role="progressbar"
-          aria-valuenow={doneCount}
-          aria-valuemin={0}
-          aria-valuemax={totalCount}
-        />
-      </div>
-      <ul className="divide-y divide-neutral-200 dark:divide-neutral-800">
-        {STEPS.map((step) => {
-          const done = completion[step.id];
-          const href = step.href(tenant.slug);
-          return (
-            <li
-              key={step.id}
-              className="flex items-start gap-3 py-3 first:pt-0 last:pb-0"
-            >
-              <CheckIcon done className="mt-0.5 shrink-0" />
-              <div className="flex-1 min-w-0">
-                <p
-                  className={`text-sm font-medium ${
-                    done
-                      ? "text-neutral-500 line-through"
-                      : "text-neutral-900 dark:text-neutral-100"
-                  }`}
-                >
-                  {step.title}
-                </p>
-                {!done && (
-                  <p className="text-xs text-neutral-500 mt-0.5">
-                    {step.description}
+    <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-background-elevated/40 p-6">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full opacity-20 blur-3xl"
+        style={{ background: "var(--brand-gradient)" }}
+      />
+      <div className="relative">
+        <div className="flex items-baseline justify-between mb-3">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.18em] text-foreground-muted">
+              Kom igång
+            </p>
+            <h2 className="mt-1 text-base font-semibold">
+              Sätt upp Saldo på {totalCount - doneCount}{" "}
+              {totalCount - doneCount === 1 ? "steg" : "steg"} till
+            </h2>
+          </div>
+          <span className="text-sm text-foreground-muted tabular-nums">
+            {doneCount} av {totalCount}
+          </span>
+        </div>
+        <div className="h-1.5 rounded-full bg-white/5 overflow-hidden mb-5">
+          <div
+            className="h-full transition-[width] duration-500"
+            style={{
+              width: `${progressPct}%`,
+              background: "var(--brand-gradient)",
+            }}
+            role="progressbar"
+            aria-valuenow={doneCount}
+            aria-valuemin={0}
+            aria-valuemax={totalCount}
+          />
+        </div>
+        <ul className="divide-y divide-white/5">
+          {STEPS.map((step) => {
+            const done = completion[step.id];
+            const href = step.href(tenant.slug);
+            return (
+              <li
+                key={step.id}
+                className="flex items-start gap-3 py-3 first:pt-0 last:pb-0"
+              >
+                <CheckIcon done className="mt-0.5 shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p
+                    className={`text-sm font-medium ${
+                      done
+                        ? "text-foreground-muted line-through"
+                        : ""
+                    }`}
+                  >
+                    {step.title}
                   </p>
+                  {!done && (
+                    <p className="text-xs text-foreground-muted mt-0.5">
+                      {step.description}
+                    </p>
+                  )}
+                </div>
+                {!done && (
+                  <Link
+                    href={href}
+                    className="shrink-0 rounded-md bg-foreground text-background px-3 py-1.5 text-sm font-medium hover:bg-foreground/90 transition-colors"
+                  >
+                    {step.ctaLabel}
+                  </Link>
                 )}
-              </div>
-              {!done && (
-                <Link
-                  href={href}
-                  className="shrink-0 rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-3 py-1.5 text-sm font-medium hover:bg-neutral-800 dark:hover:bg-white"
-                >
-                  {step.ctaLabel}
-                </Link>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </section>
   );
 }
@@ -275,7 +293,8 @@ function CheckIcon({
   if (done) {
     return (
       <span
-        className={`inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-white ${className}`}
+        className={`inline-flex h-5 w-5 items-center justify-center rounded-full text-background ${className}`}
+        style={{ background: "var(--brand-gradient)" }}
         aria-label="Klar"
       >
         <svg
@@ -296,7 +315,7 @@ function CheckIcon({
   }
   return (
     <span
-      className={`inline-block h-5 w-5 rounded-full border-2 border-neutral-300 dark:border-neutral-600 ${className}`}
+      className={`inline-block h-5 w-5 rounded-full border-2 border-white/20 ${className}`}
       aria-label="Inte klar"
     />
   );

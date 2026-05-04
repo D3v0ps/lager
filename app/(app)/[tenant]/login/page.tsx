@@ -8,6 +8,8 @@ import { getCurrentSession, signIn } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/client";
 import { acceptPendingInvitations } from "@/lib/team";
 import { SaldoMark } from "@/app/_brand/Logo";
+import { ErrorBanner } from "@/app/_components/ui";
+import { inputClass, labelClass } from "@/lib/form-classes";
 
 const supabase = createClient();
 
@@ -28,8 +30,6 @@ export default function LoginPage() {
   const [resetSentTo, setResetSentTo] = useState<string | null>(null);
   const [resetError, setResetError] = useState<string | null>(null);
 
-  // Magic-link redirects land here already authenticated. Apply any pending
-  // invitations and bounce into the app.
   useEffect(() => {
     let active = true;
     getCurrentSession().then(async (session) => {
@@ -82,93 +82,75 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* Soft gradient background */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10"
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-neutral-50 via-white to-amber-50/40 dark:from-neutral-950 dark:via-neutral-950 dark:to-blue-950/20" />
+    <div className="relative min-h-screen overflow-hidden bg-background">
+      {/* Ambient brand-gradient halos in the corners */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div
-          className="absolute -top-32 -left-32 h-[28rem] w-[28rem] rounded-full bg-gradient-to-tr from-amber-200/40 to-blue-300/30 blur-3xl dark:from-amber-500/10 dark:to-blue-600/10"
+          className="absolute -top-40 -left-40 h-[36rem] w-[36rem] rounded-full opacity-20 blur-3xl animate-ambient"
+          style={{ background: "var(--brand-gradient)" }}
         />
         <div
-          className="absolute -bottom-40 -right-32 h-[32rem] w-[32rem] rounded-full bg-gradient-to-tr from-emerald-200/30 to-amber-200/30 blur-3xl dark:from-emerald-500/10 dark:to-amber-500/10"
+          className="absolute -bottom-40 -right-40 h-[32rem] w-[32rem] rounded-full opacity-15 blur-3xl"
+          style={{ background: "var(--brand-gradient)" }}
         />
       </div>
 
-      <div className="mx-auto grid min-h-screen max-w-6xl grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 px-4 sm:px-6 py-10 sm:py-16 items-center">
+      <div className="relative mx-auto grid min-h-screen max-w-6xl grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 px-4 sm:px-6 py-10 sm:py-16 items-center">
         {/* Brand panel */}
-        <div className="order-1 lg:order-1">
+        <div className="order-1">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 group"
+            className="inline-flex items-center gap-2.5 group"
             aria-label="Saldo startsida"
           >
-            <SaldoMark className="h-9 w-9" />
-            <span className="font-semibold text-2xl tracking-tight">
-              Saldo
-            </span>
+            <SaldoMark className="h-9 w-9 transition-transform duration-300 group-hover:rotate-3" />
+            <span className="font-semibold text-2xl tracking-tight">Saldo</span>
           </Link>
 
-          <h1 className="mt-8 text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-neutral-950 dark:text-white">
+          <h1 className="mt-10 text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight leading-[1.1]">
             Logga in på{" "}
-            <span className="font-mono text-neutral-500 dark:text-neutral-400">
+            <span
+              className="font-mono"
+              style={{
+                background: "var(--brand-gradient)",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                color: "transparent",
+              }}
+            >
               {tenant}
             </span>
           </h1>
-          <p className="mt-4 text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-md">
+          <p className="mt-5 text-base sm:text-lg text-foreground-muted max-w-md leading-relaxed">
             Det operativa navet — lager, ordrar, inköp och frakt på ett ställe,
             kopplat till Fortnox.
           </p>
 
-          <ul className="mt-8 space-y-3 text-sm text-neutral-700 dark:text-neutral-300">
+          <ul className="mt-10 space-y-3 text-sm text-foreground/85">
             <TrustBullet>Svensk support — riktiga människor</TrustBullet>
             <TrustBullet>Fortnox-integration ingår</TrustBullet>
-            <TrustBullet>Bygg datasäkert i Sverige</TrustBullet>
+            <TrustBullet>Data i EU, krypterade backuper</TrustBullet>
           </ul>
         </div>
 
         {/* Form panel */}
-        <div className="order-2 lg:order-2 w-full">
+        <div className="order-2 w-full">
           <div className="mx-auto w-full max-w-md">
             <form
               onSubmit={handleSubmit}
-              className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 backdrop-blur p-6 sm:p-8 shadow-xl shadow-neutral-900/5 dark:shadow-black/20 space-y-5"
+              className="rounded-2xl border border-white/10 bg-background-elevated/60 backdrop-blur-md p-6 sm:p-8 shadow-2xl shadow-black/40 space-y-5"
             >
               <div>
                 <h2 className="text-lg font-semibold">Välkommen tillbaka</h2>
-                <p className="text-sm text-neutral-500 mt-1">
+                <p className="text-sm text-foreground-muted mt-1">
                   Ange dina inloggningsuppgifter för att fortsätta.
                 </p>
               </div>
 
-              {error && (
-                <div
-                  role="alert"
-                  className="flex gap-2 rounded-lg border border-red-300 dark:border-red-900 bg-red-50 dark:bg-red-950/40 p-3 text-sm text-red-800 dark:text-red-200"
-                >
-                  <svg
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    className="h-5 w-5 shrink-0 text-red-500 dark:text-red-400"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-8-5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span>{error}</span>
-                </div>
-              )}
+              {error && <ErrorBanner>{error}</ErrorBanner>}
 
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium mb-1.5 text-neutral-700 dark:text-neutral-300"
-                >
+                <label htmlFor="email" className={labelClass}>
                   E-post
                 </label>
                 <input
@@ -179,7 +161,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="namn@foretag.se"
-                  className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-950 px-3 py-2.5 text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/15 dark:focus:ring-white/20 focus:border-neutral-400 dark:focus:border-neutral-500 transition-colors"
+                  className={inputClass}
                 />
               </div>
 
@@ -187,17 +169,17 @@ export default function LoginPage() {
                 <div className="flex items-center justify-between mb-1.5">
                   <label
                     htmlFor="password"
-                    className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
+                    className="block text-xs font-medium uppercase tracking-[0.12em] text-foreground-muted"
                   >
                     Lösenord
                   </label>
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="text-[11px] text-foreground-muted hover:text-foreground transition-colors"
                     aria-pressed={showPassword}
                   >
-                    {showPassword ? "Dölj" : "Visa lösenord"}
+                    {showPassword ? "Dölj" : "Visa"}
                   </button>
                 </div>
                 <input
@@ -208,13 +190,13 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-950 px-3 py-2.5 text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/15 dark:focus:ring-white/20 focus:border-neutral-400 dark:focus:border-neutral-500 transition-colors"
+                  className={inputClass}
                 />
                 <div className="mt-2 text-right">
                   <button
                     type="button"
                     onClick={openReset}
-                    className="text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:underline underline-offset-2 transition-colors"
+                    className="text-xs text-foreground-muted hover:text-foreground hover:underline underline-offset-2 transition-colors"
                   >
                     Glömt lösenord?
                   </button>
@@ -224,45 +206,22 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={busy}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-4 py-2.5 text-sm font-medium hover:bg-neutral-800 dark:hover:bg-neutral-200 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-foreground text-background px-4 py-2.5 text-sm font-medium hover:bg-foreground/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
               >
-                {busy && (
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    className="h-4 w-4 motion-safe:animate-spin"
-                    aria-hidden="true"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="9"
-                      stroke="currentColor"
-                      strokeOpacity="0.25"
-                      strokeWidth="3"
-                    />
-                    <path
-                      d="M21 12a9 9 0 0 0-9-9"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                )}
+                {busy && <Spinner className="h-4 w-4" />}
                 {busy ? "Loggar in…" : "Logga in"}
               </button>
 
-              <p className="text-xs text-center text-neutral-500">
+              <p className="text-xs text-center text-foreground-muted">
                 Saknar du konto? Kontakta din administratör.
               </p>
             </form>
 
-            {/* Reset password drawer */}
             {showReset && (
               <div
                 role="dialog"
                 aria-label="Återställ lösenord"
-                className="mt-4 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 backdrop-blur p-5 sm:p-6"
+                className="mt-4 rounded-2xl border border-white/10 bg-background-elevated/60 backdrop-blur-md p-5 sm:p-6"
               >
                 {resetSentTo ? (
                   <div className="space-y-3">
@@ -270,7 +229,7 @@ export default function LoginPage() {
                       <svg
                         viewBox="0 0 20 20"
                         fill="currentColor"
-                        className="h-5 w-5 shrink-0 text-emerald-500"
+                        className="h-5 w-5 shrink-0 text-emerald-400"
                         aria-hidden="true"
                       >
                         <path
@@ -281,9 +240,9 @@ export default function LoginPage() {
                       </svg>
                       <div>
                         <h3 className="text-sm font-semibold">Mejl skickat</h3>
-                        <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
+                        <p className="text-sm text-foreground-muted mt-1">
                           Vi har skickat en återställningslänk till{" "}
-                          <span className="font-medium text-neutral-900 dark:text-neutral-100">
+                          <span className="font-medium text-foreground">
                             {resetSentTo}
                           </span>
                           . Kolla inkorgen — och spam-mappen.
@@ -293,7 +252,7 @@ export default function LoginPage() {
                     <button
                       type="button"
                       onClick={() => setShowReset(false)}
-                      className="text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:underline"
+                      className="text-xs text-foreground-muted hover:text-foreground hover:underline"
                     >
                       Stäng
                     </button>
@@ -304,23 +263,13 @@ export default function LoginPage() {
                       <h3 className="text-sm font-semibold">
                         Få en återställningslänk via mejl
                       </h3>
-                      <p className="text-xs text-neutral-500 mt-1">
+                      <p className="text-xs text-foreground-muted mt-1">
                         Vi skickar en länk till din e-post.
                       </p>
                     </div>
-                    {resetError && (
-                      <div
-                        role="alert"
-                        className="rounded-md border border-red-300 dark:border-red-900 bg-red-50 dark:bg-red-950/40 p-2.5 text-xs text-red-800 dark:text-red-200"
-                      >
-                        {resetError}
-                      </div>
-                    )}
+                    {resetError && <ErrorBanner>{resetError}</ErrorBanner>}
                     <div>
-                      <label
-                        htmlFor="reset-email"
-                        className="block text-xs font-medium mb-1 text-neutral-700 dark:text-neutral-300"
-                      >
+                      <label htmlFor="reset-email" className={labelClass}>
                         E-post
                       </label>
                       <input
@@ -331,44 +280,22 @@ export default function LoginPage() {
                         value={resetEmail}
                         onChange={(e) => setResetEmail(e.target.value)}
                         placeholder="namn@foretag.se"
-                        className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-950 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/15 dark:focus:ring-white/20 focus:border-neutral-400 dark:focus:border-neutral-500 transition-colors"
+                        className={inputClass}
                       />
                     </div>
                     <div className="flex items-center gap-2">
                       <button
                         type="submit"
                         disabled={resetBusy}
-                        className="inline-flex items-center gap-2 rounded-md bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-3 py-2 text-xs font-medium hover:bg-neutral-800 dark:hover:bg-neutral-200 disabled:opacity-60 transition-colors"
+                        className="inline-flex items-center gap-2 rounded-md bg-foreground text-background px-3 py-2 text-xs font-medium hover:bg-foreground/90 disabled:opacity-60 transition-colors"
                       >
-                        {resetBusy && (
-                          <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            className="h-3.5 w-3.5 motion-safe:animate-spin"
-                            aria-hidden="true"
-                          >
-                            <circle
-                              cx="12"
-                              cy="12"
-                              r="9"
-                              stroke="currentColor"
-                              strokeOpacity="0.25"
-                              strokeWidth="3"
-                            />
-                            <path
-                              d="M21 12a9 9 0 0 0-9-9"
-                              stroke="currentColor"
-                              strokeWidth="3"
-                              strokeLinecap="round"
-                            />
-                          </svg>
-                        )}
+                        {resetBusy && <Spinner className="h-3.5 w-3.5" />}
                         {resetBusy ? "Skickar…" : "Skicka länk"}
                       </button>
                       <button
                         type="button"
                         onClick={() => setShowReset(false)}
-                        className="text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+                        className="text-xs text-foreground-muted hover:text-foreground"
                       >
                         Avbryt
                       </button>
@@ -378,10 +305,10 @@ export default function LoginPage() {
               </div>
             )}
 
-            <p className="mt-6 text-center text-xs text-neutral-500">
+            <p className="mt-6 text-center text-xs text-foreground-muted">
               <Link
                 href="/"
-                className="hover:text-neutral-900 dark:hover:text-white hover:underline underline-offset-2 transition-colors"
+                className="hover:text-foreground hover:underline underline-offset-2 transition-colors"
               >
                 ← Saldo.se
               </Link>
@@ -393,10 +320,36 @@ export default function LoginPage() {
   );
 }
 
+function Spinner({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      className={`motion-safe:animate-spin ${className}`}
+      aria-hidden="true"
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r="9"
+        stroke="currentColor"
+        strokeOpacity="0.25"
+        strokeWidth="3"
+      />
+      <path
+        d="M21 12a9 9 0 0 0-9-9"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 function TrustBullet({ children }: { children: React.ReactNode }) {
   return (
     <li className="flex items-start gap-2.5">
-      <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300">
+      <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400">
         <svg
           viewBox="0 0 20 20"
           fill="currentColor"

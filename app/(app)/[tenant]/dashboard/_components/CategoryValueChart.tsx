@@ -1,6 +1,7 @@
 "use client";
 
 import { formatPrice } from "@/lib/format";
+import { Card, CardHeader } from "@/app/_components/ui";
 
 export type CategoryStat = {
   category: string;
@@ -15,89 +16,59 @@ type Props = {
 export default function CategoryValueChart({ stats }: Props) {
   if (stats.length === 0) {
     return (
-      <section className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4">
-        <h2 className="text-base font-semibold mb-2">Lagervärde per kategori</h2>
-        <p className="text-sm text-neutral-500">Inga produkter att visa.</p>
-      </section>
+      <Card>
+        <CardHeader title="Lagervärde per kategori" />
+        <p className="px-5 py-8 text-sm text-foreground-muted text-center">
+          Inga produkter att visa.
+        </p>
+      </Card>
     );
   }
 
   const max = Math.max(...stats.map((s) => s.value), 1);
-  const rowHeight = 32;
-  const gap = 8;
-  const labelWidth = 160;
-  const valueWidth = 140;
-  const barAreaWidth = 320;
-  const totalWidth = labelWidth + barAreaWidth + valueWidth + 24;
-  const totalHeight = stats.length * (rowHeight + gap);
+  const total = stats.reduce((acc, s) => acc + s.value, 0);
 
   return (
-    <section className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4">
-      <h2 className="text-base font-semibold mb-3">Lagervärde per kategori</h2>
-      <div className="overflow-x-auto">
-        <svg
-          viewBox={`0 0 ${totalWidth} ${totalHeight}`}
-          width="100%"
-          height={totalHeight}
-          role="img"
-          aria-label="Lagervärde per kategori"
-        >
-          {stats.map((s, i) => {
-            const y = i * (rowHeight + gap);
-            const barWidth = Math.max(2, (s.value / max) * barAreaWidth);
-            return (
-              <g key={s.category} transform={`translate(0, ${y})`}>
-                <text
-                  x={0}
-                  y={rowHeight / 2}
-                  dominantBaseline="middle"
-                  className="fill-neutral-700 dark:fill-neutral-300"
-                  fontSize="13"
-                >
-                  {s.category.length > 22
-                    ? `${s.category.slice(0, 21)}…`
-                    : s.category}
-                </text>
-                <text
-                  x={labelWidth - 8}
-                  y={rowHeight / 2}
-                  dominantBaseline="middle"
-                  textAnchor="end"
-                  className="fill-neutral-500"
-                  fontSize="11"
-                >
-                  {s.count} st
-                </text>
-                <rect
-                  x={labelWidth}
-                  y={4}
-                  width={barAreaWidth}
-                  height={rowHeight - 8}
-                  rx={4}
-                  className="fill-neutral-100 dark:fill-neutral-800"
+    <Card>
+      <CardHeader
+        title="Lagervärde per kategori"
+        subtitle={`${stats.length} kategorier · ${formatPrice(total)} totalt`}
+      />
+      <div className="px-5 sm:px-6 py-5 space-y-3">
+        {stats.map((s) => {
+          const pct = (s.value / max) * 100;
+          const share = total > 0 ? (s.value / total) * 100 : 0;
+          return (
+            <div key={s.category}>
+              <div className="flex items-baseline justify-between gap-3 mb-1.5">
+                <div className="flex items-baseline gap-2 min-w-0">
+                  <span className="text-sm truncate">{s.category}</span>
+                  <span className="text-[10.5px] text-foreground-muted tabular-nums">
+                    {s.count} st
+                  </span>
+                </div>
+                <div className="flex items-baseline gap-2 shrink-0">
+                  <span className="text-[10.5px] text-foreground-muted tabular-nums">
+                    {share.toFixed(1)}%
+                  </span>
+                  <span className="text-sm font-medium tabular-nums">
+                    {formatPrice(s.value)}
+                  </span>
+                </div>
+              </div>
+              <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
+                <div
+                  className="h-full rounded-full"
+                  style={{
+                    width: `${pct}%`,
+                    background: "var(--brand-gradient)",
+                  }}
                 />
-                <rect
-                  x={labelWidth}
-                  y={4}
-                  width={barWidth}
-                  height={rowHeight - 8}
-                  rx={4}
-                  className="fill-blue-500 dark:fill-blue-600"
-                />
-                <text
-                  x={labelWidth + barAreaWidth + 8}
-                  y={rowHeight / 2}
-                  dominantBaseline="middle"
-                  className="fill-neutral-700 dark:fill-neutral-300"
-                  fontSize="13"
-                >
-                  {formatPrice(s.value)}
-                </text>
-              </g>
-            );
-          })}
-        </svg>
+              </div>
+            </div>
+          );
+        })}
       </div>
-    </section>
+    </Card>
   );
 }

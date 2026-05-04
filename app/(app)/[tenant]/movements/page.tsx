@@ -40,9 +40,9 @@ export default function MovementsPage() {
           Inga rörelser registrerade ännu.
         </p>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+        <div className="overflow-x-auto rounded-lg border border-white/10 bg-background-elevated/40">
           <table className="w-full text-sm">
-            <thead className="bg-neutral-100 dark:bg-neutral-800/60 text-left">
+            <thead className="bg-white/[0.04] text-left">
               <tr>
                 <th className="px-4 py-2 font-medium">Tid</th>
                 <th className="px-4 py-2 font-medium">Produkt</th>
@@ -55,7 +55,7 @@ export default function MovementsPage() {
               {movements.map((m) => (
                 <tr
                   key={m.id}
-                  className="border-t border-neutral-200 dark:border-neutral-800"
+                  className="border-t border-white/10"
                 >
                   <td className="px-4 py-2 text-neutral-500">
                     {formatDate(m.created_at)}
@@ -63,7 +63,7 @@ export default function MovementsPage() {
                   <td className="px-4 py-2">
                     <Link
                       href={`/${tenant}/product/?id=${m.product_id}`}
-                      className="text-blue-600 dark:text-blue-400 hover:underline"
+                      className="text-amber-400 hover:underline"
                     >
                       {m.products?.name ?? "Okänd"}
                     </Link>

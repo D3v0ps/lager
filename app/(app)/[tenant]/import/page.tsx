@@ -18,7 +18,7 @@ export default function ImportPage() {
           ← Tillbaka
         </Link>
         <h1 className="text-2xl font-semibold mt-2">Import &amp; export</h1>
-        <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
+        <p className="text-sm text-foreground-muted mt-1">
           Flytta produkter mellan Saldo och en CSV-fil.
         </p>
       </div>

@@ -21,7 +21,7 @@ import PoLineItems, {
 } from "../_components/po-line-items";
 
 const inputClass =
-  "w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500";
+  "w-full rounded-md border border-white/15 bg-background-elevated/40 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500";
 const labelClass = "block text-sm font-medium mb-1";
 
 export default function NewPurchaseOrderPage() {
@@ -212,7 +212,7 @@ export default function NewPurchaseOrderPage() {
               type="button"
               onClick={handleSuggest}
               disabled={suggestBusy}
-              className="rounded-md border border-neutral-300 dark:border-neutral-700 px-3 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50"
+              className="rounded-md border border-white/15 px-3 py-2 text-sm hover:bg-white/[0.05] disabled:opacity-50"
               title="Lägger till alla produkter där lagret är på eller under beställningspunkten"
             >
               {suggestBusy
@@ -238,24 +238,24 @@ export default function NewPurchaseOrderPage() {
           </div>
         )}
 
-        <div className="flex items-center justify-between gap-4 border-t border-neutral-200 dark:border-neutral-800 pt-4">
-          <div className="text-sm text-neutral-600 dark:text-neutral-400">
+        <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-4">
+          <div className="text-sm text-foreground-muted">
             Totalt:{" "}
-            <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+            <span className="font-semibold text-foreground">
               {formatPrice(total)}
             </span>
           </div>
           <div className="flex gap-2">
             <Link
               href={`/${tenantSlug}/purchasing/`}
-              className="rounded-md border border-neutral-300 dark:border-neutral-700 px-4 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              className="rounded-md border border-white/15 px-4 py-2 text-sm hover:bg-white/[0.05]"
             >
               Avbryt
             </Link>
             <button
               type="submit"
               disabled={busy}
-              className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+              className="rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium disabled:opacity-50"
             >
               {busy ? "Sparar…" : "Spara som utkast"}
             </button>

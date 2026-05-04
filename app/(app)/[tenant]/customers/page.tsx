@@ -65,7 +65,7 @@ export default function CustomersPage() {
         <button
           type="button"
           onClick={() => setShowNewForm((v) => !v)}
-          className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-3 py-1.5 text-sm font-medium"
+          className="rounded-md bg-foreground text-background px-3 py-1.5 text-sm font-medium"
         >
           {showNewForm ? "Stäng" : "+ Ny kund"}
         </button>
@@ -74,7 +74,7 @@ export default function CustomersPage() {
       {customers === null && <SkeletonTable rows={5} />}
 
       {showNewForm && (
-        <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-5">
+        <div className="rounded-lg border border-white/10 bg-background-elevated/40 p-5">
           <h2 className="font-semibold mb-3">Ny kund</h2>
           <CustomerForm
             submitLabel="Skapa kund"
@@ -87,15 +87,15 @@ export default function CustomersPage() {
       )}
 
       {customers === null ? null : customers.length === 0 ? (
-        <div className="text-center py-16 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+        <div className="text-center py-16 rounded-lg border border-white/10 bg-background-elevated/40">
           <h2 className="text-xl font-semibold mb-2">Inga kunder än</h2>
-          <p className="text-neutral-600 dark:text-neutral-400 mb-4">
+          <p className="text-foreground-muted mb-4">
             Lägg till din första kund för att komma igång.
           </p>
           <button
             type="button"
             onClick={() => setShowNewForm(true)}
-            className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 text-sm font-medium"
+            className="rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium"
           >
             + Ny kund
           </button>
@@ -113,9 +113,9 @@ export default function CustomersPage() {
             />
           </div>
 
-          <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+          <div className="overflow-x-auto rounded-lg border border-white/10 bg-background-elevated/40">
             <table className="w-full text-sm">
-              <thead className="bg-neutral-100 dark:bg-neutral-800/60 text-left">
+              <thead className="bg-white/[0.04] text-left">
                 <tr>
                   <th className="px-4 py-2 font-medium">Namn</th>
                   <th className="px-4 py-2 font-medium">E-post</th>
@@ -129,12 +129,12 @@ export default function CustomersPage() {
                 {visible.map((c) => (
                   <tr
                     key={c.id}
-                    className="border-t border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/40"
+                    className="border-t border-white/10 hover:bg-white/[0.03]"
                   >
                     <td className="px-4 py-2">
                       <Link
                         href={`/${tenant}/customers/edit/?id=${c.id}`}
-                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                        className="text-amber-400 hover:underline"
                       >
                         {c.name}
                       </Link>

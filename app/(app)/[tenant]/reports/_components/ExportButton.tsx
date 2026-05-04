@@ -94,7 +94,7 @@ export default function ExportButton({ rows, tenantSlug }: Props) {
         type="button"
         onClick={handleClick}
         disabled={rows.length === 0}
-        className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+        className="rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium disabled:opacity-50"
       >
         Exportera rapport som CSV
       </button>

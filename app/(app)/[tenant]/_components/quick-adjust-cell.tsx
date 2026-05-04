@@ -95,7 +95,7 @@ export function QuickAdjustCell({ productId, quantity, low, onSaved }: Props) {
         onClick={startEdit}
         title="Klicka för att justera antal"
         className={`inline-block rounded px-2 py-0.5 font-medium tabular-nums hover:bg-neutral-200 dark:hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-neutral-500 ${
-          low ? "text-red-600 dark:text-red-400" : ""
+          low ? "text-red-400" : ""
         }`}
       >
         {quantity}
@@ -126,13 +126,13 @@ export function QuickAdjustCell({ productId, quantity, low, onSaved }: Props) {
           }
         }}
         aria-label="Nytt antal"
-        className="w-20 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-2 py-1 text-sm text-right tabular-nums focus:outline-none focus:ring-2 focus:ring-neutral-500 disabled:opacity-50"
+        className="w-20 rounded-md border border-white/15 bg-background-elevated/40 px-2 py-1 text-sm text-right tabular-nums focus:outline-none focus:ring-2 focus:ring-neutral-500 disabled:opacity-50"
       />
       <button
         type="button"
         onClick={() => void save()}
         disabled={saving}
-        className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-2 py-1 text-xs font-medium disabled:opacity-50"
+        className="rounded-md bg-foreground text-background px-2 py-1 text-xs font-medium disabled:opacity-50"
       >
         {saving ? "…" : "Spara"}
       </button>
@@ -140,7 +140,7 @@ export function QuickAdjustCell({ productId, quantity, low, onSaved }: Props) {
         type="button"
         onClick={cancel}
         disabled={saving}
-        className="rounded-md border border-neutral-300 dark:border-neutral-700 px-2 py-1 text-xs disabled:opacity-50"
+        className="rounded-md border border-white/15 px-2 py-1 text-xs disabled:opacity-50"
       >
         Avbryt
       </button>

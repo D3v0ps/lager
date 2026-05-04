@@ -313,7 +313,7 @@ export function Scanner({ tenant }: Props) {
             <button
               type="button"
               onClick={() => void startCamera()}
-              className="w-full rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-4 text-base font-semibold"
+              className="w-full rounded-md bg-foreground text-background px-4 py-4 text-base font-semibold"
             >
               Starta scanner
             </button>
@@ -324,13 +324,13 @@ export function Scanner({ tenant }: Props) {
           {mode.kind === "denied" && (
             <div className="rounded-md border border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-950/30 p-3 text-sm">
               <p className="font-medium mb-1">Kameran kunde inte startas</p>
-              <p className="text-neutral-600 dark:text-neutral-400">
+              <p className="text-foreground-muted">
                 {mode.message}
               </p>
               <button
                 type="button"
                 onClick={() => void startCamera()}
-                className="mt-2 rounded-md border border-neutral-300 dark:border-neutral-700 px-3 py-1.5 text-sm"
+                className="mt-2 rounded-md border border-white/15 px-3 py-1.5 text-sm"
               >
                 Försök igen
               </button>
@@ -375,7 +375,7 @@ export function Scanner({ tenant }: Props) {
                   setMode({ kind: "idle" });
                   clearLookup();
                 }}
-                className="rounded-md border border-neutral-300 dark:border-neutral-700 px-3 py-1.5"
+                className="rounded-md border border-white/15 px-3 py-1.5"
               >
                 Stoppa kamera
               </button>
@@ -421,11 +421,11 @@ export function Scanner({ tenant }: Props) {
             value={manualSku}
             onChange={(e) => setManualSku(e.target.value)}
             placeholder="t.ex. ABC-123"
-            className="flex-1 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm"
+            className="flex-1 rounded-md border border-white/15 bg-background-elevated/40 px-3 py-2 text-sm"
           />
           <button
             type="submit"
-            className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 text-sm font-medium"
+            className="rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium"
           >
             Sök
           </button>
@@ -462,7 +462,7 @@ function ResultCard({
 
   if (lookup.kind === "searching") {
     return (
-      <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4 text-sm text-neutral-500">
+      <div className="rounded-lg border border-white/10 bg-background-elevated/40 p-4 text-sm text-neutral-500">
         Söker SKU {lookup.sku}…
       </div>
     );
@@ -494,7 +494,7 @@ function ResultCard({
         <div className="flex items-center gap-3">
           <Link
             href={`/${tenant}/products/new/?sku=${encodeURIComponent(lookup.sku)}`}
-            className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-3 py-1.5 text-sm font-medium"
+            className="rounded-md bg-foreground text-background px-3 py-1.5 text-sm font-medium"
           >
             Skapa produkt
           </Link>
@@ -512,11 +512,11 @@ function ResultCard({
 
   const product = lookup.product;
   return (
-    <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4 space-y-4">
+    <div className="rounded-lg border border-white/10 bg-background-elevated/40 p-4 space-y-4">
       <div className="flex items-start gap-4">
         <div
           aria-hidden
-          className="h-16 w-16 shrink-0 rounded-md bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-xs text-neutral-400"
+          className="h-16 w-16 shrink-0 rounded-md bg-white/[0.06] flex items-center justify-center text-xs text-neutral-400"
         >
           ingen bild
         </div>
@@ -567,7 +567,7 @@ function ResultCard({
             type="button"
             onClick={() => onAdjust(product)}
             disabled={busy}
-            className="rounded-md border border-neutral-300 dark:border-neutral-700 px-3 py-3 text-sm font-semibold disabled:opacity-50"
+            className="rounded-md border border-white/15 px-3 py-3 text-sm font-semibold disabled:opacity-50"
           >
             Justera till…
           </button>
@@ -620,19 +620,19 @@ function AdjustForm({
           autoFocus
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className="flex-1 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-neutral-500"
+          className="flex-1 rounded-md border border-white/15 bg-background-elevated/40 px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-neutral-500"
         />
         <button
           type="submit"
           disabled={busy}
-          className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-3 text-sm font-semibold disabled:opacity-50"
+          className="rounded-md bg-foreground text-background px-4 py-3 text-sm font-semibold disabled:opacity-50"
         >
           Spara
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-md border border-neutral-300 dark:border-neutral-700 px-4 py-3 text-sm"
+          className="rounded-md border border-white/15 px-4 py-3 text-sm"
         >
           Avbryt
         </button>

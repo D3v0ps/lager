@@ -16,7 +16,7 @@ type Props = {
 export default function ValueOverTimeChart({ series }: Props) {
   if (series.length === 0) {
     return (
-      <section className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4">
+      <section className="rounded-lg border border-white/10 bg-background-elevated/40 p-4">
         <h2 className="text-base font-semibold mb-2">Lagervärde över tid</h2>
         <p className="text-sm text-neutral-500">Ingen historik ännu.</p>
       </section>
@@ -68,7 +68,7 @@ export default function ValueOverTimeChart({ series }: Props) {
     : "fill-red-500/15 dark:fill-red-400/10";
 
   return (
-    <section className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4">
+    <section className="rounded-lg border border-white/10 bg-background-elevated/40 p-4">
       <div className="flex items-baseline justify-between mb-3 gap-2 flex-wrap">
         <div>
           <h2 className="text-base font-semibold">Lagervärde över tid</h2>
@@ -81,8 +81,8 @@ export default function ValueOverTimeChart({ series }: Props) {
           <div
             className={`text-xs ${
               positive
-                ? "text-green-600 dark:text-green-400"
-                : "text-red-600 dark:text-red-400"
+                ? "text-emerald-400"
+                : "text-red-400"
             }`}
           >
             {changeLabel}

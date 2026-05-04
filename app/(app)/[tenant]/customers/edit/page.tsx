@@ -80,7 +80,7 @@ function EditCustomer() {
         <h1 className="text-2xl font-semibold mb-2">Kunden hittades inte</h1>
         <Link
           href={`/${tenant}/customers/`}
-          className="inline-block rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 mt-4"
+          className="inline-block rounded-md bg-foreground text-background px-4 py-2 mt-4"
         >
           Tillbaka till kunder
         </Link>
@@ -133,7 +133,7 @@ function EditCustomer() {
           <h2 className="text-lg font-semibold">Ordrar</h2>
           <Link
             href={`/${tenant}/orders/new/?customer=${customer.id}`}
-            className="rounded-md border border-neutral-300 dark:border-neutral-700 px-3 py-1.5 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800"
+            className="rounded-md border border-white/15 px-3 py-1.5 text-sm hover:bg-white/[0.05]"
           >
             + Ny order för denna kund
           </Link>
@@ -143,9 +143,9 @@ function EditCustomer() {
             Inga ordrar registrerade för denna kund ännu.
           </p>
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+          <div className="overflow-x-auto rounded-lg border border-white/10 bg-background-elevated/40">
             <table className="w-full text-sm">
-              <thead className="bg-neutral-100 dark:bg-neutral-800/60 text-left">
+              <thead className="bg-white/[0.04] text-left">
                 <tr>
                   <th className="px-4 py-2 font-medium">Ref</th>
                   <th className="px-4 py-2 font-medium">Status</th>
@@ -158,12 +158,12 @@ function EditCustomer() {
                 {orders.map((o) => (
                   <tr
                     key={o.id}
-                    className="border-t border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/40"
+                    className="border-t border-white/10 hover:bg-white/[0.03]"
                   >
                     <td className="px-4 py-2 font-mono">
                       <Link
                         href={`/${tenant}/orders/order/?id=${o.id}`}
-                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                        className="text-amber-400 hover:underline"
                       >
                         {o.reference ?? o.id.slice(0, 8)}
                       </Link>
@@ -192,7 +192,7 @@ function EditCustomer() {
         )}
       </section>
 
-      <section className="flex items-center justify-end border-t border-neutral-200 dark:border-neutral-800 pt-6">
+      <section className="flex items-center justify-end border-t border-white/10 pt-6">
         <button
           type="button"
           onClick={handleDelete}

@@ -48,8 +48,8 @@ function Card({
   hint?: string;
 }) {
   return (
-    <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4">
-      <div className="text-sm text-neutral-500 dark:text-neutral-400">
+    <div className="rounded-lg border border-white/10 bg-background-elevated/40 p-4">
+      <div className="text-sm text-foreground-muted">
         {label}
       </div>
       <div className="text-2xl font-semibold mt-1">{value}</div>

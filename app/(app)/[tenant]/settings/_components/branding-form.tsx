@@ -107,7 +107,7 @@ export function BrandingForm({ tenant }: Props) {
     return (
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">Branding</h2>
-        <div className="rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4 text-sm text-neutral-600 dark:text-neutral-400">
+        <div className="rounded-md border border-white/10 bg-background-elevated/40 p-4 text-sm text-foreground-muted">
           Kontakta din admin för att ändra branding.
         </div>
         <dl className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-x-4 gap-y-2 text-sm">
@@ -129,7 +129,7 @@ export function BrandingForm({ tenant }: Props) {
               <>
                 <span
                   aria-hidden
-                  className="inline-block h-5 w-5 rounded border border-neutral-300 dark:border-neutral-700"
+                  className="inline-block h-5 w-5 rounded border border-white/15"
                   style={{ backgroundColor: tenant.primary_color }}
                 />
                 <span className="font-mono">{tenant.primary_color}</span>
@@ -160,7 +160,7 @@ export function BrandingForm({ tenant }: Props) {
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4"
+        className="space-y-6 rounded-lg border border-white/10 bg-background-elevated/40 p-4"
       >
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 items-start">
           <div>
@@ -181,7 +181,7 @@ export function BrandingForm({ tenant }: Props) {
               webbplats. Lämna tomt för att använda Saldo-namnet.
             </p>
           </div>
-          <div className="flex items-center justify-center min-w-[8rem] h-20 rounded-md border border-dashed border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-950 px-3">
+          <div className="flex items-center justify-center min-w-[8rem] h-20 rounded-md border border-dashed border-white/15 bg-background px-3">
             {showLogoPreview ? (
               <img
                 src={logoUrl}
@@ -209,7 +209,7 @@ export function BrandingForm({ tenant }: Props) {
               value={colorForPicker}
               onChange={(e) => setPrimaryColor(e.target.value)}
               aria-label="Välj primärfärg"
-              className="h-10 w-12 rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 cursor-pointer"
+              className="h-10 w-12 rounded-md border border-white/15 bg-background-elevated/40 cursor-pointer"
             />
             <input
               id="primary_color_hex"
@@ -240,7 +240,7 @@ export function BrandingForm({ tenant }: Props) {
           <button
             type="submit"
             disabled={busy}
-            className="rounded-md bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+            className="rounded-md bg-foreground text-background px-4 py-2 text-sm font-medium disabled:opacity-50"
           >
             {busy ? "Sparar…" : "Spara"}
           </button>
