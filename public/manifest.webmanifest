@@ -1,0 +1,41 @@
+{
+  "name": "Saldo — Operations, Portal & Bygg",
+  "short_name": "Saldo",
+  "description": "Det operativa navet för svenska e-handlare och byggföretag — synkat med Fortnox.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#07080c",
+  "theme_color": "#07080c",
+  "lang": "sv",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Tidrapport",
+      "short_name": "Tid",
+      "description": "Snabbstämpla in/ut",
+      "url": "/?app=time",
+      "icons": [
+        { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+      ]
+    },
+    {
+      "name": "Skanna",
+      "short_name": "Skanna",
+      "description": "Streckkods-scanner",
+      "url": "/?app=scan",
+      "icons": [
+        { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+      ]
+    }
+  ]
+}

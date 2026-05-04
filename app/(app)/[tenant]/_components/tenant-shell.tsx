@@ -13,8 +13,11 @@ type Status = "loading" | "anonymous" | "authenticated";
 type NavItem = { href: string; label: string };
 type NavSection = { title: string; items: NavItem[] };
 
-function buildNav(tenant: string): NavSection[] {
-  return [
+function buildNav(
+  tenant: string,
+  flags: { portal: boolean; bygg: boolean },
+): NavSection[] {
+  const sections: NavSection[] = [
     {
       title: "Översikt",
       items: [
@@ -45,15 +48,39 @@ function buildNav(tenant: string): NavSection[] {
         { label: "Leverantörer", href: `/${tenant}/suppliers/` },
       ],
     },
-    {
-      title: "Inställningar",
-      items: [
-        { label: "Inställningar", href: `/${tenant}/settings/` },
-        { label: "Team", href: `/${tenant}/team/` },
-        { label: "Import / export", href: `/${tenant}/import/` },
-      ],
-    },
   ];
+
+  if (flags.bygg) {
+    sections.push({
+      title: "Bygg",
+      items: [
+        { label: "Projekt", href: `/${tenant}/projects/` },
+        { label: "Anbud", href: `/${tenant}/quotes/` },
+        { label: "Tidrapport", href: `/${tenant}/time/` },
+        { label: "Personal", href: `/${tenant}/employees/` },
+      ],
+    });
+  }
+
+  if (flags.portal) {
+    sections.push({
+      title: "Portal",
+      items: [
+        { label: "Kundportal", href: `/${tenant}/portal-settings/` },
+      ],
+    });
+  }
+
+  sections.push({
+    title: "Inställningar",
+    items: [
+      { label: "Inställningar", href: `/${tenant}/settings/` },
+      { label: "Team", href: `/${tenant}/team/` },
+      { label: "Import / export", href: `/${tenant}/import/` },
+    ],
+  });
+
+  return sections;
 }
 
 export default function TenantShell({
@@ -70,6 +97,11 @@ export default function TenantShell({
 
   const isLoginPath =
     pathname === `/${tenant}/login` || pathname === `/${tenant}/login/`;
+
+  // Portal routes (B2B customer-facing) host their own shell + auth gate.
+  const isPortalPath =
+    pathname?.startsWith(`/${tenant}/portal/`) ||
+    pathname === `/${tenant}/portal`;
 
   useEffect(() => {
     let mounted = true;
@@ -102,9 +134,9 @@ export default function TenantShell({
     setNavOpen(false);
   }, [pathname]);
 
-  if (isLoginPath) {
+  if (isLoginPath || isPortalPath) {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-background">
         <main id="main" className="flex-1">
           {children}
         </main>
@@ -157,7 +189,12 @@ function AuthenticatedShell({
 }) {
   const tenantState = useTenantState();
   const tenantData = tenantState.tenant;
-  const sections = buildNav(tenant);
+  const sections = buildNav(tenant, {
+    portal: !!(
+      tenantData as { b2b_portal_enabled?: boolean } | null
+    )?.b2b_portal_enabled,
+    bygg: !!(tenantData as { bygg_enabled?: boolean } | null)?.bygg_enabled,
+  });
   const brandColor = tenantData?.primary_color ?? "#F59E0B";
   const logoUrl = tenantData?.logo_url ?? null;
   const tenantName = tenantData?.name ?? tenant;

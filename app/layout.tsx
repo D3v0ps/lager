@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+
+import PwaRegister from "./_components/PwaRegister";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,9 +15,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Saldo — operativa navet för svenska e-handlare",
+  title: "Saldo — Operations, Portal & Bygg",
   description:
-    "Saldo sköter lager, ordrar, inköp och frakt — synkat med Fortnox i bakgrunden. Inga dubbelregistreringar. Inga konnektor-avgifter.",
+    "Det operativa navet för svenska företag. Lager, B2B-portal och projektledning för bygg — synkat med Fortnox.",
+  manifest: "/manifest.webmanifest",
+  applicationName: "Saldo",
+  appleWebApp: {
+    capable: true,
+    title: "Saldo",
+    statusBarStyle: "black-translucent",
+  },
+  icons: {
+    icon: "/icon.svg",
+    apple: "/icon.svg",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#07080c",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -36,6 +56,7 @@ export default function RootLayout({
           Hoppa till innehåll
         </a>
         {children}
+        <PwaRegister />
       </body>
     </html>
   );

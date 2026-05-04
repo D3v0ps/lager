@@ -1,5 +1,6 @@
 import Hero from "./_components/Hero";
 import Integrations from "./_components/Integrations";
+import Platform from "./_components/Platform";
 import Problem from "./_components/Problem";
 import Features from "./_components/Features";
 import CustomerStory from "./_components/CustomerStory";
@@ -13,6 +14,7 @@ export default function LandingPage() {
     <>
       <Hero />
       <Integrations />
+      <Platform />
       <Problem />
       <Features />
       <CustomerStory />
