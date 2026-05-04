@@ -25,6 +25,35 @@ const faqs = [
     q: "Erbjuder ni mobilapp?",
     a: "Ja — som Progressive Web App. Streckkods­scannern och alla flöden fungerar i webbläsaren på telefon (iOS Safari, Chrome). Native-appar i App Store / Play kommer 2027 om efterfrågan finns.",
   },
+  {
+    q: "Hur funkar volymrabatter?",
+    a: "Du sätter rabatt­trösklar per kund eller avtal — exempelvis 5 % från 10 000 kr, 10 % från 50 000 kr. Rabatten räknas live i kassan och i B2B-portalen, inkl. på återkommande beställningar. Du kan också lägga avtalspriser per artikel, prislista per kundgrupp eller kombinera båda. Volymrabatter ingår i Saldo Portal-tillägget.",
+  },
+  {
+    q: "Behöver jag aktivera ID06-modulen separat?",
+    a: "Nej — ID06-stödet ingår i Saldo Bygg utan extra avgift. Du kopplar ID06-kort till medarbetare, närvaro­loggen rullar automatiskt och byggarbetsplats-ID hanteras inbyggt. Samma sak gäller UE-registret med F-skatt-validering, KMA-mallar och Gantt — alla bygg-funktioner ligger i samma 1 200 kr/mån-pris.",
+  },
+  {
+    q: "Vad händer med vår data om vi byter system?",
+    a: "Du kan när som helst exportera allt — produkter, ordrar, kunder, lagerrörelser, projekt, tidrapporter, foton (med EXIF) — som CSV eller via vårt API. Inga lock-in-format, inga utträdesavgifter. Vi raderar din data 30 dagar efter uppsägning på begäran (eller direkt om du så vill). Vi hjälper också till att exportera i lämpligt format för det system du går till.",
+  },
+  {
+    q: "Är ni GDPR-compliant?",
+    a: (
+      <>
+        Ja. Data lagras i EU (Supabase Frankfurt-region), all
+        multi-tenant-isolation sker via rad-nivå-säkerhet (RLS), och vi
+        signerar DPA på begäran. 2FA och full audit-log för känsliga åtgärder
+        ingår i alla planer.{" "}
+        <a
+          href="/security/"
+          className="text-foreground hover:underline underline-offset-4"
+        >
+          Mer om vår säkerhet och GDPR-hantering →
+        </a>
+      </>
+    ),
+  },
 ];
 
 export default function Faq() {
