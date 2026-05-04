@@ -6,15 +6,18 @@ import { useMemo, useState } from "react";
 import { ScrollReveal } from "./ScrollReveal";
 
 /**
- * Pricing — volume-aware calculator on top, full tier comparison below.
+ * Pricing — module-based platform pricing.
  *
- * The slider drives a live calculation: given a monthly order volume,
- * we recommend a plan and show the price + what you'd save vs the typical
- * Visma-eGo + Fortnox-connector setup. All numbers are illustrative and
- * match the tier table below.
+ * Saldo prices three modules independently:
+ *   • Operations (bas) — tiered by order volume (Starter / Pro / Enterprise)
+ *   • Portal (tillägg) — flat add-on for customer self-onboarding etc.
+ *   • Bygg (vertikal) — flat fee, unlimited users, complete project module
+ *
+ * The slider drives only Operations tier selection. Portal and Bygg are
+ * priced independently and shown as add-on cards above the calculator.
  */
 
-const tiers = [
+const operationsTiers = [
   {
     id: "starter",
     name: "Starter",
@@ -25,7 +28,7 @@ const tiers = [
     features: [
       "Upp till 500 ordrar/mån",
       "5 användare inkluderade",
-      "Alla moduler — lager, order, inköp, rapporter",
+      "Lager, order, inköp, rapporter",
       "Fortnox-koppling ingår",
       "E-post­support på svenska",
     ],
@@ -40,10 +43,11 @@ const tiers = [
     features: [
       "Upp till 5 000 ordrar/mån",
       "15 användare inkluderade",
-      "Alla moduler",
+      "Alla Operations-moduler",
       "Fortnox-koppling ingår",
+      "Webhooks + API",
+      "2FA + audit-log",
       "Prioriterad svensk support",
-      "Onboarding-call med en människa",
     ],
     highlight: true,
   },
@@ -57,12 +61,46 @@ const tiers = [
     features: [
       "Obegränsade ordrar",
       "Obegränsade användare",
+      "White-label-möjligheter",
       "Dedikerad kundansvarig",
       "SLA på svarstid och drift",
       "On-site onboarding",
     ],
   },
 ] as const;
+
+const addons = [
+  {
+    id: "portal",
+    name: "Saldo Portal",
+    badge: "Tillägg",
+    price: "+400",
+    color: "rose" as const,
+    blurb:
+      "Kundvänd B2B-portal — låt kunderna logga in och beställa själva, med avtalspriser och egen orderhistorik.",
+    features: [
+      "Customer self-onboarding",
+      "Volymrabatter per kund/avtal",
+      "Återkommande beställningar",
+      "Avtalspriser & egen artikel­katalog",
+    ],
+  },
+  {
+    id: "bygg",
+    name: "Saldo Bygg",
+    badge: "Vertikal",
+    price: "1 200",
+    color: "violet" as const,
+    blurb:
+      "Komplett projektstyrning för bygg och installation — flat månads­avgift, obegränsade användare. Hälften så dyrt som Bygglet.",
+    features: [
+      "ID06 + UE-register inbyggt",
+      "KMA, egenkontroll, skyddsrond",
+      "Projektmallar + Gantt-schema",
+      "Obegränsade användare",
+    ],
+  },
+];
 
 // Comparison baseline for "what you'd otherwise pay" — Visma eGo Mini ~329kr
 // + a typical Fortnox connector (Synca/Tickster/etc.) ~390kr/mån.
@@ -72,7 +110,9 @@ export default function Pricing() {
   const [orders, setOrders] = useState(750);
 
   const tier = useMemo(
-    () => tiers.find((t) => orders <= t.upTo) ?? tiers[tiers.length - 1],
+    () =>
+      operationsTiers.find((t) => orders <= t.upTo) ??
+      operationsTiers[operationsTiers.length - 1],
     [orders],
   );
   const savings = Math.max(0, ALT_BASELINE - tier.price);
@@ -89,22 +129,119 @@ export default function Pricing() {
               Priser
             </p>
             <h2 className="mt-3 text-3xl sm:text-5xl font-semibold tracking-tight leading-[1.1]">
-              Flata priser.
+              Modul för modul.
               <br />
               <span className="text-foreground-muted">
                 Inga konnektor-avgifter.
               </span>
             </h2>
             <p className="mt-5 text-lg text-foreground-muted leading-relaxed max-w-xl">
-              Du betalar för verksamhetens storlek — inte per användare. Säg
-              upp när du vill, ingen bindningstid.
+              Du betalar för verksamhetens storlek — inte per användare. Lägg
+              till Portal eller Bygg när du behöver. Säg upp månadsvis.
             </p>
           </div>
         </ScrollReveal>
 
-        {/* Calculator */}
+        {/* Combine modules — small intro cards */}
         <ScrollReveal>
-          <div className="mt-12 rounded-2xl border border-white/10 bg-background-elevated/40 p-6 sm:p-10">
+          <div className="mt-16">
+            <div className="flex items-baseline justify-between flex-wrap gap-3">
+              <p className="text-xs uppercase tracking-[0.2em] text-amber-400 font-medium">
+                Kombinera moduler
+              </p>
+              <p className="text-xs text-foreground-muted">
+                Operations är basen — Portal och Bygg är tillägg
+              </p>
+            </div>
+            <div className="mt-5 grid md:grid-cols-3 gap-4">
+              {/* Operations summary card */}
+              <div className="rounded-2xl border border-white/10 bg-background-elevated/40 p-6">
+                <div className="flex items-center justify-between">
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-amber-400 font-medium">
+                    Saldo Operations
+                  </p>
+                  <span className="text-[10px] uppercase tracking-[0.18em] rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-foreground-muted">
+                    Bas
+                  </span>
+                </div>
+                <div className="mt-3 flex items-baseline gap-1.5">
+                  <span className="text-3xl font-semibold tabular-nums tracking-tight">
+                    från 500
+                  </span>
+                  <span className="text-sm text-foreground-muted">kr/mån</span>
+                </div>
+                <p className="mt-3 text-sm text-foreground-muted leading-relaxed">
+                  Lager, order, inköp och rapporter. Tre nivåer baserade på
+                  ordervolym — välj med kalkylatorn nedan.
+                </p>
+              </div>
+
+              {/* Portal add-on card */}
+              <div className="rounded-2xl border border-white/10 bg-background-elevated/40 p-6">
+                <div className="flex items-center justify-between">
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-rose-400 font-medium">
+                    Saldo Portal
+                  </p>
+                  <span className="text-[10px] uppercase tracking-[0.18em] rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-foreground-muted">
+                    Tillägg
+                  </span>
+                </div>
+                <div className="mt-3 flex items-baseline gap-1.5">
+                  <span className="text-3xl font-semibold tabular-nums tracking-tight">
+                    +400
+                  </span>
+                  <span className="text-sm text-foreground-muted">kr/mån</span>
+                </div>
+                <p className="mt-3 text-sm text-foreground-muted leading-relaxed">
+                  Kunder loggar in och beställer själva. Customer self-
+                  onboarding, volymrabatter, återkommande beställningar.
+                </p>
+              </div>
+
+              {/* Bygg vertical card */}
+              <div className="rounded-2xl border border-white/10 bg-background-elevated/40 p-6">
+                <div className="flex items-center justify-between">
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-violet-400 font-medium">
+                    Saldo Bygg
+                  </p>
+                  <span className="text-[10px] uppercase tracking-[0.18em] rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-foreground-muted">
+                    Vertikal
+                  </span>
+                </div>
+                <div className="mt-3 flex items-baseline gap-1.5">
+                  <span className="text-3xl font-semibold tabular-nums tracking-tight">
+                    1 200
+                  </span>
+                  <span className="text-sm text-foreground-muted">
+                    kr/mån, alla användare
+                  </span>
+                </div>
+                <p className="mt-3 text-sm text-foreground-muted leading-relaxed">
+                  Komplett bygg-vertikal. ID06, UE-register, KMA, Gantt och
+                  ROT/RUT — flat avgift.{" "}
+                  <Link
+                    href="/bygg/"
+                    className="text-foreground hover:underline underline-offset-4"
+                  >
+                    Se /bygg →
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
+        </ScrollReveal>
+
+        {/* Operations calculator */}
+        <ScrollReveal>
+          <div className="mt-16 rounded-2xl border border-white/10 bg-background-elevated/40 p-6 sm:p-10">
+            <div className="mb-6 flex items-baseline justify-between flex-wrap gap-2">
+              <p className="text-xs uppercase tracking-[0.2em] text-amber-400 font-medium">
+                Operations-kalkylator
+              </p>
+              <p className="text-xs text-foreground-muted">
+                Driver bara Operations-nivån
+              </p>
+            </div>
             <div className="grid lg:grid-cols-2 gap-10 items-center">
               <div>
                 <label
@@ -138,7 +275,7 @@ export default function Pricing() {
               <div className="rounded-xl border border-white/10 bg-background p-6">
                 <div className="flex items-center justify-between">
                   <p className="text-xs uppercase tracking-[0.2em] text-foreground-muted">
-                    Rekommenderad plan
+                    Rekommenderad Operations-plan
                   </p>
                   <span
                     className="text-xs font-medium"
@@ -178,54 +315,130 @@ export default function Pricing() {
           </div>
         </ScrollReveal>
 
-        {/* Tier table — kept as fallback / detailed view */}
+        {/* Operations tier table */}
         <ScrollReveal>
-          <div className="mt-16 grid lg:grid-cols-3 gap-4">
-            {tiers.map((plan) => {
-              const isHighlight = "highlight" in plan && plan.highlight;
-              return (
-                <div
-                  key={plan.id}
-                  className={`relative rounded-2xl border p-7 ${
-                    isHighlight
-                      ? "border-white/30 bg-background-elevated/60"
-                      : "border-white/10 bg-background-elevated/30"
-                  }`}
-                >
-                  {isHighlight && (
-                    <span
-                      className="absolute -top-3 left-7 inline-flex items-center rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-background"
-                      style={{ background: "var(--brand-gradient)" }}
+          <div className="mt-16">
+            <p className="text-xs uppercase tracking-[0.2em] text-foreground-muted font-medium">
+              Saldo Operations — alla nivåer
+            </p>
+            <div className="mt-5 grid lg:grid-cols-3 gap-4">
+              {operationsTiers.map((plan) => {
+                const isHighlight = "highlight" in plan && plan.highlight;
+                return (
+                  <div
+                    key={plan.id}
+                    className={`relative rounded-2xl border p-7 ${
+                      isHighlight
+                        ? "border-white/30 bg-background-elevated/60"
+                        : "border-white/10 bg-background-elevated/30"
+                    }`}
+                  >
+                    {isHighlight && (
+                      <span
+                        className="absolute -top-3 left-7 inline-flex items-center rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-background"
+                        style={{ background: "var(--brand-gradient)" }}
+                      >
+                        Mest populär
+                      </span>
+                    )}
+                    <h3 className="text-lg font-semibold">{plan.name}</h3>
+                    <div className="mt-4 flex items-baseline gap-1.5">
+                      <span className="text-4xl font-semibold tracking-tight tabular-nums">
+                        {plan.price.toLocaleString("sv-SE")}
+                      </span>
+                      <span className="text-sm text-foreground-muted">
+                        kr/mån
+                      </span>
+                    </div>
+                    <p className="mt-3 text-sm text-foreground-muted leading-relaxed min-h-12">
+                      {plan.description}
+                    </p>
+
+                    <Link
+                      href="/demo/"
+                      className={`mt-6 inline-flex w-full justify-center rounded-md px-4 py-2.5 text-sm font-medium transition-colors ${
+                        isHighlight
+                          ? "bg-foreground text-background hover:bg-foreground/90"
+                          : "border border-white/15 hover:bg-white/[0.05]"
+                      }`}
                     >
-                      Mest populär
+                      {plan.name === "Enterprise" ? "Kontakta oss" : "Kom igång"}
+                    </Link>
+
+                    <ul className="mt-7 space-y-3 text-sm">
+                      {plan.features.map((feat) => (
+                        <li
+                          key={feat}
+                          className="flex items-start gap-2.5 text-foreground/85"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            className="h-4 w-4 mt-0.5 text-emerald-400 shrink-0"
+                            aria-hidden="true"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.704 5.29a.75.75 0 0 1 .006 1.06l-7.5 7.6a.75.75 0 0 1-1.07.001L3.29 8.99a.75.75 0 1 1 1.066-1.056l4.314 4.355 6.97-7.06a.75.75 0 0 1 1.064-.006Z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          <span>{feat}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </ScrollReveal>
+
+        {/* Add-on detail strip */}
+        <ScrollReveal>
+          <div className="mt-12 grid md:grid-cols-2 gap-4">
+            {addons.map((a) => (
+              <div
+                key={a.id}
+                className="relative overflow-hidden rounded-2xl border border-white/10 bg-background-elevated/30 p-7"
+              >
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -top-20 -right-20 h-48 w-48 rounded-full blur-3xl opacity-15"
+                  style={{
+                    background:
+                      a.color === "rose"
+                        ? "radial-gradient(circle, #F43F5E, transparent 60%)"
+                        : "radial-gradient(circle, #8B5CF6, transparent 60%)",
+                  }}
+                />
+                <div className="relative">
+                  <div className="flex items-center justify-between">
+                    <p
+                      className={`text-[11px] uppercase tracking-[0.2em] font-medium ${
+                        a.color === "rose" ? "text-rose-400" : "text-violet-400"
+                      }`}
+                    >
+                      {a.name}
+                    </p>
+                    <span className="text-[10px] uppercase tracking-[0.18em] rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-foreground-muted">
+                      {a.badge}
                     </span>
-                  )}
-                  <h3 className="text-lg font-semibold">{plan.name}</h3>
-                  <div className="mt-4 flex items-baseline gap-1.5">
-                    <span className="text-4xl font-semibold tracking-tight tabular-nums">
-                      {plan.price.toLocaleString("sv-SE")}
+                  </div>
+                  <div className="mt-3 flex items-baseline gap-1.5">
+                    <span className="text-4xl font-semibold tabular-nums tracking-tight">
+                      {a.price}
                     </span>
                     <span className="text-sm text-foreground-muted">
                       kr/mån
                     </span>
                   </div>
-                  <p className="mt-3 text-sm text-foreground-muted leading-relaxed min-h-12">
-                    {plan.description}
+                  <p className="mt-3 text-sm text-foreground-muted leading-relaxed">
+                    {a.blurb}
                   </p>
-
-                  <Link
-                    href="/demo/"
-                    className={`mt-6 inline-flex w-full justify-center rounded-md px-4 py-2.5 text-sm font-medium transition-colors ${
-                      isHighlight
-                        ? "bg-foreground text-background hover:bg-foreground/90"
-                        : "border border-white/15 hover:bg-white/[0.05]"
-                    }`}
-                  >
-                    {plan.name === "Enterprise" ? "Kontakta oss" : "Kom igång"}
-                  </Link>
-
-                  <ul className="mt-7 space-y-3 text-sm">
-                    {plan.features.map((feat) => (
+                  <ul className="mt-5 space-y-2.5 text-sm">
+                    {a.features.map((feat) => (
                       <li
                         key={feat}
                         className="flex items-start gap-2.5 text-foreground/85"
@@ -248,17 +461,18 @@ export default function Pricing() {
                     ))}
                   </ul>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </ScrollReveal>
 
-        <p className="mt-10 text-center text-base font-medium">
+        <p className="mt-12 text-center text-base font-medium">
           Inga per-användarkostnader. Inga konnektor-avgifter. Inga
           överraskningar.
         </p>
         <p className="mt-2 text-sm text-foreground-muted text-center">
-          Alla priser anges exklusive moms. Sägs upp månadsvis.
+          Alla planer: 14 dagar gratis, inga konnektor-avgifter, månadsvis
+          uppsägning. Priser exkl. moms.
         </p>
       </div>
     </section>

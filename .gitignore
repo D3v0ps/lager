@@ -49,3 +49,6 @@ next-env.d.ts
 
 # Local-only Claude settings (may hold SUPABASE_PAT etc.)
 .claude/settings.local.json
+
+# Agent worktrees (transient)
+.claude/worktrees/
