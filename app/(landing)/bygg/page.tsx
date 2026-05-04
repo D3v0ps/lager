@@ -26,6 +26,62 @@ const compareRows = [
     winner: true,
   },
   {
+    feature: "ID06-stöd",
+    saldo: "Ja — kort-koppling, närvarologg, byggarbetsplats-ID inbyggt",
+    bygglet: "Tillägg / klagomål från användare",
+    bygglog: "Nej",
+    winner: true,
+  },
+  {
+    feature: "UE-register med F-skatt-validering",
+    saldo: "Ja — automatisk slagning mot Skatteverket, varning vid utgång",
+    bygglet: "Manuellt register",
+    bygglog: "Nej",
+    winner: true,
+  },
+  {
+    feature: "KMA / egenkontroll / skyddsrond-mallar",
+    saldo: "Ja — färdiga mallar för AFS, BAS-P/U, signering på platsen",
+    bygglet: "Tillägg / klagomål från användare",
+    bygglog: "Nej",
+    winner: true,
+  },
+  {
+    feature: "Före/efter-foton",
+    saldo: "Ja — parade fotopar med EXIF, exporteras direkt till slutbesiktning",
+    bygglet: "Nej",
+    bygglog: "Nej",
+    winner: true,
+  },
+  {
+    feature: "GPS-clock-in",
+    saldo: "Ja — geofence per byggarbetsplats, automatisk ut-stämpling",
+    bygglet: "Tillägg",
+    bygglog: "Begränsat",
+    winner: true,
+  },
+  {
+    feature: "Projektmallar (kopiera projekt)",
+    saldo: "Ja — kopiera ett helt projekt med kostnadsposter och tidsplan",
+    bygglet: "Nej",
+    bygglog: "Nej",
+    winner: true,
+  },
+  {
+    feature: "Schema/Gantt-vy",
+    saldo: "Ja — drag-and-drop Gantt med beroenden och resursplanering",
+    bygglet: "Tillägg",
+    bygglog: "Nej",
+    winner: true,
+  },
+  {
+    feature: "Lönefil-export",
+    saldo: "Ja — Visma Lön, Hogia, Crona och PAXml direkt från tidrapport",
+    bygglet: "Tillägg",
+    bygglog: "Nej",
+    winner: true,
+  },
+  {
     feature: "Word/Excel-bilagor",
     saldo: "Native PDF/Word/Excel/bild + EXIF-foto med GPS",
     bygglet: "Begränsat (klagomål från användare)",
@@ -64,9 +120,24 @@ const compareRows = [
 
 const features = [
   {
-    title: "Projektöversikt med flikar",
+    title: "ID06 + UE-register inbyggt",
     description:
-      "Tid, anbud, ÄTA, material, foton och dokument per projekt — bytt på en klick. Live-summering av timmar och kostnader.",
+      "ID06-kort kopplas till medarbetare, närvarologgen rullar automatiskt. UE-registret slår F-skatt mot Skatteverket och varnar i god tid innan certifikat går ut.",
+  },
+  {
+    title: "KMA-mallar, egenkontroll och skyddsrond",
+    description:
+      "Färdiga mallar för BAS-P/U, AFS-kontroller och veckorond. Fyll i på telefonen, signera digitalt och bifoga till slutbesiktningen.",
+  },
+  {
+    title: "Före/efter-fotopar med GPS",
+    description:
+      "Parade fotopar med EXIF — bilden vet vart den togs, när och av vem. Exporteras direkt till slutdokumentation eller försäkringsanmälan.",
+  },
+  {
+    title: "Projektmallar + Gantt-schema",
+    description:
+      "Kopiera ett helt projekt — kostnadsposter, tidsplan, mallar — på två klick. Drag-and-drop-Gantt med beroenden, milstolpar och resursplanering.",
   },
   {
     title: "Anbudsbyggare med ROT/RUT",
@@ -74,24 +145,9 @@ const features = [
       "Lägg in arbete och material — ROT/RUT räknas i realtid och kunden ser slutpriset. Skicka som magisk länk och få digital signatur.",
   },
   {
-    title: "ÄTA på två klick",
-    description:
-      "Ändrings- och tilläggsarbeten registreras direkt under projektet. Kund godkänner — du fakturerar.",
-  },
-  {
     title: "Tidrapport som folk faktiskt använder",
     description:
-      "Stämpla in/ut från mobilen, GPS valfritt, eller registrera tim i efterhand. Godkänn rader för fakturering med en klick.",
-  },
-  {
-    title: "Foton med plats och datum",
-    description:
-      "EXIF läses automatiskt — bilden vet vart den togs och när. Före/efter-jämförelser kommer i nästa release.",
-  },
-  {
-    title: "Kopplat till lagret",
-    description:
-      "Plocka material från lagret rakt in i projektet — saldon uppdateras automatiskt. Slut med Excel-listan i mejlen.",
+      "GPS-clock-in från mobilen med geofence per byggarbetsplats. Lönefil-export till Visma Lön, Hogia, Crona och PAXml — utan Excel-mellansteg.",
   },
 ];
 
@@ -296,6 +352,18 @@ export default function ByggPage() {
               <p className="mt-5 text-lg text-foreground-muted max-w-xl mx-auto">
                 Inga per-användartillägg. Inga konsultarvoden. Säg upp månadsvis.
                 14 dagar gratis prov.
+              </p>
+              <p className="mt-3 text-sm font-medium">
+                <span
+                  style={{
+                    background: "var(--brand-gradient)",
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                    color: "transparent",
+                  }}
+                >
+                  + ID06, UE, KMA, mobil-PWA, Gantt — allt ingår
+                </span>
               </p>
               <div className="mt-10 grid sm:grid-cols-3 gap-4 text-left">
                 <Bullet>Alla bygg-funktioner</Bullet>
