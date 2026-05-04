@@ -34,6 +34,10 @@ import {
 import { inputClass, labelClass } from "@/lib/form-classes";
 import { roleLabel } from "@/lib/roles";
 
+import ApplicationsTab from "./_components/applications-tab";
+import PublicApplyLinkSection from "./_components/PublicApplyLinkSection";
+import VolumeDiscountsTab from "./_components/VolumeDiscountsTab";
+
 const ROLES: ("admin" | "orderer")[] = ["admin", "orderer"];
 
 export default function PortalSettingsPage() {
@@ -219,6 +223,25 @@ export default function PortalSettingsPage() {
             ))}
           </div>
         )}
+      </section>
+
+      {tenant && tenant.slug ? (
+        <PublicApplyLinkSection slug={tenant.slug} />
+      ) : null}
+
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold">Inkomna ansökningar</h2>
+        <p className="text-sm text-foreground-muted">
+          Företag som ansökt via{" "}
+          <code className="font-mono">/{tenant?.slug ?? "[slug]"}/portal/apply/</code>{" "}
+          — godkänn för att skapa kund + skicka magisk länk.
+        </p>
+        <ApplicationsTab />
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold">Volymrabatter</h2>
+        <VolumeDiscountsTab />
       </section>
     </div>
   );

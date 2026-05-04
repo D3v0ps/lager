@@ -53,12 +53,19 @@ import {
 import { fieldHintClass, inputClass, labelClass } from "@/lib/form-classes";
 
 import { Tabs, useHashTab } from "../_components/Tabs";
+import InspectionsTab from "./_components/InspectionsTab";
+import SubcontractorsSection from "./_components/SubcontractorsSection";
+import { UploadPhotoButton } from "./_components/UploadPhotoButton";
+import { UploadDocumentButton } from "./_components/UploadDocumentButton";
+import PhotoPairsTab from "./_components/PhotoPairsTab";
 
 const TAB_IDS = [
   "oversikt",
   "tid",
   "anbud",
   "ata",
+  "kontroll",
+  "ue",
   "material",
   "foton",
   "dokument",
@@ -161,6 +168,8 @@ function ProjectDetail() {
           { id: "tid", label: "Tid", count: summary?.time_entry_count },
           { id: "anbud", label: "Anbud" },
           { id: "ata", label: "ÄTA" },
+          { id: "kontroll", label: "Kontroller" },
+          { id: "ue", label: "UE" },
           { id: "material", label: "Material" },
           { id: "foton", label: "Foton", count: summary?.photo_count },
           { id: "dokument", label: "Dokument", count: summary?.doc_count },
@@ -179,9 +188,31 @@ function ProjectDetail() {
       {activeTab === "ata" && (
         <ChangeOrdersTab projectId={project.id} onChanged={reload} />
       )}
+      {activeTab === "kontroll" && (
+        <InspectionsTab projectId={project.id} />
+      )}
+      {activeTab === "ue" && (
+        <SubcontractorsSection projectId={project.id} />
+      )}
       {activeTab === "material" && <MaterialsTab projectId={project.id} />}
-      {activeTab === "foton" && <PhotosTab projectId={project.id} />}
-      {activeTab === "dokument" && <DocumentsTab projectId={project.id} />}
+      {activeTab === "foton" && (
+        <div className="space-y-4">
+          <UploadPhotoButton
+            projectId={project.id}
+            onUploaded={reload}
+          />
+          <PhotoPairsTab projectId={project.id} />
+        </div>
+      )}
+      {activeTab === "dokument" && (
+        <div className="space-y-4">
+          <UploadDocumentButton
+            projectId={project.id}
+            onUploaded={reload}
+          />
+          <DocumentsTab projectId={project.id} />
+        </div>
+      )}
     </div>
   );
 }

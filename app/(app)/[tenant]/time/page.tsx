@@ -34,6 +34,8 @@ import {
 } from "@/app/_components/ui";
 import { fieldHintClass, inputClass, labelClass } from "@/lib/form-classes";
 
+import PayrollExportButton from "./_components/PayrollExportButton";
+
 export default function TimePage() {
   const tenantState = useTenantState();
   const tenantData = tenantState.tenant;
@@ -182,6 +184,7 @@ export default function TimePage() {
         eyebrow="Saldo Bygg"
         title="Tidrapport"
         subtitle="Stämpla in/ut, rapportera timmar i efterhand, godkänn för fakturering."
+        actions={<PayrollExportButton />}
       />
 
       {error && <ErrorBanner>{error}</ErrorBanner>}

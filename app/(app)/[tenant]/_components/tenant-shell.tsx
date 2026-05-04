@@ -55,9 +55,13 @@ function buildNav(
       title: "Bygg",
       items: [
         { label: "Projekt", href: `/${tenant}/projects/` },
+        { label: "Schema", href: `/${tenant}/schedule/` },
+        { label: "Mallar", href: `/${tenant}/projects/templates/` },
         { label: "Anbud", href: `/${tenant}/quotes/` },
         { label: "Tidrapport", href: `/${tenant}/time/` },
         { label: "Personal", href: `/${tenant}/employees/` },
+        { label: "UE-register", href: `/${tenant}/subcontractors/` },
+        { label: "Kontroller", href: `/${tenant}/inspections/` },
       ],
     });
   }
@@ -76,6 +80,9 @@ function buildNav(
     items: [
       { label: "Inställningar", href: `/${tenant}/settings/` },
       { label: "Team", href: `/${tenant}/team/` },
+      { label: "Säkerhet (2FA)", href: `/${tenant}/settings/security/` },
+      { label: "Händelselogg", href: `/${tenant}/settings/audit/` },
+      { label: "Integrationer", href: `/${tenant}/settings/integrations/` },
       { label: "Import / export", href: `/${tenant}/import/` },
     ],
   });

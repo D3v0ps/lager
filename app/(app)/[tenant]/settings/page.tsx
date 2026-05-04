@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useTenantState } from "@/lib/tenant-context";
 
 import { BrandingForm } from "./_components/branding-form";
+import { WhiteLabelSection } from "./_components/WhiteLabelSection";
 
 export default function SettingsPage() {
   const { status, tenant, error } = useTenantState();
@@ -45,7 +46,12 @@ export default function SettingsPage() {
         </div>
       )}
 
-      {status === "ready" && <BrandingForm tenant={tenant} />}
+      {status === "ready" && (
+        <>
+          <BrandingForm tenant={tenant} />
+          <WhiteLabelSection tenant={tenant} />
+        </>
+      )}
     </div>
   );
 }
