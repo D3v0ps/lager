@@ -46,45 +46,38 @@ const features = [
 const compareRows = [
   {
     feature: "Pris (3-användarnivå)",
-    saldo: "500 kr/mån",
-    visma: "ca 779 kr/mån + per användare",
-    fortnox: "Endast bokföring — separat lager-app krävs",
+    saldo: "500 kr/mån — alla användare",
+    others: "ofta 779 kr/mån + per-användartillägg",
   },
   {
     feature: "Per-användarpris",
     saldo: "Inget — flat per tier",
-    visma: "ca 80–120 kr/användare/mån",
-    fortnox: "—",
+    others: "ofta 80–120 kr/användare/mån",
   },
   {
     feature: "Mobil streckkods­scanner",
-    saldo: "Ja — i webbläsaren, ingen app",
-    visma: "Tilläggsmodul",
-    fortnox: "Nej",
+    saldo: "I webbläsaren, ingen app att installera",
+    others: "Tilläggsmodul",
   },
   {
     feature: "Beställnings­förslag",
-    saldo: "Auto — baserat på reorder-punkter",
-    visma: "Manuell prognos",
-    fortnox: "Nej",
+    saldo: "Auto — baserat på era reorder-punkter",
+    others: "Manuell prognos",
   },
   {
-    feature: "Konnektor-avgifter",
+    feature: "Konnektor-avgifter (Fortnox)",
     saldo: "0 kr — inkluderat",
-    visma: "190–500 kr/mån",
-    fortnox: "—",
+    others: "190–500 kr/mån",
   },
   {
     feature: "Implementations­tid",
     saldo: "1–3 dagar",
-    visma: "4–8 veckor",
-    fortnox: "—",
+    others: "4–8 veckor",
   },
   {
     feature: "Modern UX (sub-100 ms)",
     saldo: "Ja",
-    visma: "Nej",
-    fortnox: "Delvis",
+    others: "Vanligen byggt 2010-tal",
   },
 ];
 
@@ -216,16 +209,16 @@ export default function OperationsPage() {
           <ScrollReveal>
             <div className="max-w-2xl">
               <p className="text-xs uppercase tracking-[0.2em] text-amber-400 font-medium">
-                Saldo vs alternativen
+                Saldo vs branschstandarden
               </p>
               <h2 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight leading-[1.1]">
-                Bättre än Visma. Snabbare att rulla ut.
+                Modernare. Snabbare att rulla ut.
               </h2>
               <p className="mt-4 text-foreground-muted">
-                Visma eGo är robust men byggd 2010 — och tar betalt per
-                användare. Fortnox sköter bokföringen utmärkt men har inget
-                lager-flöde. Saldo Operations sitter mitt-emellan: modern
-                UX, flat pris, allt som behövs för dagliga driften.
+                Etablerade affärs­system är robusta men byggda 2010 — och tar
+                betalt per användare. Saldo Operations sitter mitt-emellan
+                Fortnox och de tunga affärs­systemen: modern UX, flat pris,
+                allt som behövs för dagliga driften.
               </p>
             </div>
           </ScrollReveal>
@@ -233,7 +226,7 @@ export default function OperationsPage() {
           <ScrollReveal>
             <div className="mt-12 overflow-hidden rounded-2xl border border-white/10 bg-background-elevated/40">
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[640px] text-sm">
+                <table className="w-full min-w-[560px] text-sm">
                   <thead>
                     <tr className="border-b border-white/5 bg-white/[0.02]">
                       <th className="text-left px-5 sm:px-6 py-4 text-xs uppercase tracking-[0.15em] text-foreground-muted font-medium">
@@ -251,10 +244,7 @@ export default function OperationsPage() {
                         Saldo Operations
                       </th>
                       <th className="text-left px-5 sm:px-6 py-4 text-foreground-muted font-medium">
-                        Visma eGo
-                      </th>
-                      <th className="text-left px-5 sm:px-6 py-4 text-foreground-muted font-medium">
-                        Endast Fortnox
+                        Branschstandard
                       </th>
                     </tr>
                   </thead>
@@ -275,10 +265,7 @@ export default function OperationsPage() {
                           {row.saldo}
                         </td>
                         <td className="px-5 sm:px-6 py-4 text-sm text-foreground-muted">
-                          {row.visma}
-                        </td>
-                        <td className="px-5 sm:px-6 py-4 text-sm text-foreground-muted">
-                          {row.fortnox}
+                          {row.others}
                         </td>
                       </tr>
                     ))}

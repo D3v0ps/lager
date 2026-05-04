@@ -92,7 +92,7 @@ const addons = [
     price: "1 200",
     color: "violet" as const,
     blurb:
-      "Komplett projektstyrning för bygg och installation — flat månads­avgift, obegränsade användare. Hälften så dyrt som Bygglet.",
+      "Komplett projektstyrning för bygg och installation — flat månads­avgift, obegränsade användare. Hälften så dyrt som branschstandarden.",
     features: [
       "ID06 + UE-register inbyggt",
       "KMA, egenkontroll, skyddsrond",

@@ -4,11 +4,15 @@ import { useEffect, useRef, useState } from "react";
 
 import {
   listTimeEntries,
-  timeCategoryLabel,
   type TimeEntryWithRelations,
 } from "@/lib/time-entries";
-import { listEmployees, type Employee } from "@/lib/projects";
+import { listEmployees } from "@/lib/projects";
 import { todayInStockholmISO } from "@/lib/format";
+import {
+  PAYROLL_FORMATS,
+  downloadPayrollFile,
+  type PayrollFormat,
+} from "@/lib/payroll-exporters";
 import { ErrorBanner } from "@/app/_components/ui";
 
 type Props = {
@@ -22,43 +26,12 @@ function addDaysIso(iso: string, days: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-// ---------------------------------------------------------------------------
-// Minimal semicolon-CSV builder. Excel (Swedish locale) opens these as native
-// columns when the file is BOM'd UTF-8 with `;` as separator.
-// ---------------------------------------------------------------------------
-
-function escapeCell(value: string): string {
-  if (/[";\r\n]/.test(value)) {
-    return '"' + value.replace(/"/g, '""') + '"';
-  }
-  return value;
-}
-
-function buildCsv(rows: (string | number | null | undefined)[][]): string {
-  return rows
-    .map((row) =>
-      row
-        .map((cell) => {
-          if (cell == null) return "";
-          if (typeof cell === "number") {
-            if (!Number.isFinite(cell)) return "";
-            // Use comma as decimal separator (sv-SE)
-            return String(cell).replace(".", ",");
-          }
-          return escapeCell(cell);
-        })
-        .join(";"),
-    )
-    .join("\r\n");
-}
-
-const UTF8_BOM = "﻿";
-
 export default function PayrollExportButton({ fromDate, toDate }: Props) {
   const today = todayInStockholmISO();
   const defaultFrom = addDaysIso(today, -30);
   const [from, setFrom] = useState<string>(fromDate ?? defaultFrom);
   const [to, setTo] = useState<string>(toDate ?? today);
+  const [format, setFormat] = useState<PayrollFormat>("paxml");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -97,54 +70,12 @@ export default function PayrollExportButton({ fromDate, toDate }: Props) {
     setBusy(true);
     try {
       const [entries, employees] = await Promise.all([
-        listTimeEntries({ fromDate: from, toDate: to }),
+        listTimeEntries({ fromDate: from, toDate: to }) as Promise<
+          TimeEntryWithRelations[]
+        >,
         listEmployees(),
       ]);
-      const empById = new Map<string, Employee>();
-      for (const e of employees) empById.set(e.id, e);
-
-      const header = [
-        "anställd",
-        "datum",
-        "projekt",
-        "kategori",
-        "minuter",
-        "timpris",
-        "kommentar",
-      ];
-
-      const body = entries.map((e: TimeEntryWithRelations) => {
-        const emp = empById.get(e.employee_id);
-        const empName = e.employees?.full_name ?? emp?.full_name ?? "";
-        const projectName = e.projects
-          ? e.projects.reference
-            ? `${e.projects.reference} ${e.projects.name}`
-            : e.projects.name
-          : "";
-        const minutes = e.duration_minutes ?? 0;
-        const rate = emp?.hourly_rate ?? null;
-        return [
-          empName,
-          e.entry_date,
-          projectName,
-          timeCategoryLabel(e.category),
-          minutes,
-          rate,
-          e.note ?? "",
-        ];
-      });
-
-      const csv = UTF8_BOM + buildCsv([header, ...body]);
-
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `lonefil-${from}-${to}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
+      downloadPayrollFile(format, entries, employees, from, to);
       setPreviewOpen(false);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -192,13 +123,32 @@ export default function PayrollExportButton({ fromDate, toDate }: Props) {
                 Exportera lönefil
               </h3>
               <p className="text-[11px] text-foreground-muted leading-relaxed">
-                Vad som ingår: anställd, datum, projekt, kategori, minuter,
-                timpris och kommentar — semikolon-CSV med UTF-8 BOM, läses
-                direkt av Excel (svensk språkversion).
+                Välj format för ditt lönesystem. PAXml är svensk standard
+                och läses av Visma Lön, Hogia, Crona, Agda och Kontek.
               </p>
             </div>
 
             {error && <ErrorBanner>{error}</ErrorBanner>}
+
+            <div>
+              <span className="block text-[10px] uppercase tracking-[0.15em] text-foreground-muted mb-1.5">
+                Format
+              </span>
+              <select
+                value={format}
+                onChange={(e) => setFormat(e.target.value as PayrollFormat)}
+                className="block w-full rounded-md border border-white/10 bg-background-elevated/60 px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/40"
+              >
+                {PAYROLL_FORMATS.map((f) => (
+                  <option key={f.id} value={f.id}>
+                    {f.label}
+                  </option>
+                ))}
+              </select>
+              <p className="mt-1.5 text-[10.5px] text-foreground-muted">
+                {PAYROLL_FORMATS.find((f) => f.id === format)?.hint}
+              </p>
+            </div>
 
             <div className="grid grid-cols-2 gap-2">
               <label className="block">
@@ -239,7 +189,7 @@ export default function PayrollExportButton({ fromDate, toDate }: Props) {
                 disabled={busy || !from || !to || from > to}
                 className="rounded-md bg-foreground text-background px-3 py-1.5 text-sm font-medium hover:bg-foreground/90 disabled:opacity-50"
               >
-                {busy ? "Skapar…" : "Ladda ner CSV"}
+                {busy ? "Skapar…" : "Ladda ner"}
               </button>
             </div>
           </div>

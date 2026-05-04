@@ -7,114 +7,87 @@ import { SaldoMark } from "@/app/_brand/Logo";
 export const metadata: Metadata = {
   title: "Saldo Bygg — projektstyrning för bygg och installation",
   description:
-    "Saldo Bygg är en modern projektledningsapp för bygg- och installationsföretag. Tid, anbud, ÄTA, foton och material i ett system — utan per-användarkostnader.",
+    "Saldo Bygg är ett modernt projektstyrningssystem för bygg- och installationsföretag. Tid, anbud, ÄTA, foton och material i ett system — utan per-användarkostnader.",
 };
 
+// Honest comparison vs the established players in Swedish construction PM.
+// We don't name them — partly to be respectful, partly because we want
+// to slå dem på sak: pris, modernitet, utan-tillägg.
 const compareRows = [
   {
     feature: "Pris",
-    saldo: "1 200 kr/mån, obegränsade användare",
-    bygglet: "1 745 kr + ~1 445 kr per extra användare",
-    bygglog: "från 399 kr för 3 användare",
-    winner: true,
+    saldo: "1 200 kr/mån — alla användare",
+    others: "Ofta 1 700 kr/mån + per-användartillägg",
   },
   {
     feature: "ROT/RUT-avdrag",
-    saldo: "Auto-split arbete vs material, signering via magic-länk",
-    bygglet: "Manuellt på anbudet",
-    bygglog: "Auto-split (RUT)",
-    winner: true,
+    saldo: "Auto-split arbete vs material, signering via magisk länk",
+    others: "Vanligen manuellt på anbudet",
   },
   {
     feature: "ID06-stöd",
-    saldo: "Ja — kort-koppling, närvarologg, byggarbetsplats-ID inbyggt",
-    bygglet: "Tillägg / klagomål från användare",
-    bygglog: "Nej",
-    winner: true,
+    saldo: "Kort-koppling till medarbetare + giltighets­bevakning",
+    others: "Tilläggsmodul eller saknas",
   },
   {
-    feature: "UE-register med F-skatt-validering",
-    saldo: "Ja — automatisk slagning mot Skatteverket, varning vid utgång",
-    bygglet: "Manuellt register",
-    bygglog: "Nej",
-    winner: true,
+    feature: "UE-register",
+    saldo: "Kontrolldatum för F-skatt + försäkring, varning vid utgång",
+    others: "Ofta manuellt register utan bevakning",
   },
   {
-    feature: "KMA / egenkontroll / skyddsrond-mallar",
-    saldo: "Ja — färdiga mallar för AFS, BAS-P/U, signering på platsen",
-    bygglet: "Tillägg / klagomål från användare",
-    bygglog: "Nej",
-    winner: true,
+    feature: "KMA / egenkontroll / skyddsrond",
+    saldo: "Färdiga BAS-P/U-mallar + AFS-checklistor, signering på platsen",
+    others: "Tilläggsmodul eller separat verktyg",
   },
   {
     feature: "Före/efter-foton",
-    saldo: "Ja — parade fotopar med EXIF, exporteras direkt till slutbesiktning",
-    bygglet: "Nej",
-    bygglog: "Nej",
-    winner: true,
+    saldo: "Parade fotopar med GPS — perfekt för slutdokumentation",
+    others: "Saknas i flera system",
   },
   {
     feature: "GPS-clock-in",
-    saldo: "Ja — geofence per byggarbetsplats, automatisk ut-stämpling",
-    bygglet: "Tillägg",
-    bygglog: "Begränsat",
-    winner: true,
+    saldo: "Geofence per byggarbetsplats med automatisk varning utanför zon",
+    others: "Tilläggsmodul",
   },
   {
-    feature: "Projektmallar (kopiera projekt)",
-    saldo: "Ja — kopiera ett helt projekt med kostnadsposter och tidsplan",
-    bygglet: "Nej",
-    bygglog: "Nej",
-    winner: true,
+    feature: "Projektmallar",
+    saldo: "Kopiera ett helt projekt med faser och team på två klick",
+    others: "Begränsat eller saknas",
   },
   {
     feature: "Schema/Gantt-vy",
-    saldo: "Ja — drag-and-drop Gantt med beroenden och resursplanering",
-    bygglet: "Tillägg",
-    bygglog: "Nej",
-    winner: true,
+    saldo: "Visuell tidsplan med faser och milstolpar",
+    others: "Tilläggsmodul",
   },
   {
     feature: "Lönefil-export",
-    saldo: "Ja — Visma Lön, Hogia, Crona och PAXml direkt från tidrapport",
-    bygglet: "Tillägg",
-    bygglog: "Nej",
-    winner: true,
+    saldo: "PAXml + CSV-format för Visma, Hogia, Crona — direkt från tidrapport",
+    others: "Tilläggsmodul",
   },
   {
-    feature: "Word/Excel-bilagor",
-    saldo: "Native PDF/Word/Excel/bild + EXIF-foto med GPS",
-    bygglet: "Begränsat (klagomål från användare)",
-    bygglog: "Begränsat",
-    winner: true,
+    feature: "Word/Excel/PDF-bilagor",
+    saldo: "Native + EXIF-foto med GPS",
+    others: "Begränsat",
   },
   {
     feature: "Anbudsmodul",
     saldo: "Live-builder, ROT/RUT räknas i realtid, kund signerar online",
-    bygglet: "Buggig (klagomål från användare)",
-    bygglog: "Standard",
-    winner: true,
+    others: "Vanligen statisk PDF + e-post",
   },
   {
     feature: "Kontraktstid",
     saldo: "Månadsvis, säg upp när du vill, 14 dagar gratis",
-    bygglet: "Årskontrakt, ingen prov-tid",
-    bygglog: "Månadsvis",
-    winner: true,
+    others: "Vanligen årskontrakt utan prov-tid",
   },
   {
     feature: "Mobil",
     saldo: "PWA — clock-in, GPS, foto direkt i webbläsaren",
-    bygglet: "App, men reportedly klen",
-    bygglog: "App",
-    winner: true,
+    others: "Egen app, ofta begränsad",
   },
   {
     feature: "Lager + B2B-portal i samma system",
     saldo: "Ja — del av plattformen",
-    bygglet: "Nej",
-    bygglog: "Nej",
-    winner: true,
+    others: "Nej — kräver separata system",
   },
 ];
 
@@ -122,32 +95,32 @@ const features = [
   {
     title: "ID06 + UE-register inbyggt",
     description:
-      "ID06-kort kopplas till medarbetare, närvarologgen rullar automatiskt. UE-registret slår F-skatt mot Skatteverket och varnar i god tid innan certifikat går ut.",
+      "ID06-kort kopplas till medarbetare och giltighetsdatum bevakas automatiskt. UE-registret håller koll på F-skatt och försäkringar — varnar i god tid innan något går ut.",
   },
   {
-    title: "KMA-mallar, egenkontroll och skyddsrond",
+    title: "BAS-P/U + AFS-mallar för KMA",
     description:
-      "Färdiga mallar för BAS-P/U, AFS-kontroller och veckorond. Fyll i på telefonen, signera digitalt och bifoga till slutbesiktningen.",
+      "Färdiga checklistor för byggarbetsmiljö-samordning (BAS-P/U), AFS-kontroller, egenkontroll och veckorond. Fyll i på telefonen, signera digitalt och bifoga slutdokumentationen.",
   },
   {
     title: "Före/efter-fotopar med GPS",
     description:
-      "Parade fotopar med EXIF — bilden vet vart den togs, när och av vem. Exporteras direkt till slutdokumentation eller försäkringsanmälan.",
+      "Parade fotopar med EXIF-data — bilden vet vart den togs, när och av vem. Använd för slutdokumentation, ÄTA-bevis eller försäkringsanmälan.",
   },
   {
-    title: "Projektmallar + Gantt-schema",
+    title: "Projektmallar + Gantt-tidsplan",
     description:
-      "Kopiera ett helt projekt — kostnadsposter, tidsplan, mallar — på två klick. Drag-and-drop-Gantt med beroenden, milstolpar och resursplanering.",
+      "Kopiera ett helt projekt — faser, team, mallar — på två klick. Visuell Gantt-vy med faser och milstolpar gör det lätt att se hela året på en skärm.",
   },
   {
     title: "Anbudsbyggare med ROT/RUT",
     description:
-      "Lägg in arbete och material — ROT/RUT räknas i realtid och kunden ser slutpriset. Skicka som magisk länk och få digital signatur.",
+      "Lägg in arbete och material — ROT/RUT räknas i realtid och kunden ser slutpriset. Skicka som magisk länk och få digital signatur — inget print/scan.",
   },
   {
     title: "Tidrapport som folk faktiskt använder",
     description:
-      "GPS-clock-in från mobilen med geofence per byggarbetsplats. Lönefil-export till Visma Lön, Hogia, Crona och PAXml — utan Excel-mellansteg.",
+      "GPS-clock-in från mobilen med geofence per byggarbetsplats. Lönefil-export i PAXml + CSV för Visma Lön, Hogia, Crona — direkt från tidrapporten.",
   },
 ];
 
@@ -189,11 +162,11 @@ export default function ByggPage() {
               <p className="mt-6 text-lg text-foreground-muted max-w-2xl leading-relaxed">
                 Tid. Anbud. ÄTA. ROT/RUT-avdrag. Foton med GPS.
                 Materialavstämning. Allt i ett system, byggt för svenska
-                bygg- och installations­företag — för cirka{" "}
+                bygg- och installations­företag — för{" "}
                 <span className="text-foreground font-semibold">
-                  hälften
+                  hälften så mycket
                 </span>{" "}
-                av vad Bygglet kostar.
+                som branschstandarden.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <a
@@ -214,21 +187,24 @@ export default function ByggPage() {
         </div>
       </section>
 
-      {/* Why-not-Bygglet table */}
+      {/* Comparison vs branschstandard */}
       <section className="border-y border-white/5 bg-background-elevated/30">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 py-20 sm:py-24">
           <ScrollReveal>
             <div className="max-w-2xl">
               <p className="text-xs uppercase tracking-[0.2em] text-rose-400 font-medium">
-                Bygglet vs Saldo
+                Saldo Bygg vs branschstandarden
               </p>
               <h2 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight leading-[1.1]">
-                Vad användare faktiskt klagar på.
+                Modernare. Billigare.
+                <br />
+                <span className="text-foreground-muted">Och utan tilläggs­avgifter.</span>
               </h2>
               <p className="mt-4 text-foreground-muted">
-                Bygglet ligger på 2,3 / 5 på Reco. Återkommande klagomål: per-
-                användarpris, buggig anbudsmodul, dåligt stöd för Word/Excel,
-                låst i årskontrakt. Saldo Bygg löser dem en för en.
+                Etablerade projektstyrnings-system i bygg-Sverige har samma
+                problem: per-användarpris som rusar, klagomål om buggig
+                anbudsmodul, dåligt stöd för Word/Excel, låsning i års­kontrakt.
+                Saldo Bygg är byggd från grunden för att lösa varje punkt.
               </p>
             </div>
           </ScrollReveal>
@@ -236,7 +212,7 @@ export default function ByggPage() {
           <ScrollReveal>
             <div className="mt-12 overflow-hidden rounded-2xl border border-white/10 bg-background-elevated/40">
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[640px] text-sm">
+                <table className="w-full min-w-[560px] text-sm">
                   <thead>
                     <tr className="border-b border-white/5 bg-white/[0.02]">
                       <th className="text-left px-5 sm:px-6 py-4 text-xs uppercase tracking-[0.15em] text-foreground-muted font-medium">
@@ -254,10 +230,7 @@ export default function ByggPage() {
                         Saldo Bygg
                       </th>
                       <th className="text-left px-5 sm:px-6 py-4 text-foreground-muted font-medium">
-                        Bygglet
-                      </th>
-                      <th className="text-left px-5 sm:px-6 py-4 text-foreground-muted font-medium">
-                        ByggLog
+                        Branschstandard
                       </th>
                     </tr>
                   </thead>
@@ -278,10 +251,7 @@ export default function ByggPage() {
                           {row.saldo}
                         </td>
                         <td className="px-5 sm:px-6 py-4 text-sm text-foreground-muted">
-                          {row.bygglet}
-                        </td>
-                        <td className="px-5 sm:px-6 py-4 text-sm text-foreground-muted">
-                          {row.bygglog}
+                          {row.others}
                         </td>
                       </tr>
                     ))}
@@ -291,8 +261,9 @@ export default function ByggPage() {
             </div>
           </ScrollReveal>
           <p className="mt-4 text-xs text-foreground-muted">
-            Konkurrenter ändrar produktpaket löpande — be oss uppdatera om
-            ni har en ny offert i hand.
+            Jämförelsen baseras på publika prislistor och produkt­dokumentation
+            för etablerade projektstyrnings­system i Sverige. Be oss räkna
+            specifikt om du sitter med en konkret offert.
           </p>
         </div>
       </section>
