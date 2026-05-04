@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { useTenantState } from "@/lib/tenant-context";
+
 import {
   enrollTotp,
   listTotpFactors,
@@ -47,6 +49,8 @@ function statusLabel(status: string): string {
 }
 
 export default function SecurityPage() {
+  const tenantState = useTenantState();
+  const tenantName = tenantState.tenant?.name ?? null;
   const [factors, setFactors] = useState<Factor[] | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -83,7 +87,12 @@ export default function SecurityPage() {
     setEnrollError(null);
     setBusy(true);
     try {
-      const data = await enrollTotp();
+      // Issuer = "Saldo · Bygghandel AB" so the authenticator app shows
+      // a meaningful brand+tenant heading instead of the project URL.
+      const data = await enrollTotp({
+        issuer: tenantName ? `Saldo · ${tenantName}` : "Saldo",
+        friendlyName: tenantName ? `Saldo · ${tenantName}` : "Saldo",
+      });
       setEnroll({ phase: "enrolling", data });
     } catch (e) {
       setEnrollError(e instanceof Error ? e.message : String(e));

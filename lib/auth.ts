@@ -10,13 +10,41 @@ const supabase = createClient();
 // "Email not confirmed" otherwise — easy email enumeration).
 export const GENERIC_SIGN_IN_ERROR = "Fel e-post eller lösenord.";
 
-export async function signIn(email: string, password: string): Promise<void> {
+export type SignInResult =
+  | { status: "ok" }
+  | { status: "mfa_required"; factorId: string };
+
+/**
+ * Signs in with email + password and reports back whether an MFA
+ * challenge is required to fully upgrade the session.
+ *
+ * The session itself is created on success regardless — Supabase needs
+ * AAL1 first to even list the user's factors. Callers that get
+ * `mfa_required` MUST gate their navigation behind a successful
+ * `verifyTotp(factorId, code)`.
+ */
+export async function signIn(
+  email: string,
+  password: string,
+): Promise<SignInResult> {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
-    // Log the original for ops; show user a generic message.
     console.warn("[signIn] failed:", error.message);
     throw new Error(GENERIC_SIGN_IN_ERROR);
   }
+
+  // Check Authenticator Assurance Level. If the user has any verified
+  // factor, Supabase will say nextLevel === "aal2" and currentLevel ===
+  // "aal1" — meaning the session is signed in but NOT yet challenged.
+  const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (aal && aal.nextLevel === "aal2" && aal.currentLevel === "aal1") {
+    const { data: factors } = await supabase.auth.mfa.listFactors();
+    const verified = factors?.totp?.find((f) => f.status === "verified");
+    if (verified) {
+      return { status: "mfa_required", factorId: verified.id };
+    }
+  }
+  return { status: "ok" };
 }
 
 export async function signOut(): Promise<void> {

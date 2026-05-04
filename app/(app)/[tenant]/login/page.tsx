@@ -7,6 +7,11 @@ import { useEffect, useState } from "react";
 import { getCurrentSession, signIn } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/client";
 import { acceptPendingInvitations } from "@/lib/team";
+import {
+  getVerifiedTotpFactorId,
+  needsMfaChallenge,
+  verifyTotp,
+} from "@/lib/two-factor";
 import { SaldoMark } from "@/app/_brand/Logo";
 import { ErrorBanner } from "@/app/_components/ui";
 import { inputClass, labelClass } from "@/lib/form-classes";
@@ -30,13 +35,30 @@ export default function LoginPage() {
   const [resetSentTo, setResetSentTo] = useState<string | null>(null);
   const [resetError, setResetError] = useState<string | null>(null);
 
+  // MFA challenge state — set after a successful password sign-in if the
+  // user has a verified TOTP factor.
+  const [mfaFactorId, setMfaFactorId] = useState<string | null>(null);
+  const [mfaCode, setMfaCode] = useState("");
+  const [mfaError, setMfaError] = useState<string | null>(null);
+  const [mfaBusy, setMfaBusy] = useState(false);
+
   useEffect(() => {
     let active = true;
-    getCurrentSession().then(async (session) => {
+    (async () => {
+      const session = await getCurrentSession();
       if (!session || !active) return;
+      // Magic-link / already-signed-in flow: if MFA needed, gate redirect
+      // behind the challenge instead of waving them through.
+      if (await needsMfaChallenge()) {
+        const factorId = await getVerifiedTotpFactorId();
+        if (active && factorId) {
+          setMfaFactorId(factorId);
+          return;
+        }
+      }
       await acceptPendingInvitations();
       if (active) router.replace(`/${tenant}/`);
-    });
+    })();
     return () => {
       active = false;
     };
@@ -47,12 +69,37 @@ export default function LoginPage() {
     setError(null);
     setBusy(true);
     try {
-      await signIn(email.trim(), password);
+      const result = await signIn(email.trim(), password);
+      if (result.status === "mfa_required") {
+        setMfaFactorId(result.factorId);
+        setBusy(false);
+        return;
+      }
       await acceptPendingInvitations();
       router.replace(`/${tenant}/`);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
       setBusy(false);
+    }
+  }
+
+  async function handleMfaSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!mfaFactorId) return;
+    setMfaError(null);
+    setMfaBusy(true);
+    try {
+      await verifyTotp(mfaFactorId, mfaCode.trim());
+      await acceptPendingInvitations();
+      router.replace(`/${tenant}/`);
+    } catch (err) {
+      setMfaError(
+        err instanceof Error
+          ? err.message
+          : "Verifieringen misslyckades. Kontrollera koden och försök igen.",
+      );
+      setMfaCode("");
+      setMfaBusy(false);
     }
   }
 
@@ -136,6 +183,62 @@ export default function LoginPage() {
         {/* Form panel */}
         <div className="order-2 w-full">
           <div className="mx-auto w-full max-w-md">
+            {mfaFactorId ? (
+              <form
+                onSubmit={handleMfaSubmit}
+                className="rounded-2xl border border-white/10 bg-background-elevated/60 backdrop-blur-md p-6 sm:p-8 shadow-2xl shadow-black/40 space-y-5"
+              >
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-amber-400 font-medium">
+                    Tvåfaktorsautentisering
+                  </p>
+                  <h2 className="mt-1 text-lg font-semibold">
+                    Ange koden från din authenticator
+                  </h2>
+                  <p className="text-sm text-foreground-muted mt-1">
+                    Öppna Google Authenticator, Authy eller motsvarande och
+                    skriv in den 6-siffriga koden.
+                  </p>
+                </div>
+                {mfaError && <ErrorBanner>{mfaError}</ErrorBanner>}
+                <div>
+                  <label htmlFor="mfa-code" className={labelClass}>
+                    6-siffrig kod
+                  </label>
+                  <input
+                    id="mfa-code"
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    pattern="[0-9]{6}"
+                    maxLength={6}
+                    required
+                    autoFocus
+                    value={mfaCode}
+                    onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, ""))}
+                    placeholder="123 456"
+                    className={`${inputClass} font-mono text-center text-2xl tracking-[0.3em] tabular-nums`}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={mfaBusy || mfaCode.length !== 6}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-foreground text-background px-4 py-2.5 text-sm font-medium hover:bg-foreground/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                >
+                  {mfaBusy && <Spinner className="h-4 w-4" />}
+                  {mfaBusy ? "Verifierar…" : "Verifiera"}
+                </button>
+                <p className="text-xs text-center text-foreground-muted">
+                  Förlorat din authenticator?{" "}
+                  <a
+                    href="mailto:hej@saldo.se?subject=2FA-återställning"
+                    className="hover:text-foreground hover:underline underline-offset-2"
+                  >
+                    Kontakta supporten
+                  </a>
+                </p>
+              </form>
+            ) : (
             <form
               onSubmit={handleSubmit}
               className="rounded-2xl border border-white/10 bg-background-elevated/60 backdrop-blur-md p-6 sm:p-8 shadow-2xl shadow-black/40 space-y-5"
@@ -216,8 +319,9 @@ export default function LoginPage() {
                 Saknar du konto? Kontakta din administratör.
               </p>
             </form>
+            )}
 
-            {showReset && (
+            {!mfaFactorId && showReset && (
               <div
                 role="dialog"
                 aria-label="Återställ lösenord"

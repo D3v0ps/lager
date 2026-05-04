@@ -64,7 +64,15 @@ export default function PortalLoginPage() {
     setError(null);
     setBusy(true);
     try {
-      await signIn(email.trim(), password);
+      const result = await signIn(email.trim(), password);
+      if (result.status === "mfa_required") {
+        // Portal users are unlikely to have 2FA but we handle the case
+        // by bouncing them to the supplier-side login page where the
+        // MFA challenge UI lives. For a polished portal-native flow we
+        // can move the challenge inline here in a follow-up.
+        router.replace(`/${tenant}/login/`);
+        return;
+      }
       await acceptPendingCustomerInvitations();
       router.replace(`/${tenant}/portal/`);
     } catch (err) {
