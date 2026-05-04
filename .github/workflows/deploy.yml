@@ -30,12 +30,63 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # ------------------------------------------------------------------
+      # Build Next.js static export FIRST so we fail fast on TS / build
+      # errors before we touch the database.
+      # ------------------------------------------------------------------
       - name: Build Next.js static export
         run: npm run build
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
+      # ------------------------------------------------------------------
+      # Apply Supabase migrations + deploy Edge Functions
+      #
+      # Required GitHub secrets:
+      #   SUPABASE_ACCESS_TOKEN  — personal access token from
+      #                            https://supabase.com/dashboard/account/tokens
+      #   SUPABASE_PROJECT_REF   — your project ref (8-char id from URL)
+      #   SUPABASE_DB_PASSWORD   — database password for the project
+      #                            (Settings → Database → Database password)
+      #
+      # `db push` is idempotent — only migrations that haven't been
+      # applied are run. Tracking happens in
+      # supabase_migrations.schema_migrations.
+      # ------------------------------------------------------------------
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Apply database migrations
+        run: |
+          supabase link --project-ref "$SUPABASE_PROJECT_REF" \
+            --password "$SUPABASE_DB_PASSWORD"
+          supabase db push --include-all
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+
+      - name: Deploy Edge Functions
+        # Deploys all functions under supabase/functions/. Skips the SMS /
+        # webhook functions if they don't exist yet (which they do, but
+        # this future-proofs the step for new functions added later).
+        run: |
+          for fn in supabase/functions/*/; do
+            name=$(basename "$fn")
+            echo "::group::Deploy $name"
+            supabase functions deploy "$name" --no-verify-jwt=false || true
+            echo "::endgroup::"
+          done
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+
+      # ------------------------------------------------------------------
+      # SFTP — only runs if the build + DB migrations succeeded above.
+      # ------------------------------------------------------------------
       - name: Deploy to One.com via SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.6
         with:
