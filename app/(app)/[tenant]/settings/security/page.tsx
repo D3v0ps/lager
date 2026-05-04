@@ -7,6 +7,7 @@ import { useTenantState } from "@/lib/tenant-context";
 import {
   enrollTotp,
   listTotpFactors,
+  needsMfaChallenge,
   unenrollTotp,
   verifyTotp,
   type TotpEnrollment,
@@ -59,6 +60,14 @@ export default function SecurityPage() {
   const [busy, setBusy] = useState(false);
   const [enrollError, setEnrollError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // Inline AAL2 challenge state for unenroll flow.
+  const [unenrollChallenge, setUnenrollChallenge] = useState<{
+    factor: Factor;
+    code: string;
+    busy: boolean;
+    error: string | null;
+  } | null>(null);
 
   const codeInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -168,11 +177,43 @@ export default function SecurityPage() {
     ) {
       return;
     }
+    // Supabase requires AAL2 to unenroll a verified factor (otherwise an
+    // attacker with just the password could disable MFA). If we're at AAL1
+    // we open an inline challenge instead of just calling unenroll.
     try {
+      if (factor.status === "verified" && (await needsMfaChallenge())) {
+        setUnenrollChallenge({ factor, code: "", busy: false, error: null });
+        return;
+      }
       await unenrollTotp(factor.id);
       await reload();
     } catch (e) {
       setLoadError(e instanceof Error ? e.message : String(e));
+    }
+  }
+
+  async function submitUnenrollChallenge() {
+    if (!unenrollChallenge) return;
+    setUnenrollChallenge({ ...unenrollChallenge, busy: true, error: null });
+    try {
+      await verifyTotp(unenrollChallenge.factor.id, unenrollChallenge.code.trim());
+      await unenrollTotp(unenrollChallenge.factor.id);
+      setUnenrollChallenge(null);
+      await reload();
+    } catch (e) {
+      setUnenrollChallenge((cur) =>
+        cur
+          ? {
+              ...cur,
+              busy: false,
+              code: "",
+              error:
+                e instanceof Error
+                  ? e.message
+                  : "Verifieringen misslyckades. Försök igen.",
+            }
+          : cur,
+      );
     }
   }
 
@@ -278,6 +319,76 @@ export default function SecurityPage() {
           {loadError && factors !== null ? (
             <div className="mt-4">
               <ErrorBanner>{loadError}</ErrorBanner>
+            </div>
+          ) : null}
+
+          {unenrollChallenge ? (
+            <div className="mx-5 sm:mx-6 mb-5 mt-2 rounded-2xl border border-amber-400/30 bg-amber-500/[0.06] p-5">
+              <p className="text-[11px] uppercase tracking-[0.2em] text-amber-400 font-medium">
+                Bekräfta borttagning
+              </p>
+              <h3 className="mt-1 text-sm font-semibold">
+                Skriv in en aktuell 6-siffrig kod för att ta bort faktorn
+              </h3>
+              <p className="text-xs text-foreground-muted mt-1">
+                Säkerhetsåtgärd — Supabase kräver AAL2 för att avregistrera
+                en verifierad 2FA-faktor. När du tagit bort den här koden
+                kommer du behöva registrera en ny vid nästa inloggning.
+              </p>
+              {unenrollChallenge.error ? (
+                <div className="mt-3">
+                  <ErrorBanner>{unenrollChallenge.error}</ErrorBanner>
+                </div>
+              ) : null}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  void submitUnenrollChallenge();
+                }}
+                className="mt-4 flex flex-col sm:flex-row gap-2"
+              >
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  pattern="[0-9]{6}"
+                  maxLength={6}
+                  required
+                  autoFocus
+                  value={unenrollChallenge.code}
+                  onChange={(e) =>
+                    setUnenrollChallenge((cur) =>
+                      cur
+                        ? {
+                            ...cur,
+                            code: e.target.value.replace(/\D/g, ""),
+                          }
+                        : cur,
+                    )
+                  }
+                  placeholder="123 456"
+                  className={`${inputClass} font-mono text-center text-xl tracking-[0.3em] tabular-nums sm:max-w-[12rem]`}
+                />
+                <button
+                  type="submit"
+                  disabled={
+                    unenrollChallenge.busy ||
+                    unenrollChallenge.code.length !== 6
+                  }
+                  className={buttonClasses("danger", "md")}
+                >
+                  {unenrollChallenge.busy
+                    ? "Verifierar…"
+                    : "Bekräfta & ta bort"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUnenrollChallenge(null)}
+                  className={buttonClasses("secondary", "md")}
+                >
+                  Avbryt
+                </button>
+              </form>
             </div>
           ) : null}
         </div>
