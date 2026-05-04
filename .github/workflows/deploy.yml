@@ -60,29 +60,38 @@ jobs:
           version: latest
 
       - name: Apply database migrations
-        run: |
-          supabase link --project-ref "$SUPABASE_PROJECT_REF" \
-            --password "$SUPABASE_DB_PASSWORD"
-          supabase db push --include-all
         env:
+          # Canonical pattern for supabase CLI in CI: pass everything as env
+          # vars, no flags. The CLI reads SUPABASE_DB_PASSWORD when prompted
+          # by `link`, and SUPABASE_ACCESS_TOKEN for auth.
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: |
+          set -euo pipefail
+          supabase link --project-ref "$PROJECT_REF"
+          # `db push --linked` requires a successful link in the same step.
+          # On a fresh project the migrations table is empty so all migrations
+          # run; on an already-seeded project it's a no-op (CLI checks
+          # supabase_migrations.schema_migrations).
+          supabase db push --linked
 
       - name: Deploy Edge Functions
-        # Deploys all functions under supabase/functions/. Skips the SMS /
-        # webhook functions if they don't exist yet (which they do, but
-        # this future-proofs the step for new functions added later).
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
         run: |
+          set -uo pipefail
+          # Deploy each function under supabase/functions/ to the linked
+          # project. Continue on individual failures so one bad function
+          # doesn't block the rest of the deploy.
           for fn in supabase/functions/*/; do
             name=$(basename "$fn")
             echo "::group::Deploy $name"
-            supabase functions deploy "$name" --no-verify-jwt=false || true
+            supabase functions deploy "$name" --project-ref "$PROJECT_REF" || \
+              echo "::warning::Edge function $name failed to deploy"
             echo "::endgroup::"
           done
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
 
       # ------------------------------------------------------------------
       # SFTP — only runs if the build + DB migrations succeeded above.
