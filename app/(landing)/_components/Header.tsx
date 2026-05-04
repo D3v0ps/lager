@@ -13,28 +13,31 @@ export default function Header() {
           <span className="text-base">Saldo</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8 text-sm text-foreground-muted">
-          <a
-            href="#funktioner"
+        <nav className="hidden md:flex items-center gap-7 text-sm text-foreground-muted">
+          <Link
+            href="/operations/"
             className="hover:text-foreground transition-colors"
           >
-            Funktioner
-          </a>
-          <a
-            href="#kunder"
+            Operations
+          </Link>
+          <Link
+            href="/portal/"
             className="hover:text-foreground transition-colors"
           >
-            Kunder
-          </a>
-          <a
-            href="#priser"
+            Portal
+          </Link>
+          <Link
+            href="/bygg/"
+            className="hover:text-foreground transition-colors"
+          >
+            Bygg
+          </Link>
+          <Link
+            href="/#priser"
             className="hover:text-foreground transition-colors"
           >
             Priser
-          </a>
-          <a href="#faq" className="hover:text-foreground transition-colors">
-            FAQ
-          </a>
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -45,7 +48,7 @@ export default function Header() {
             Logga in
           </Link>
           <Link
-            href="#priser"
+            href="/#priser"
             className="inline-flex items-center gap-1.5 rounded-md bg-foreground text-background px-3.5 py-1.5 text-sm font-medium hover:bg-foreground/90 transition-colors"
           >
             Boka demo

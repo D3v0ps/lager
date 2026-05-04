@@ -2,47 +2,105 @@ import Link from "next/link";
 import { ScrollReveal } from "./ScrollReveal";
 
 /**
- * Platform-sektion — positionerar Saldo som plattform med tre moduler
- * snarare än "lagermjukvara". Slut på säljs-likt bull, in med strikt
- * matrisformat så besökaren ser hur det hänger ihop på 5 sekunder.
+ * Platform-sektion — primär funnel till modul-sidor.
+ * Tre stora modul-kort med tydliga CTAs ut till /operations, /portal, /bygg.
+ *
+ * Varje kort visar:
+ *   • Modul-namn + accent
+ *   • En 3-ords-tagline för "vad är det här"
+ *   • För vem (mål-segment)
+ *   • 3 punkter med toppfunktioner
+ *   • Pris-indikator
+ *   • Stor CTA-knapp till modulens egen sida
  */
 
-const modules = [
+type ModuleColor = "amber" | "rose" | "violet";
+
+const modules: Array<{
+  id: string;
+  name: string;
+  tagline: string;
+  audience: string;
+  href: string;
+  color: ModuleColor;
+  price: string;
+  badge: string;
+  bullets: string[];
+}> = [
   {
     id: "operations",
     name: "Operations",
-    tagline: "Lager · order · inköp · frakt",
-    blurb:
-      "Det dagliga navet — synkat med Fortnox. Streckkods­scanning, beställnings­förslag och rapporter som faktiskt används.",
-    cta: { href: "#funktioner", label: "Se Operations" },
+    tagline: "Lager, order, inköp.",
+    audience: "För e-handlare och småföretag med varulager",
+    href: "/operations/",
     color: "amber",
+    price: "Från 500 kr/mån",
     badge: "Bas",
+    bullets: [
+      "Streckkods­scanning + auto-beställning",
+      "Fortnox-koppling ingår",
+      "Sub-100 ms UI, mobil-first",
+    ],
   },
   {
     id: "portal",
     name: "Portal",
-    tagline: "Kundvänd B2B-portal",
-    blurb:
-      "Låt grossister, återförsäljare och B2B-kunder logga in och beställa direkt — med avtalspriser och egen orderhistorik. Inga mejlpingisar.",
-    cta: { href: "/bygg/", label: "Snart utförligare info" },
+    tagline: "B2B-kunder loggar in och beställer själva.",
+    audience: "För grossister och leverantörer med B2B-kunder",
+    href: "/portal/",
     color: "rose",
-    badge: "Tillval",
+    price: "+400 kr/mån",
+    badge: "Tillägg",
+    bullets: [
+      "Avtalspriser + volymrabatter per kund",
+      "Återkommande beställningar",
+      "Self-onboarding (kund-ansökan)",
+    ],
   },
   {
     id: "bygg",
     name: "Bygg",
-    tagline: "Projekt · tid · anbud · ÄTA",
-    blurb:
-      "Komplett projektstyrning för bygg och installation — med ROT/RUT-avdrag, fotodokumentation och digital anbud-acceptans. Konkurrent till Bygglet, hälften så dyrt.",
-    cta: { href: "/bygg/", label: "Se Saldo Bygg →" },
+    tagline: "Projektstyrning för bygg & installation.",
+    audience: "För hantverkare, installatörer, byggentreprenörer",
+    href: "/bygg/",
     color: "violet",
+    price: "1 200 kr/mån, obegränsade användare",
     badge: "Vertikal",
+    bullets: [
+      "ID06, UE-register, KMA-mallar",
+      "Anbud med ROT/RUT + digital signering",
+      "GPS-clock-in + Lönefil-export",
+    ],
   },
-] as const;
+];
+
+const accentClasses: Record<
+  ModuleColor,
+  { text: string; halo: string; arrow: string }
+> = {
+  amber: {
+    text: "text-amber-400",
+    halo: "radial-gradient(circle, #F59E0B, transparent 60%)",
+    arrow: "group-hover:text-amber-400",
+  },
+  rose: {
+    text: "text-rose-400",
+    halo: "radial-gradient(circle, #F43F5E, transparent 60%)",
+    arrow: "group-hover:text-rose-400",
+  },
+  violet: {
+    text: "text-violet-400",
+    halo: "radial-gradient(circle, #8B5CF6, transparent 60%)",
+    arrow: "group-hover:text-violet-400",
+  },
+};
 
 export default function Platform() {
   return (
-    <section className="relative border-t border-white/5 bg-background-elevated/30">
+    <section
+      id="plattformen"
+      className="scroll-mt-20 relative border-t border-white/5 bg-background-elevated/30"
+    >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-24 sm:py-32">
         <ScrollReveal>
           <div className="max-w-2xl">
@@ -50,72 +108,106 @@ export default function Platform() {
               Plattformen
             </p>
             <h2 className="mt-3 text-3xl sm:text-5xl font-semibold tracking-tight leading-[1.1]">
-              Tre moduler.
+              Välj din modul.
               <br />
-              <span className="text-foreground-muted">Ett system att lära sig.</span>
+              <span className="text-foreground-muted">Ingen tar betalt för det du inte använder.</span>
             </h2>
             <p className="mt-5 text-lg text-foreground-muted leading-relaxed max-w-xl">
-              Operations är basen. Portal låter dina kunder beställa själva.
-              Bygg gör Saldo till ett komplett projektstyrnings­system. Allt
-              med samma login, samma databas, samma Fortnox-koppling.
+              Tre kompletta produkter på samma databas, samma login, samma
+              Fortnox-koppling. Klicka in dig på den som passar — eller
+              kombinera flera.
             </p>
           </div>
         </ScrollReveal>
 
-        <div className="mt-16 grid md:grid-cols-3 gap-4">
-          {modules.map((m, i) => (
-            <ScrollReveal key={m.id} delay={i * 80}>
-              <article className="group relative h-full overflow-hidden rounded-2xl border border-white/10 bg-background-elevated/40 hover:border-white/20 transition-colors p-6 sm:p-8">
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -top-20 -right-20 h-64 w-64 rounded-full blur-3xl opacity-15"
-                  style={{
-                    background:
-                      m.color === "amber"
-                        ? "radial-gradient(circle, #F59E0B, transparent 60%)"
-                        : m.color === "rose"
-                          ? "radial-gradient(circle, #F43F5E, transparent 60%)"
-                          : "radial-gradient(circle, #8B5CF6, transparent 60%)",
-                  }}
-                />
-                <div className="relative h-full flex flex-col">
-                  <div className="flex items-center justify-between">
-                    <p
-                      className={`text-[11px] uppercase tracking-[0.2em] font-medium ${
-                        m.color === "amber"
-                          ? "text-amber-400"
-                          : m.color === "rose"
-                            ? "text-rose-400"
-                            : "text-violet-400"
-                      }`}
-                    >
-                      Saldo {m.name}
+        <div className="mt-16 grid md:grid-cols-3 gap-5">
+          {modules.map((m, i) => {
+            const accent = accentClasses[m.color];
+            return (
+              <ScrollReveal key={m.id} delay={i * 80}>
+                <Link
+                  href={m.href}
+                  className="group relative block h-full overflow-hidden rounded-2xl border border-white/10 bg-background-elevated/40 hover:border-white/25 transition-all hover:-translate-y-0.5"
+                >
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full blur-3xl opacity-20 group-hover:opacity-30 transition-opacity"
+                    style={{ background: accent.halo }}
+                  />
+                  <div className="relative p-7 sm:p-8 flex flex-col h-full">
+                    <div className="flex items-center justify-between">
+                      <p
+                        className={`text-[11px] uppercase tracking-[0.2em] font-semibold ${accent.text}`}
+                      >
+                        Saldo {m.name}
+                      </p>
+                      <span className="text-[10px] uppercase tracking-[0.18em] rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-foreground-muted">
+                        {m.badge}
+                      </span>
+                    </div>
+                    <h3 className="mt-4 text-2xl sm:text-3xl font-semibold tracking-tight leading-tight">
+                      {m.tagline}
+                    </h3>
+                    <p className="mt-2 text-sm text-foreground-muted">
+                      {m.audience}
                     </p>
-                    <span className="text-[10px] uppercase tracking-[0.18em] rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-foreground-muted">
-                      {m.badge}
-                    </span>
+
+                    <ul className="mt-6 space-y-2.5 flex-1">
+                      {m.bullets.map((b) => (
+                        <li
+                          key={b}
+                          className="flex items-start gap-2 text-sm text-foreground/85"
+                        >
+                          <svg
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            className={`h-4 w-4 mt-0.5 ${accent.text} shrink-0`}
+                            aria-hidden="true"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.704 5.296a1 1 0 0 1 0 1.408l-7.5 7.5a1 1 0 0 1-1.414 0l-3.5-3.5a1 1 0 1 1 1.414-1.414L8.5 12.086l6.793-6.79a1 1 0 0 1 1.411 0Z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <div className="mt-6 pt-6 border-t border-white/5 flex items-center justify-between">
+                      <span className="text-xs text-foreground-muted tabular-nums">
+                        {m.price}
+                      </span>
+                      <span
+                        className={`inline-flex items-center gap-1 text-sm font-medium ${accent.arrow} transition-colors`}
+                      >
+                        Läs mer
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                          aria-hidden="true"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                    </div>
                   </div>
-                  <h3 className="mt-3 text-2xl font-semibold tracking-tight">
-                    {m.tagline}
-                  </h3>
-                  <p className="mt-3 text-sm text-foreground-muted leading-relaxed flex-1">
-                    {m.blurb}
-                  </p>
-                  <Link
-                    href={m.cta.href}
-                    className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium hover:text-amber-400 transition-colors"
-                  >
-                    {m.cta.label}
-                  </Link>
-                </div>
-              </article>
-            </ScrollReveal>
-          ))}
+                </Link>
+              </ScrollReveal>
+            );
+          })}
         </div>
 
-        <p className="mt-10 text-sm text-foreground-muted text-center">
-          Behöver bara Operations? Kör bara den. Lägg till Portal eller
-          Bygg när du behöver. Inga rip-and-replace migrationer.
+        <p className="mt-12 text-center text-sm text-foreground-muted">
+          Behöver bara en? Kör bara den. Behöver alla tre? Lägg till
+          dem när du är redo. Inga rip-and-replace-migrationer.
         </p>
       </div>
     </section>

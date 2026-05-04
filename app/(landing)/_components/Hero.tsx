@@ -28,27 +28,27 @@ export default function Hero() {
                 className="h-1.5 w-1.5 rounded-full"
                 style={{ background: "var(--brand-gradient)" }}
               />
-              Operativa navet — synkat med Fortnox
+              Plattform för svenska företag — synkad med Fortnox
             </div>
 
             <h1 className="mt-6 text-5xl sm:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.05]">
-              Lager. Order. Inköp.
+              En plattform.
               <br />
-              <span className="brand-text">Synkat med Fortnox.</span>
+              <span className="brand-text">Tre moduler.</span>
             </h1>
 
             <p className="mt-6 text-lg text-foreground-muted max-w-xl leading-relaxed">
-              Det operativa navet svenska e-handlare har saknat. Vi sköter den
-              dagliga driften — Fortnox sköter bokföringen. Inga
-              dubbelregistreringar, inga konnektor-avgifter.
+              Saldo är operativa navet för e-handel, B2B-grossister och
+              byggföretag. Lager, kundportal och projektstyrning — välj
+              modulerna du behöver, betala bara för dem.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                href="#priser"
+                href="#plattformen"
                 className="group inline-flex items-center gap-2 rounded-md bg-foreground text-background px-5 py-3 text-sm font-medium hover:bg-foreground/90 transition-all"
               >
-                Boka demo
+                Utforska modulerna
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
@@ -64,10 +64,10 @@ export default function Hero() {
                 </svg>
               </Link>
               <a
-                href="#funktioner"
+                href="#priser"
                 className="inline-flex items-center gap-2 rounded-md border border-white/15 bg-white/[0.02] backdrop-blur px-5 py-3 text-sm font-medium hover:bg-white/[0.06] transition-colors"
               >
-                Se produkten
+                Se priser
               </a>
             </div>
 
